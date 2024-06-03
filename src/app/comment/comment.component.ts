@@ -10,6 +10,8 @@ import { Comment, CommentQueryParameters } from '../model/comment';
 
 export class CommentComponent implements OnInit{
 
+  private hotelId = 2;
+
   @Input()hotelName!: string;
 
 
@@ -88,11 +90,14 @@ export class CommentComponent implements OnInit{
     this.loadComments();
   }
 
+  //todo 調整日期方法
   filterByDate(event: Event): void {
     const target = event.target as HTMLSelectElement;
-  const date = target?.value || '';
-    this.queryParameters.dateFilter = date;
+  const dateFilter = target?.value || '';
+  this.commentService.getMonthFilter(dateFilter).subscribe(month => {
+    // 在這裡根據選擇的月份進行評論加載或篩選
     this.loadComments();
+  });
   }
 
   filterByTopic(topic:string):void{

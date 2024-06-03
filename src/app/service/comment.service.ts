@@ -10,7 +10,7 @@ import { Comment, CommentQueryParameters } from '../model/comment';
 export class CommentService {
 
 
-private apiUrl = 'https://localhost:7103/api/Comment/GetComment';
+private apiUrl = 'https://localhost:7103/api/Comment';
 
 constructor(private client:HttpClient) { }
 
@@ -28,7 +28,7 @@ getCommentAPI(paras:CommentQueryParameters): Observable<any>
     queryParas = queryParas.set('dateFilter', paras.dateFilter);
   }
 
-  return this.client.get<any>('https://localhost:7103/api/Comment/CommentFilter',{params:queryParas})
+  return this.client.get<any>(`${this.apiUrl}/CommentFilter`,{params:queryParas})
 }
 
 
@@ -39,9 +39,13 @@ postCommentAPI(comment: Comment):Observable<any>{
 
 filterByRating(ratingFilter: number): Observable<Comment[]> {
   const params = new HttpParams().set('ratingFilter', ratingFilter.toString());
-  return this.client.get<Comment[]>('https://localhost:7103/api/Comment/ApplyRatingFilter', { params });
+  return this.client.get<Comment[]>(`${this.apiUrl}/ApplyRatingFilter`, { params });
 }
 
-
+getMonthFilter(dateFilter: string): Observable<number> {
+  return this.client.get<number>(`${this.apiUrl}/GetMonthFilter`, {
+    params: { dateFilter }
+  });
+}
 
 }
