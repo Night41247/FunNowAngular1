@@ -6,15 +6,18 @@ import { AppComponent } from './app.component';
 import { CommentComponent } from './comment/comment.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { CommentModule } from './comment/comment.module';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CommentComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    CommonModule,
+    CommentModule,
     FormsModule,
     HttpClientModule,
     ReactiveFormsModule

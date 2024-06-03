@@ -2,10 +2,10 @@
 <div class="container mt-5">
 
   <div>
-      <h4 class="mb-3 font-sty">雀客旅館台中中山 住客評論</h4>
-      <span class="comment-cube">10.0</span>
+      <h4 class="mb-3 font-sty">{{hotelName}} 住客評論</h4>
+      <span class="comment-cube">{{totalAverageScore.toFixed(1)}}</span>
       <span>超棒</span>
-      <span>1,145則評論</span>
+      <span>{{ totalItems }}則評論</span>
   </div>
   <hr />
   <!--評分條-->
@@ -14,88 +14,16 @@
           <h6 class="m-2 p-3">各項目評分：</h6>
 
           <div class="row m-2 ">
-              <div class="col">
+              <div class="col-4" *ngFor="let score if averageScores | keyvalue">
                   <div>
-                      <span>舒適程度</span>
-                      <span id="comfort-score-avg">10.0</span>
+                      <span>{{score.key | titlecase}}</span>
+                      <span id="comfort-score-avg">{{score.value}}</span>
                       <div class="progress2 progress-moved">
-                          <div class="progress-bar2">
+                          <div class="progress-bar2" [style.width.%]="score.value * 10">
                           </div>
                       </div>
                   </div>
               </div>
-
-              <div class="col">
-                  <div>
-                      <span>清潔程度</span>
-                      <span id="clean-score-avg">10.0</span>
-                      <div class="progress2 progress-moved">
-                          <div class="progress-bar2">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-
-              <div class="col">
-                  <div>
-                      <span>員工素質</span>
-                      <span id="staff-score-avg">10.0</span>
-                      <div class="progress2 progress-moved">
-                          <div class="progress-bar2">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <div class="row m-2">
-              <div class="col">
-                  <div>
-                      <span>設施</span>
-                      <span id="facility-score-avg">10.0</span>
-                      <div class="progress2 progress-moved">
-                          <div class="progress-bar2">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-
-              <div class="col">
-                  <div>
-                      <span>性價比</span>
-                      <span id="cost–performance-avg">10.0</span>
-                      <div class="progress2 progress-moved">
-                          <div class="progress-bar2">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-
-              <div class="col">
-                  <div>
-                      <span>住宿地點</span>
-                      <span id="location-score-avg">10.0</span>
-                      <div class="progress2 progress-moved">
-                          <div class="progress-bar2">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-
-          </div>
-          <div class="row m-2">
-              <div class="col">
-                  <div>
-                      <span>免費WIFI</span>
-                      <span id="frre-wifi-avg">10.0</span>
-                      <div class="progress2 progress-moved">
-                          <div class="progress-bar2">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <div class="col"></div>
-              <div class="col"></div>
-          </div>
       </div>
 
   </div>
@@ -112,9 +40,9 @@
                   </span>
               </label>
               <div>
-                  <select class="form-select" aria-label="filter-rate">
-                      <option selected>全部(739)</option>
-                      <option value="1">全部(739)</option>
+                  <select class="form-select" aria-label="filter-rate" (change)="filterByRating($event)">
+                      <option selected>全部{{ totalItems }}</option>
+                      <option value="1">全部{{ totalItems }}</option>
                       <option value="2">超讚:9+(338)</option>
                       <option value="3">很讚:7-9(292)</option>
                       <option value="4">很好:5-7(78)</option>
@@ -130,9 +58,9 @@
                   </span>
               </label>
               <div>
-                  <select class="form-select" aria-label="filter-during">
-                      <option selected>全部(739)</option>
-                      <option value="1">全部(739)</option>
+                  <select class="form-select" aria-label="filter-during" (change)="filterByDate($event)">
+                      <option selected>全部{{ totalItems }}</option>
+                      <option value="1">全部{{ totalItems }}</option>
                       <option value="2">3-5月</option>
                       <option value="3">6-8月</option>
                       <option value="4">9-11月</option>
@@ -147,7 +75,7 @@
                   </span>
               </label>
               <div>
-                  <select class="form-select" aria-label="filter-sort">
+                  <select class="form-select" aria-label="filter-sort" (change)="sortBy($event)">
                       <option selected>最新</option>
                       <option value="1">最新</option>
                       <option value="2">最舊</option>
@@ -162,71 +90,14 @@
   <!--篩選bar-->
   <h5 class="font-sty mt-5">選擇主題以瀏覽相關評語</h5>
   <div class="mt-3">
-      <label data-testid="topic-filter-component">
-          <button type="button" class="btn btn-outline-primary">
+      <label data-testid="topic-filter-component" *ngFor="let topic of ['客房', '地點', '床', '廁所', '安靜', '晚餐', '小孩', '停車']">
+          <button type="button" class="btn btn-outline-primary" (click)="filterByTopic(topic)">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
                   <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"></path>
               </svg>
-              客房
+              {{topic}}
           </button>
       </label>
-      <label data-testid="topic-filter-component">
-          <button type="button" class="btn btn-outline-primary">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"></path>
-              </svg>
-              地點
-          </button>
-      </label>
-      <label data-testid="topic-filter-component">
-          <button type="button" class="btn btn-outline-primary">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"></path>
-              </svg>
-              床
-          </button>
-      </label>
-      <label data-testid="topic-filter-component">
-          <button type="button" class="btn btn-outline-primary">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"></path>
-              </svg>
-              廁所
-          </button>
-      </label>
-      <label data-testid="topic-filter-component">
-          <button type="button" class="btn btn-outline-primary">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"></path>
-              </svg>
-              安靜
-          </button>
-      </label>
-      <label data-testid="topic-filter-component">
-          <button type="button" class="btn btn-outline-primary">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"></path>
-              </svg>
-              晚餐
-          </button>
-      </label>
-      <label data-testid="topic-filter-component">
-          <button type="button" class="btn btn-outline-primary">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"></path>
-              </svg>
-              小孩
-          </button>
-      </label>
-      <label data-testid="topic-filter-component">
-          <button type="button" class="btn btn-outline-primary">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"></path>
-              </svg>
-              停車
-          </button>
-      </label>
-
       <label data-testid="topic-filter-component" (click)="toggleSearch()">
           <button type="button" class="btn btn-outline-primary" id="searchBtnpic" >
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -254,16 +125,18 @@
 <!--評論頁面切換-上 page動態產生-->
 <nav aria-label="Page navigation example">
   <ul class="pagination container d-flex justify-content-center">
-      <li class="page-item">
-          <a class="page-link" href="#" aria-label="Previous">
+      <li class="page-item" [class.disabled]="queryParameters.page <= 1">
+          <a class="page-link" href="#" aria-label="Previous" (click)="prevPage()">
               <span aria-hidden="true">&laquo;</span>
           </a>
       </li>
-      <li class="page-item"><a class="page-link" href="#">1</a></li>
-      <li class="page-item"><a class="page-link" href="#">2</a></li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
-      <li class="page-item">
-          <a class="page-link" href="#" aria-label="Next">
+
+      <li class="page-item" *ngFor="let page of getPageNumbers()" [class.active]="page === queryParameters.page">
+        <a class="page-link" href="#" (click)="setPage(page)">{{page}}</a>
+      </li>
+
+      <li class="page-item" [class.disabled]="queryParameters.page * queryParameters.pageSize >= totalItems">
+          <a class="page-link" href="#" aria-label="Next" (click)="nextPage()">
               <span aria-hidden="true">&raquo;</span>
           </a>
       </li>
@@ -355,20 +228,20 @@
 
 
 <!--評論頁面切換-下 page動態產生-->
-<nav aria-label="Page navigation example ">
-  <ul class="pagination container d-flex justify-content-center p-3">
-      <li class="page-item">
-          <div>
-              <a class="page-link" href="#" aria-label="Previous">
-                  <span aria-hidden="true">&laquo;</span>
-              </a>
-          </div>
+<nav aria-label="Page navigation example">
+  <ul class="pagination container d-flex justify-content-center">
+      <li class="page-item" [class.disabled]="queryParameters.page <= 1">
+          <a class="page-link" href="#" aria-label="Previous" (click)="prevPage()">
+              <span aria-hidden="true">&laquo;</span>
+          </a>
       </li>
-      <li class="page-item"><a class="page-link" href="#">1</a></li>
-      <li class="page-item"><a class="page-link" href="#">2</a></li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
-      <li class="page-item">
-          <a class="page-link" href="#" aria-label="Next">
+
+      <li class="page-item" *ngFor="let page of getPageNumbers()" [class.active]="page === queryParameters.page">
+        <a class="page-link" href="#" (click)="setPage(page)">{{page}}</a>
+      </li>
+
+      <li class="page-item" [class.disabled]="queryParameters.page * queryParameters.pageSize >= totalItems">
+          <a class="page-link" href="#" aria-label="Next" (click)="nextPage()">
               <span aria-hidden="true">&raquo;</span>
           </a>
       </li>
