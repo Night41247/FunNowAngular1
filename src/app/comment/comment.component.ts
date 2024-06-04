@@ -1,6 +1,7 @@
 import { CommentService } from './../service/comment.service';
 import { Component, Input, OnInit } from '@angular/core';
-import { Comment, CommentQueryParameters } from '../model/comment';
+import { CommentQueryParameters } from '../model/comment';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-comment',
@@ -10,13 +11,9 @@ import { Comment, CommentQueryParameters } from '../model/comment';
 
 export class CommentComponent implements OnInit{
 
-  private hotelId = 2;
-
-  @Input()hotelName!: string;
-
-
-
-
+  // hotelId!: number;
+  hotelId=2;
+  hotelName!: string;
 
   //評論
   comments:Comment[] = [];
@@ -28,30 +25,48 @@ export class CommentComponent implements OnInit{
   queryParameters:CommentQueryParameters = new CommentQueryParameters();
   isSearchVisible: boolean = false;
 
-  constructor(private commentService: CommentService ){}
+  constructor(private commentService: CommentService , private route: ActivatedRoute){}
 
   ngOnInit(): void {
-    this.loadComments();
+    const hotelId = this.route.snapshot.paramMap.get('hotelId');
+    if (hotelId) {
+      this.hotelId = +hotelId; // 將 hotelId 轉換為數字類型
+      this.loadComments(this.hotelId);
+    }
   }
 
-  loadComments(): void{
-    this.commentService.getCommentAPI(this.queryParameters).subscribe(data =>{
+
+  loadComments(hotelId: number): void {
+    this.commentService.getComments(hotelId, this.queryParameters.page, this.queryParameters.pageSize, this.queryParameters.search, this.queryParameters.ratingFilter, this.queryParameters.dateFilter)
+      .subscribe(data => {
         this.comments = data.comments;
-        this.totalItems = data.TotalItems;
-        this.averageScores = data.AverageScores;
-        this.totalAverageScore = data.TotalAverageScore;
-    });
-
+        this.hotelName = data.hotelName;
+        this.totalItems = data.totalItems;
+        this.averageScores = data.averageScores;
+        this.totalAverageScore = data.totalAverageScore;
+      });
   }
+
+  // calculateAverageScore(comments: any[]): number {
+  //   let totalScore = 0;
+  //   let count = 0;
+  //   comments.forEach(comment => {
+  //     comment.ratingScores.forEach(score => {
+  //       totalScore += (score.comfortScore + score.cleanlinessScore + score.staffScore + score.facilitiesScore + score.valueScore + score.locationScore + score.freeWifiScore) / 7;
+  //       count++;
+  //     });
+  //   });
+  //   return totalScore / count;
+  // }
 
   searchComments():void{
     this.queryParameters.page = 1;
-    this.loadComments();
+    this.loadComments(this.hotelId);
   }
 
   addComment(newComment:Comment):void{
     this.commentService.postCommentAPI(newComment).subscribe(()=>{
-      this.loadComments();
+      this.loadComments(this.hotelId);
     })
   }
 
@@ -59,7 +74,7 @@ export class CommentComponent implements OnInit{
   nextPage():void{
     if(this.queryParameters.page * this.queryParameters.pageSize < this.totalItems){
       this.queryParameters.page++;
-      this.loadComments();
+      this.loadComments(this.hotelId);
     }
   }
 
@@ -67,49 +82,48 @@ export class CommentComponent implements OnInit{
   prevPage():void{
     if(this.queryParameters.page > 1){
         this.queryParameters.page--;
-        this.loadComments();
+        this.loadComments(this.hotelId);
     }
   }
 
   setPage(page: number): void {
     this.queryParameters.page = page;
-    this.loadComments();
+    this.loadComments(this.hotelId);
   }
 
   toggleSearch() {
     this.isSearchVisible = !this.isSearchVisible;
   }
 
-  filterByRating(event:Event):void{
+  filterByRating(event: Event): void {
     const target = event.target as HTMLSelectElement;
-    const rating = target?.value ? +target.value : 0;
-    this.commentService.filterByRating(rating)
-    .subscribe(comments => {
-      this.comments = comments;
-    });
-    this.loadComments();
+    const ratingFilter = Number(target.value); // 將字串轉換為數字
+    this.queryParameters.ratingFilter = ratingFilter;
+    this.queryParameters.page = 1;
+    this.loadComments(this.hotelId);
   }
 
   //todo 調整日期方法
   filterByDate(event: Event): void {
     const target = event.target as HTMLSelectElement;
-  const dateFilter = target?.value || '';
-  this.commentService.getMonthFilter(dateFilter).subscribe(month => {
-    // 在這裡根據選擇的月份進行評論加載或篩選
-    this.loadComments();
-  });
+    const dateFilter = target.value;
+    this.queryParameters.dateFilter = dateFilter;
+    this.queryParameters.page = 1;
+    this.loadComments(this.hotelId);
   }
 
-  filterByTopic(topic:string):void{
+  filterByTopic(topic: string): void {
     this.queryParameters.search = topic;
-    this.loadComments();
+    this.queryParameters.page = 1;
+    this.loadComments(this.hotelId);
   }
 
-  sortBy(event: Event):void{
+  sortBy(event: Event): void {
     const target = event.target as HTMLSelectElement;
-    const sortOrder = target?.value || 'latest';
+    const sortOrder = target.value;
     this.queryParameters.sortOrder = sortOrder;
-    this.loadComments();
+    this.queryParameters.page = 1; // 重置頁碼為第一頁
+    this.loadComments(this.hotelId);
   }
 
   getPageNumbers(): number[] {

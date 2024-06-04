@@ -4,8 +4,8 @@
   <div>
       <h4 class="mb-3 font-sty">{{hotelName}} 住客評論</h4>
       <span class="comment-cube">{{totalAverageScore.toFixed(1)}}</span>
-      <span>超棒</span>
-      <span>{{ totalItems }}則評論</span>
+      <span>{{ratingFilter}}</span>
+      <span> 共{{ totalItems }}則評論</span>
   </div>
   <hr />
   <!--評分條-->
@@ -24,8 +24,8 @@
                       </div>
                   </div>
               </div>
-      </div>
-
+          </div>
+        </div>
   </div>
 
   <!--篩選列-->
@@ -41,8 +41,8 @@
               </label>
               <div>
                   <select class="form-select" aria-label="filter-rate" (change)="filterByRating($event)">
-                      <option selected>全部{{ totalItems }}</option>
-                      <option value="1">全部{{ totalItems }}</option>
+                      <option selected>全部({{ totalItems }})</option>
+                      <option value="0">全部({{ totalItems }})</option>
                       <option value="2">超讚:9+(338)</option>
                       <option value="3">很讚:7-9(292)</option>
                       <option value="4">很好:5-7(78)</option>
@@ -171,33 +171,7 @@
 </div>
 <hr class="container" />
 
-<!--評論bar(後面要加一個<hr />)-->
 
-<div class="container">
-  <div class="row">
-      <div class="col-4 p-2 ">
-          <div class="py-3">
-              <span class="commentList-left-score me-2">10.0</span>
-              <span class="commentList-left-scoretxt">超棒</span>
-          </div>
-          <div class="fw-bold comment-left-fontsty"><i class="fa-solid fa-user "></i>  WANTING </div>
-          <div><i class="fa-solid fa-suitcase fa-sm"></i> 入住1晚（2023年4月）</div>
-          <div><i class="fa-solid fa-bed fa-sm"></i> 豪華雙人房 - 有浴缸</div>
-          <div><i class="fa-solid fa-people-group fa-sm"></i> 家庭(嬰幼兒隨行)</div>
-      </div>
-      <div class="col-8 commentList-right mt-3 p-4 px-5">
-          <div class="fw-bold fs-5">員工親切，房間乾淨</div>
-          <div class="my-2">帶嬰兒一起出門有很多不方便，早班晚班的櫃檯都很親切的主動詢問及幫忙，房間很漂亮也很乾淨。離第二市場很近吃東西也很方便！</div>
-          <div class="d-flex justify-content-between">
-              <div class="comment-font-color">評論日期：2023年4月16日</div>
-              <div class="comment-font-color text-end">
-                  <a href="report_form.html" class="link">檢舉</a>
-              </div>
-          </div>
-        </div>
-  </div>
-</div>
-<hr class="container" />
 
 <!--評論bar(後面要加一個<hr />每頁最後一個評論不用<hr/>)-->
 

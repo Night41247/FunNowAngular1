@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Comment, CommentQueryParameters } from '../model/comment';
+import { CommentQueryParameters } from '../model/comment';
 
 
 @Injectable({
@@ -10,42 +10,46 @@ import { Comment, CommentQueryParameters } from '../model/comment';
 export class CommentService {
 
 
-private apiUrl = 'https://localhost:7103/api/Comment';
+private apiUrl = 'https://localhost:7103/api/Comment/2/Getcomments?page=1&pageSize=10';
+//  params = {
+//   page: 1,
+//   pageSize: 10,
+//   search: null,
+//   ratingFilter: null, // 這裡設置評分過濾參數
+//   dateFilter: null // 這裡設置日期過濾參數
+// };
 
 constructor(private client:HttpClient) { }
 
-getCommentAPI(paras:CommentQueryParameters): Observable<any>
-{
-  let queryParas = new HttpParams()
-  .set('page', paras.page.toString())
-  .set('pageSize' ,paras.pageSize.toString())
-  .set('ratingFilter', paras.ratingFilter.toString());
-
-  if(paras.search){
-      queryParas = queryParas.set('search',paras.search);
-  }
-  if(paras.dateFilter){
-    queryParas = queryParas.set('dateFilter', paras.dateFilter);
-  }
-
-  return this.client.get<any>(`${this.apiUrl}/CommentFilter`,{params:queryParas})
+getComments(hotelId: number, page: number, pageSize: number, search: string | undefined, ratingFilter: number | null, dateFilter: string | undefined): Observable<any> {
+  const url = `${this.apiUrl}/${hotelId}/Getcomments?page=${page}&pageSize=${pageSize}&search=${search}&ratingFilter=${ratingFilter}&dateFilter=${dateFilter}`;
+  return this.client.get<any>(url);
 }
+// getComments(hotelId: number, page: number = 1, pageSize: number = 10, search: string | null = null, ratingFilter: number | null = null, dateFilter: string | null = null): Observable<any> {
+//   let params = new HttpParams()
+//     .set('hotelId', hotelId.toString())
+//     .set('page', page.toString())
+//     .set('pageSize', pageSize.toString());
 
+
+//   if (search) {
+//     params = params.set('search', search);
+//   }
+//   if (ratingFilter) {
+//     params = params.set('ratingFilter', ratingFilter);
+//   }
+//   if (dateFilter) {
+//     params = params.set('dateFilter', dateFilter);
+//   }
+
+//   return this.client.get<any>(`${this.apiUrl}`, { params });
+// }
 
 
 postCommentAPI(comment: Comment):Observable<any>{
   return this.client.post(this.apiUrl , comment);
 }
 
-filterByRating(ratingFilter: number): Observable<Comment[]> {
-  const params = new HttpParams().set('ratingFilter', ratingFilter.toString());
-  return this.client.get<Comment[]>(`${this.apiUrl}/ApplyRatingFilter`, { params });
-}
 
-getMonthFilter(dateFilter: string): Observable<number> {
-  return this.client.get<number>(`${this.apiUrl}/GetMonthFilter`, {
-    params: { dateFilter }
-  });
-}
 
 }
