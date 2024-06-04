@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { CommentQueryParameters } from '../model/comment';
 
 
@@ -25,6 +25,8 @@ getComments(hotelId: number, page: number, pageSize: number, search: string | un
   const url = `${this.apiUrl}/${hotelId}/Getcomments?page=${page}&pageSize=${pageSize}&search=${search}&ratingFilter=${ratingFilter}&dateFilter=${dateFilter}`;
   return this.client.get<any>(url);
 }
+
+
 // getComments(hotelId: number, page: number = 1, pageSize: number = 10, search: string | null = null, ratingFilter: number | null = null, dateFilter: string | null = null): Observable<any> {
 //   let params = new HttpParams()
 //     .set('hotelId', hotelId.toString())

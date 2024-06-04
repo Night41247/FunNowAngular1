@@ -1,6 +1,6 @@
 import { CommentService } from './../service/comment.service';
 import { Component, Input, OnInit } from '@angular/core';
-import { CommentQueryParameters } from '../model/comment';
+import { CommentQueryParameters, Score } from '../model/comment';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -19,12 +19,24 @@ export class CommentComponent implements OnInit{
   //評論
   comments:Comment[] = [];
   totalItems:number = 0;
-  averageScores: any = {};
+  averageScores: { [key: string]:Score } = {};
   //確定屬性會在使用前初始化，可以使用!非空斷言運算符來告訴TypeScript編譯器
   //或提供默認值  totalAverageScore: number = 0;
   totalAverageScore: number = 0;
   queryParameters:CommentQueryParameters = new CommentQueryParameters();
   isSearchVisible: boolean = false;
+
+   ratingRanges = [
+    { key: 0, label: '全部' },
+    { key: 2, label: '超讚:9+' },
+    { key: 3, label: '很讚:7-9' },
+    { key: 4, label: '很好:5-7' },
+    { key: 5, label: '尚可:3-5' },
+    { key: 6, label: '低於預期:1-3' }
+  ];
+  rateCounts: Map<number, number> = new Map();
+
+
 
   constructor(private commentService: CommentService , private route: ActivatedRoute){}
 
@@ -133,7 +145,23 @@ export class CommentComponent implements OnInit{
   }
 
 
+  getRatingLabel(key: number): string {
+    switch (key) {
+      case 2: return '超讚:9+';
+      case 3: return '很讚:7-9';
+      case 4: return '很好:5-7';
+      case 5: return '尚可:3-5';
+      case 6: return '低於預期:1-3';
+      default: return '全部';
+    }
+  }
 
+  //to do 6.5繼續
+//   const counts = GetRatingCounts(query);
+// this.rateCounts.clear();
+// for (const [key, value] of Object.entries(counts)) {
+//   this.rateCounts.set(Number(key), value);
+// }
 
 
 

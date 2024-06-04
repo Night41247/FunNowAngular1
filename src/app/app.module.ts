@@ -8,10 +8,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { CommentModule } from './comment/comment.module';
 import { CommonModule } from '@angular/common';
+import { DataComponent } from './data/data.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    DataComponent,
   ],
   imports: [
     BrowserModule,

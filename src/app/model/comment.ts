@@ -54,3 +54,8 @@ export class CommentQueryParameters {
   updatedAt: Date = new Date();
 
 }
+
+export interface Score {
+  key: string;
+  value: number;
+}
