@@ -12,8 +12,9 @@ import { ActivatedRoute } from '@angular/router';
 export class CommentComponent implements OnInit{
 
   // hotelId!: number;
-  hotelId=2;
+  hotelId=2; //to do先寫死
   hotelName!: string;
+
 
   //評論
   comments:Comment[] = [];
