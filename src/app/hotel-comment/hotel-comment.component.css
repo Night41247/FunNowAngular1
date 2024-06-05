@@ -1,0 +1,185 @@
+.comment-cube {
+  border-radius: 8px;
+  background-color: #3f62ee;
+  color: white;
+  padding: 8px;
+}
+
+.container {
+  width: 70%;
+}
+
+.font-sty {
+  font-weight: bold;
+}
+/*各項評分條*/
+.grid-container {
+  width: 70%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.grid-item {
+  width: calc(33.33% - 10px);
+  margin-bottom: 20px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+/*進度條 http://www.webkaka.com/tutorial/html/2021/1028198/*/
+.progress2 {
+  padding: 2px;
+  border-radius: 30px;
+  background: #D0D0D0;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px rgba(255, 255, 255, 0.08);
+  width: 90%;
+}
+
+.progress-bar2 {
+  height: 10px;
+  border-radius: 30px;
+  background-image: linear-gradient(to bottom, #005AB5, #0066CC);
+  transition: 0.4s linear;
+  transition-property: width, background-color;
+}
+
+.progress-moved .progress-bar2 {
+  width: 80%;
+  background-color: #0072E3;
+  animation: progressAnimation 1s;
+}
+
+
+
+@keyframes progressAnimation {
+  0% {
+      width: 5%;
+      background-color: #F9BCCA;
+  }
+
+  100% {
+
+      background-color: #EF476F;
+  }
+}
+
+.commentList-right {
+  background-color: #ECF5FF;
+  border-radius: 10px;
+}
+
+.commentList-left-score {
+  font-family: Bahnschrift;
+  color: #0080FF;
+  font-size: 30px;
+}
+
+.commentList-left-scoretxt {
+  font-family: Bahnschrift;
+  color: #0080FF;
+}
+
+.comment-left-fontsty {
+  font-size: 14px;
+}
+
+.comment-font-color {
+  color: #8E8E8E;
+  font-size: 14px;
+}
+
+.dispaly {
+  display: none;
+}
+
+.link {
+  text-decoration: none;
+  font-family: 微軟正黑體;
+  color: #2894FF;
+}
+
+  .link:hover {
+      color: #dc3545;
+  }
+
+.slide-border {
+  border: 1px solid black;
+  border-radius: 15px;
+}
+
+.btncolor {
+  color: aquamarine;
+}
+
+.comment-sm {
+  margin-left: 8%;
+  margin-right: 8%;
+  width: 84%;
+}
+
+.comment-xs {
+  margin-left: 15%;
+  margin-right: 15%;
+  width: 70%;
+  padding-left: 10%;
+  padding-right: 10%;
+  font-size: 11px;
+}
+
+.font-sty2 {
+  font-size: 14px;
+  color: #0E46A3;
+  font-weight: bold;
+}
+
+.font-sty3 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.tag {
+  font-size: 12px;
+  background-color: #e4f8e1;
+  color: #45a2ae;
+  margin: 2px;
+  padding: 2px;
+}
+
+.comment-bubble {
+  width: 285px;
+  height: 210px;
+  border: 1px solid #45a2ae;
+  border-radius: 8px;
+}
+
+.comment-sm-border {
+  border: 1px solid #45a2ae;
+  border-radius: 8px;
+  padding: 5px;
+  margin-top: 5px;
+}
+
+.indicatorsp {
+  bottom: -40px;
+}
+.rating-item {
+  width: 300px;
+  height: 350px;
+  font-size: 11px;
+  position: relative;
+  /*top: 50px;*/
+  left: 950px;
+  background-color: #FFFFFF;
+  display: none;
+
+}
+.tooltip {
+
+  position: absolute;
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+.height {height:10px;
+}
