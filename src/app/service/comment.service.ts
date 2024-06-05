@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { CommentQueryParameters } from '../model/comment';
+
 
 
 @Injectable({
@@ -9,8 +9,10 @@ import { CommentQueryParameters } from '../model/comment';
 })
 export class CommentService {
 
+  constructor(private http:HttpClient) { }
 
-private apiUrl = 'https://localhost:7103/api/Comment/2/Getcomments?page=1&pageSize=10';
+
+private apiUrl = 'https://localhost:7103/api/Comment';
 //  params = {
 //   page: 1,
 //   pageSize: 10,
@@ -19,14 +21,29 @@ private apiUrl = 'https://localhost:7103/api/Comment/2/Getcomments?page=1&pageSi
 //   dateFilter: null // 這裡設置日期過濾參數
 // };
 
-constructor(private client:HttpClient) { }
 
-getComments(hotelId: number, page: number, pageSize: number, search: string | undefined, ratingFilter: number | null, dateFilter: string | undefined): Observable<any> {
-  const url = `${this.apiUrl}/${hotelId}/Getcomments?page=${page}&pageSize=${pageSize}&search=${search}&ratingFilter=${ratingFilter}&dateFilter=${dateFilter}`;
-  return this.client.get<any>(url);
+
+getComments(hotelId: number, page: number, pageSize: number, search?: string, ratingFilter?: number, dateFilter?: string): Observable<any> {
+  let params = new HttpParams()
+    .set('page', page.toString())
+    .set('pageSize', pageSize.toString());
+
+  if (search) {
+    params = params.set('search', search);
+  }
+  if (ratingFilter) {
+    params = params.set('ratingFilter', ratingFilter.toString());
+  }
+  if (dateFilter) {
+    params = params.set('dateFilter', dateFilter);
+  }
+
+  return this.http.get<any>(`${this.apiUrl}/${hotelId}/GetComments`, { params });
 }
 
-
+getCommentCounts(): Observable<any> {
+  return this.http.get<any>(`${this.apiUrl}/commentCounts`);
+}
 // getComments(hotelId: number, page: number = 1, pageSize: number = 10, search: string | null = null, ratingFilter: number | null = null, dateFilter: string | null = null): Observable<any> {
 //   let params = new HttpParams()
 //     .set('hotelId', hotelId.toString())
@@ -49,7 +66,7 @@ getComments(hotelId: number, page: number, pageSize: number, search: string | un
 
 
 postCommentAPI(comment: Comment):Observable<any>{
-  return this.client.post(this.apiUrl , comment);
+  return this.http.post(this.apiUrl , comment);
 }
 
 

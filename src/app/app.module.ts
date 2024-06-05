@@ -8,12 +8,17 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { CommentModule } from './comment/comment.module';
 import { CommonModule } from '@angular/common';
-import { DataComponent } from './data/data.component';
+import { RouterModule, Routes } from '@angular/router';
 
+const routes: Routes = [
+  { path: '評論', component: CommentComponent },
+  // { path: 'about', component: AboutComponent },
+  // { path: 'contact', component: ContactComponent},
+  // ...
+];
 @NgModule({
   declarations: [
     AppComponent,
-    DataComponent,
   ],
   imports: [
     BrowserModule,
@@ -22,7 +27,8 @@ import { DataComponent } from './data/data.component';
     CommentModule,
     FormsModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterModule.forRoot(routes)
   ],
   providers: [],
   bootstrap: [AppComponent]

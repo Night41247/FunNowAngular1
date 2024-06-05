@@ -14,12 +14,17 @@ export class CommentComponent implements OnInit{
   // hotelId!: number;
   hotelId=2; //to do先寫死
   hotelName!: string;
-
+  statistics: any;
+  page: number = 1;
+  pageSize: number = 10;
+  search: string = '';
+  ratingFilter: number | null = null;
+  dateFilter: string = '';
 
   //評論
   comments:Comment[] = [];
   totalItems:number = 0;
-  averageScores: { [key: string]:Score } = {};
+  averageScores: any = {};
   //確定屬性會在使用前初始化，可以使用!非空斷言運算符來告訴TypeScript編譯器
   //或提供默認值  totalAverageScore: number = 0;
   totalAverageScore: number = 0;
@@ -37,15 +42,16 @@ export class CommentComponent implements OnInit{
   rateCounts: Map<number, number> = new Map();
 
 
-
   constructor(private commentService: CommentService , private route: ActivatedRoute){}
+
 
   ngOnInit(): void {
     const hotelId = this.route.snapshot.paramMap.get('hotelId');
     if (hotelId) {
       this.hotelId = +hotelId; // 將 hotelId 轉換為數字類型
-      this.loadComments(this.hotelId);
     }
+    this.loadComments(this.hotelId);
+    this.loadCommentCounts();
   }
 
 
@@ -55,9 +61,32 @@ export class CommentComponent implements OnInit{
         this.comments = data.comments;
         this.hotelName = data.hotelName;
         this.totalItems = data.totalItems;
-        this.averageScores = data.averageScores;
+        this.averageScores = [
+          { key: '舒適程度', value: data.averageScore.comfortScore },
+          { key: '清潔程度', value: data.averageScore.cleanlinessScore },
+          { key: '員工素質', value: data.averageScore.staffScore },
+          { key: '設施', value: data.averageScore.facilitiesScore },
+          { key: '性價比', value: data.averageScore.valueScore },
+          { key: '住宿地點', value: data.averageScore.locationScore },
+          { key: '免費WIFI', value: data.averageScore.freeWifiScore }
+        ];
         this.totalAverageScore = data.totalAverageScore;
+        this.statistics = data.Statistics;
+        console.log('Average Scores: ', this.averageScores);
       });
+  }
+
+  loadCommentCounts(): void {
+    this.commentService.getCommentCounts().subscribe(data => {
+      this.totalItems = data.total;
+      this.rateCounts = new Map<number, number>(data.counts);
+    });
+  }
+
+  filterByRating(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    const ratingFilter = Number(target.value);
+    this.loadComments(ratingFilter);
   }
 
   // calculateAverageScore(comments: any[]): number {
@@ -108,13 +137,13 @@ export class CommentComponent implements OnInit{
     this.isSearchVisible = !this.isSearchVisible;
   }
 
-  filterByRating(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const ratingFilter = Number(target.value); // 將字串轉換為數字
-    this.queryParameters.ratingFilter = ratingFilter;
-    this.queryParameters.page = 1;
-    this.loadComments(this.hotelId);
-  }
+  // filterByRating(event: Event): void {
+  //   const target = event.target as HTMLSelectElement;
+  //   const ratingFilter = Number(target.value); // 將字串轉換為數字
+  //   this.queryParameters.ratingFilter = ratingFilter;
+  //   this.queryParameters.page = 1;
+  //   this.loadComments(this.hotelId);
+  // }
 
   //todo 調整日期方法
   filterByDate(event: Event): void {
@@ -145,16 +174,7 @@ export class CommentComponent implements OnInit{
   }
 
 
-  getRatingLabel(key: number): string {
-    switch (key) {
-      case 2: return '超讚:9+';
-      case 3: return '很讚:7-9';
-      case 4: return '很好:5-7';
-      case 5: return '尚可:3-5';
-      case 6: return '低於預期:1-3';
-      default: return '全部';
-    }
-  }
+
 
   //to do 6.5繼續
 //   const counts = GetRatingCounts(query);
