@@ -9,10 +9,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { CommentModule } from './comment/comment.module';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
+import { CommentListComponent } from './comment-list/comment-list.component';
 
 const routes: Routes = [
-  { path: '評論', component: CommentComponent },
-  // { path: 'about', component: AboutComponent },
+  { path: 'hotel_comment', component: CommentComponent },
+  { path: 'comment_list', component:  CommentListComponent},
   // { path: 'contact', component: ContactComponent},
   // ...
 ];
