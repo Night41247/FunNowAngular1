@@ -37,12 +37,23 @@ export class CommentComponent implements OnInit{
 
   comments: any[] = [];
   totalItems: number = 0;
-  averageScores: any = {};
+  averageScores: any[] = [];
   totalAverageScore: number = 0;
   isSearchVisible: boolean = false;
+  totalCommentCount: number = 0;
 
   rateCounts: Map<number, number> = new Map();
   monthCounts: Map<string, number> = new Map();
+
+  scoreKeyMap: { [key: string]: string } = {
+    cleanlinessScore: '清潔度',
+    comfortScore: '舒適度',
+    facilitiesScore: '設施',
+    freeWifiScore: '免費WiFi',
+    locationScore: '地點',
+    staffScore: '員工',
+    valueScore: '性價比'
+  };
 
   constructor(private commentService: CommentService , private route: ActivatedRoute){}
 
@@ -73,8 +84,8 @@ export class CommentComponent implements OnInit{
     this.commentService.getComments(this.hotelId, this.page, this.pageSize, this.search, ratingFilter,dateFilter, this.sortOrder)
       .subscribe(data => {
         this.comments = data.Comments;
-        this.hotelName = data.HotelName;
-        this.totalItems = data.TotalItems;
+        this.hotelName = data.hotelName;
+        this.totalItems = data.totalItems;
         console.log('Comments Data:', data);
       });
   }
@@ -82,9 +93,12 @@ export class CommentComponent implements OnInit{
   loadAverageScore(): void {
     this.commentService.getAverageScores(this.hotelId).subscribe(
       data => {
-        this.averageScores = data.averageScore;
+        this.averageScores = Object.entries(data.averageScore).map(([key, value]) => ({
+          key: this.scoreKeyMap[key] || key, // 將key轉換為中文名稱
+          value
+        }));
         this.totalAverageScore = data.totalAverageScore;
-        this.totalItems = data.totalItems; // 確保獲取評論總數
+
         console.log('AVG Data:', data);
       },
       error => {
@@ -96,33 +110,32 @@ export class CommentComponent implements OnInit{
  // 加載評論數量
  loadCommentCounts(): void {
   this.commentService.getCommentCounts().subscribe(data => {
-    this.totalItems = data.total;
+    console.log('Received Comment Counts:', data);
 
-    // 更新評級範圍的計數
-    for (const [key, value] of Object.entries(data.RatingCommentDetails)) {
-      const ratingDetail = value as { Count: number; Comments: any[] };
-      this.rateCounts.set(parseInt(key, 10), ratingDetail.Count);
-    }
+    const ratingCommentDetailsArray = Object.entries(data.ratingCommentDetails);
+    ratingCommentDetailsArray.forEach(([rating, detail]) => {
+      const ratingDetail = detail as { count: number; comments: any[] };
+      this.rateCounts.set(parseInt(rating, 10), ratingDetail.count);
+    });
+
+
+    console.log('Updated Rating Counts:', Array.from(this.rateCounts.entries()));
 
     // 更新月份範圍的計數
     for (const [key, value] of Object.entries(data.DateCommentDetails)) {
       const dateDetail = value as { Count: number; Comments: any[] };
       this.monthCounts.set(key, dateDetail.Count);
+
     }
+    console.log('Updated Month Counts:', Array.from(this.monthCounts.entries()));
 
     // 構建月份範圍的選項
-    this.monthRanges = Object.keys(data.DateCommentDetails).map(key => ({
-      key,
-      label: key
-    }));
+    this.monthRanges = Object.keys(data.DateCommentDetails).map(key => ({ key, label: key }));
+
   });
 }
 
-
-
-
-filterByRating(rating: number | null): void {
-  this.ratingFilter = rating;
+filterByRating(event: any): void {
   this.loadComments();
 }
 

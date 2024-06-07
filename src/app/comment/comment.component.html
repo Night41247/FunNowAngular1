@@ -4,7 +4,7 @@
 <div class="container mt-5">
   <!-- 飯店名稱及總分 -->
   <div>
-    <h4 class="mb-3 font-sty">飯店名稱{{hotelName}} 住客評論</h4>
+    <h4 class="mb-3 font-sty">{{hotelName}} 住客評論</h4>
     <span class="comment-cube">{{totalAverageScore | number:'1.1-1'}}</span>
     <span>共{{totalItems}}則評論</span>
 
@@ -19,7 +19,7 @@
           <div class="col-4" *ngFor="let score of averageScores">
             <div>
               <span>{{score.key}}</span>
-              <span id="comfort-score-avg">{{score.value.toFixed(1)}}</span>
+              <span id="comfort-score-avg"> {{score.value.toFixed(1)}}</span>
               <div class="progress2 progress-moved">
                 <div class="progress-bar2" [style.width.%]="score.value * 10"></div>
               </div>
@@ -30,24 +30,26 @@
     </div>
 
    <!-- 篩選條件 -->
-   <!-- <hr class="mt-5" />
+   <hr class="mt-5" />
    <h5 class="font-sty">篩選條件</h5>
    <div class="container">
-     <div class="row"> -->
+     <div class="row">
        <!-- 評分篩選 -->
-       <!-- <div class="col">
+       <div class="col">
          <label><span>評分</span></label>
          <div>
           <select class="form-select" aria-label="filter-rate" [(ngModel)]="ratingFilter" (ngModelChange)="filterByRating($event)">
             <option [ngValue]="null" selected>全部({{ totalItems }})</option>
-            <option *ngFor="let range of ratingRanges" [ngValue]="range.key">
-              {{ range.label }}: ({{ rateCounts.get(range.key) || 0 }})
-            </option>
+            <option >超讚:9+ ({{rateCounts.get(2)}})</option>
+            <option >很讚:7-9 ({{rateCounts.get(3)}})</option>
+            <option >很好:5-7 ({{rateCounts.get(4)}})</option>
+            <option >尚可:3-5 ({{rateCounts.get(5)}})</option>
+            <option >低於預期:1-3 ({{rateCounts.get(6)}})</option>
           </select>
          </div>
-       </div> -->
+       </div>
        <!-- 住宿期間篩選 -->
-       <!-- <div class="col">
+       <div class="col">
          <label><span>住宿期間</span></label>
          <div>
            <select class="form-select" aria-label="filter-during"  [(ngModel)]="dateFilter" (ngModelChange)="filterByDate($event)">
@@ -57,9 +59,9 @@
              </option>
            </select>
          </div>
-       </div> -->
+       </div>
        <!-- 排序依據篩選 -->
-       <!-- <div class="col">
+       <div class="col">
          <label><span>排序依據</span></label>
          <div>
            <select class="form-select" aria-label="filter-sort" (change)="sortBy($event)">
@@ -71,10 +73,10 @@
          </div>
        </div>
      </div>
-   </div> -->
+   </div>
 
   <!-- 主題篩選 -->
-  <!-- <h5 class="font-sty mt-5">選擇主題以瀏覽相關評語</h5>
+  <h5 class="font-sty mt-5">選擇主題以瀏覽相關評語</h5>
   <div class="mt-3">
     <label data-testid="topic-filter-component" *ngFor="let topic of ['客房', '地點', '床', '廁所', '安靜', '晚餐', '小孩', '停車']">
       <button type="button" class="btn btn-outline-primary" (click)="filterByTopic(topic)">
@@ -98,7 +100,7 @@
       <input *ngIf="isSearchVisible" type="button" class="btn btn-outline-primary" id="searchBtn" value="搜尋">
     </div>
   </div>
-</div> -->
+</div>
 
 
 
@@ -106,7 +108,7 @@
 
 
 <!-- 分頁導航 -->
-<!-- <nav aria-label="Page navigation example">
+<nav aria-label="Page navigation example">
   <ul class="pagination container d-flex justify-content-center">
     <li class="page-item" [class.disabled]="page <= 1">
       <a class="page-link" href="#" aria-label="Previous" (click)="prevPage()">
@@ -122,10 +124,10 @@
       </a>
     </li>
   </ul>
-</nav> -->
+</nav>
 
 <!-- 評論bar(後面要加一個<hr />) -->
-<!--
+
 <div class="container">
   <div class="row">
       <div class="col-4 p-2 ">
@@ -150,12 +152,12 @@
       </div>
   </div>
 </div>
-<hr class="container" /> -->
+<hr class="container" />
 
 
 
 <!-- 評論列表 -->
-<!-- <div *ngFor="let comment of comments">
+<div *ngFor="let comment of comments">
   <div class="container">
     <div class="row">
       <div class="col-4 p-2">
@@ -181,10 +183,10 @@
     </div>
   </div>
   <hr *ngIf="(comment)" class="container" />
-</div> -->
+</div>
 
 <!-- 分頁導航 -->
-<!-- <nav aria-label="Page navigation example">
+<nav aria-label="Page navigation example">
   <ul class="pagination container d-flex justify-content-center">
     <li class="page-item" [class.disabled]="page <= 1">
       <a class="page-link" href="#" aria-label="Previous" (click)="prevPage()">
@@ -200,4 +202,4 @@
       </a>
     </li>
   </ul>
-</nav> -->
+</nav>

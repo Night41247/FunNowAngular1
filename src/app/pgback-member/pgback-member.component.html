@@ -1,0 +1,161 @@
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark gradient-custom">
+  <!-- Container wrapper -->
+  <div class="container-fluid">
+    <!-- Navbar brand -->
+    <a class="navbar-brand" href="#">FunNow</a>
+
+    <!-- Toggle button -->
+    <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="fas fa-bars text-light"></i>
+    </button>
+
+    <!-- Collapsible wrapper -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <!-- Left links -->
+      <ul class="navbar-nav me-auto d-flex flex-row mt-3 mt-lg-0">
+        <li class="nav-item text-center mx-2 mx-lg-1">
+          <a class="nav-link" href="#!">
+            <div>
+              <i class="fa-solid fa-user mb-1"></i>
+              <span class="badge rounded-pill badge-notification bg-dark"></span>
+            </div>
+            房客
+          </a>
+        </li>
+        <li class="nav-item text-center mx-2 mx-lg-1">
+          <a class="nav-link" href="#!">
+            <div>
+              <i class="fa-solid fa-house mb-1"></i>
+              <span class="badge rounded-pill badge-notification bg-dark">2</span>
+            </div>
+            房東
+          </a>
+        </li>
+        <li class="nav-item text-center mx-2 mx-lg-1">
+          <a class="nav-link" href="#!">
+            <div>
+              <i class="fa-solid fa-face-smile mb-1"></i>
+              <span class="badge rounded-pill badge-notification bg-dark">11</span>
+            </div>
+            評論
+          </a>
+        </li>
+        <li class="nav-item text-center mx-2 mx-lg-1">
+          <a class="nav-link" href="#!">
+            <div>
+              <i class="fa-solid fa-comment mb-1"></i>
+              <span class="badge rounded-pill badge-notification bg-dark">1</span>
+            </div>
+            訊息
+          </a>
+        </li>
+        <li class="nav-item text-center mx-2 mx-lg-1">
+          <a class="nav-link" href="#!">
+            <div>
+              <i class="fa-solid fa-chart-line mb-1"></i>
+              <span class="badge rounded-pill badge-notification bg-dark"></span>
+            </div>
+            數據分析
+          </a>
+        </li>
+      </ul>
+      <!-- Left links -->
+    </div>
+    <!-- Collapsible wrapper -->
+  </div>
+  <!-- Container wrapper -->
+</nav>
+<!-- Navbar -->
+
+<div class="container mt-5">
+  <h3>房客管理</h3>
+</div>
+
+<div class="container mt-5" style="display: flex; justify-content: space-between; align-items: center;">
+  <!--篩選紐-->
+  <div style="display: flex; align-items: center;">
+    <button type="button" class="btn btn-outline-primary" (click)="showAllMember()">全部</button>
+    <button type="button" class="btn btn-outline-primary" (click)="showNormalMember()">正常</button>
+    <button type="button" class="btn btn-outline-primary" (click)="showBlockedMember()">封鎖中</button>
+  </div>
+  <!--排序下拉選單-->
+  <div style="display: flex; align-items: center;">
+    <select (change)="onSortChange($event)" [value]="selectedSortOption" class="form-select"
+      aria-label="Default select example" style="width: auto; margin-right: 10px;">
+      <option value="nameDefault">依姓名排序</option>
+      <option value="nameASC">A-Z升冪</option>
+      <option value="nameDESC">Z-A降冪</option>
+    </select>
+    <!--搜尋欄-->
+    <div style="display: flex; align-items: center;">
+      <input [(ngModel)]="searchKeyword" (keyup)="onKeyUp($event)" type="text" class="form-control dispaly"
+        placeholder="請輸入...">
+      <input (click)="showMemberContainsKeyword()" type="button" class="btn btn-outline-primary dispaly" value="搜尋">
+    </div>
+  </div>
+</div>
+
+
+<div class="container mt-5" style="display: flex; justify-content: space-between; align-items: center;">
+  <!--分頁紐-->
+  <nav aria-label="Page navigation example" style="display: flex; align-items: center;">
+    <ul class="pagination">
+      <li class="page-item" [class.disabled]="searchPageNumber === 1">
+        <a class="page-link" aria-label="Previous" (click)="onPageChange(searchPageNumber - 1)">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li *ngFor="let page of getPagesArray()" class="page-item" [class.active]="searchPageNumber === page">
+        <a class="page-link" (click)="onPageChange(page)">{{ page }}</a>
+      </li>
+      <li class="page-item" [class.disabled]="searchPageNumber === totalPages">
+        <a class="page-link" aria-label="Next" (click)="onPageChange(searchPageNumber + 1)">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  <div style="display: flex; align-items: center; margin-left: auto;">
+  <!--共幾筆資料-->
+  <div style="display: flex; align-items: center;">
+    <span>共{{totalRecords}}筆資料</span>
+  </div>
+  <div style="display: flex; align-items: center;">
+    <!--一頁幾筆下拉選單-->
+    <!-- <select (change)="onSelectPagingChange($event)" [value]="selectedSortOption" class="form-select" aria-label="Default select example">
+      <option value="pagingTen">每頁顯示</option>
+      <option value="pagingFive">5筆資料</option>
+      <option value="pagingTen">10筆資料</option>
+    </select> -->
+  </div>
+  </div>
+</div>
+
+<!--資料表格-->
+<div class="container mt-5">
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>序號</th>
+        <th>全名</th>
+        <th>Email</th>
+        <th>電話</th>
+        <th>狀態</th>
+        <th>動作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let member of arrayMember; let i = index">
+        <td>{{ i+1 }}</td>
+        <td>{{ member.fullName }}</td>
+        <td>{{ member.email }}</td>
+        <td>{{ member.phone }}</td>
+        <td [ngStyle]="{'color': setRoleColor(member.roleName)}">{{ member.roleName }}</td>
+        <td><button (click)="popConfirmMsg(member)" type="button" class="btn btn-warning">修改狀態</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
