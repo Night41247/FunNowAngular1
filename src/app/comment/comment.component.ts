@@ -57,128 +57,142 @@ export class CommentComponent implements OnInit{
     this.loadMonthRanges();
   }
 
+
   loadMonthRanges(): void {
     this.commentService.getMonthRanges().subscribe(ranges => {
       this.monthRanges = ranges;
     });
   }
-   // 加載評論
-loadComments(): void {
-  const ratingFilter = this.ratingFilter !== null ? this.ratingFilter : undefined;
-  this.commentService.getComments(this.hotelId, this.page, this.pageSize, this.search, ratingFilter, this.dateFilter, this.sortOrder)
-    .subscribe(data => {
-      this.comments = data.comments;
-      this.hotelName = data.hotelName;
-      this.totalItems = data.totalItems;
-      this.averageScores = data.averageScore;
-      this.totalAverageScore = data.totalAverageScore;
-      this.statistics = data.Statistics;
-    });
-}
 
- // 加載評論數量
- loadCommentCounts(): void {
-  this.commentService.getCommentCounts(this.dateFilter).subscribe(data => {
+
+
+  // 加載評論
+  loadComments(): void {
+    this.commentService.getComments(this.hotelId, this.page, this.pageSize, this.search)
+      .subscribe(data => {
+        this.comments = data.Comments;
+        this.hotelName = data.HotelName;
+        this.totalItems = data.TotalItems;
+        this.averageScores = data.AverageScore;
+        this.totalAverageScore = data.TotalAverageScore;
+      });
+  }
+
+// 加載評論數量
+loadCommentCounts(): void {
+  this.commentService.getCommentCounts().subscribe(data => {
     this.totalItems = data.total;
+
     // 更新評級範圍的計數
-    for (const [key, value] of Object.entries(data.counts)) {
-      this.rateCounts.set(parseInt(key, 10), value as number);
+    for (const [key, value] of Object.entries(data.RatingCommentDetails)) {
+      const ratingDetail = value as { Count: number; Comments: any[] };
+      this.rateCounts.set(parseInt(key, 10), ratingDetail.Count);
+    }
+
+    // 更新月份範圍的計數
+    for (const [key, value] of Object.entries(data.DateCommentDetails)) {
+      const dateDetail = value as { Count: number; Comments: any[] };
+      this.monthCounts.set(key, dateDetail.Count);
     }
   });
-
-  this.commentService.getMonthCounts().subscribe(counts => {
-    this.monthCounts = counts;
-  });
 }
 
-  // 根據評分篩選評論
-  filterByRating(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    this.ratingFilter = Number(target.value);
-    this.page = 1; // 重置頁碼為第一頁
-    this.loadComments();
-  }
-
-
-
-   // 搜索評論
-   searchComments(): void {
-    this.page = 1;
-    this.loadComments();
-  }
-
-   // 添加評論
-  addComment(newComment: Comment): void {
-    this.commentService.postCommentAPI(newComment).subscribe(() => {
-      this.loadComments();
-    });
-  }
-
-   // 切換到下一頁
-   nextPage(): void {
-    if (this.page * this.pageSize < this.totalItems) {
-      this.page++;
+    // 根據評分篩選評論
+    filterByRating(event: Event): void {
+      const target = event.target as HTMLSelectElement;
+      this.ratingFilter = Number(target.value);
+      this.page = 1; // 重置頁碼為第一頁
       this.loadComments();
     }
-  }
 
-   // 切換到上一頁
-   prevPage(): void {
-    if (this.page > 1) {
-      this.page--;
+    // 搜索評論
+    searchComments(): void {
+      this.page = 1;
       this.loadComments();
     }
+
+    // 添加評論
+    addComment(newComment: any): void {
+      this.commentService.postCommentAPI(newComment).subscribe(() => {
+        this.loadComments();
+      });
+    }
+
+    // 切換到下一頁
+    nextPage(): void {
+      if (this.page * this.pageSize < this.totalItems) {
+        this.page++;
+        this.loadComments();
+      }
+    }
+
+    // 切換到上一頁
+    prevPage(): void {
+      if (this.page > 1) {
+        this.page--;
+        this.loadComments();
+      }
+    }
+
+    // 設定當前頁碼
+    setPage(page: number): void {
+      this.page = page;
+      this.loadComments();
+    }
+
+    // 顯示或隱藏搜索欄
+    toggleSearch(): void {
+      this.isSearchVisible = !this.isSearchVisible;
+    }
+
+    // 根據日期篩選評論
+    filterByDate(event: Event): void {
+      const target = event.target as HTMLSelectElement;
+      this.dateFilter = target.value;
+      this.page = 1; // 重置頁碼為第一頁
+      this.loadComments();
+      this.loadCommentCounts();
+      this.updateMonthCounts();
+    }
+
+    updateMonthCounts(): void {
+      this.commentService.getMonthCounts().subscribe(counts => {
+        this.monthCounts = counts;
+        this.totalItems = Array.from(counts.values()).reduce((sum, count) => sum + count, 0);
+      });
+    }
+
+    // 根據主題篩選評論
+    filterByTopic(topic: string): void {
+      this.search = topic;
+      this.page = 1;
+      this.loadComments();
+    }
+
+    // 根據排序方式篩選評論
+    sortBy(event: Event): void {
+      const target = event.target as HTMLSelectElement;
+      this.sortOrder = target.value;
+      this.page = 1; // 重置頁碼為第一頁
+      this.loadComments();
+    }
+
+    // 獲取所有頁碼數
+    getPageNumbers(): number[] {
+      const totalPages = Math.ceil(this.totalItems / this.pageSize);
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+
+
+
+
+
+
+
+
+
   }
 
-   // 設定當前頁碼
-   setPage(page: number): void {
-    this.page = page;
-    this.loadComments();
-  }
-
-   // 顯示或隱藏搜索欄
-   toggleSearch(): void {
-    this.isSearchVisible = !this.isSearchVisible;
-  }
-
-   // 根據日期篩選評論
-   filterByDate(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    this.dateFilter = target.value;
-    this.page = 1; // 重置頁碼為第一頁
-    this.loadComments();
-    this.loadCommentCounts();
-    this.updateMonthCounts();
-  }
-
-  updateMonthCounts(): void {
-    this.commentService.getMonthCounts().subscribe(counts => {
-      this.monthCounts = counts;
-      this.totalItems = Array.from(counts.values()).reduce((sum, count) => sum + count, 0);
-    });
-  }
-
-
-   // 根據主題篩選評論
-   filterByTopic(topic: string): void {
-    this.search = topic;
-    this.page = 1;
-    this.loadComments();
-  }
-
-  // 根據排序方式篩選評論
-  sortBy(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    this.sortOrder = target.value;
-    this.page = 1; // 重置頁碼為第一頁
-    this.loadComments();
-  }
-
- // 獲取所有頁碼數
- getPageNumbers(): number[] {
-  const totalPages = Math.ceil(this.totalItems / this.pageSize);
-  return Array.from({ length: totalPages }, (_, i) => i + 1);
-}
 
 
 
@@ -188,4 +202,3 @@ loadComments(): void {
 
 
 
-}
