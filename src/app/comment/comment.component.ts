@@ -26,16 +26,16 @@ export class CommentComponent implements OnInit{
   ];
 
   hotelId = 2; // TODO: 測試時寫死
-  hotelName!: string;
+  hotelName!: string; // 使用非空斷言操作符
   statistics: any;
   page: number = 1;
   pageSize: number = 10;
   search: string = '';
   ratingFilter: number | null = null;
-  dateFilter: string = '';
+  dateFilter: string | null = null;
   sortOrder: string = 'newest'; // 預設排序為最新
 
-  comments: Comment[] = [];
+  comments: any[] = [];
   totalItems: number = 0;
   averageScores: any = {};
   totalAverageScore: number = 0;
@@ -54,32 +54,47 @@ export class CommentComponent implements OnInit{
     }
     this.loadComments();
     this.loadCommentCounts();
-    this.loadMonthRanges();
+    this.loadAverageScore();
   }
 
 
-  loadMonthRanges(): void {
-    this.commentService.getMonthRanges().subscribe(ranges => {
-      this.monthRanges = ranges;
-    });
-  }
+  // loadMonthRanges(): void {
+  //   this.commentService.getMonthRanges().subscribe(ranges => {
+  //     this.monthRanges = ranges;
+  //   });
+  // }
 
 
 
   // 加載評論
   loadComments(): void {
-    this.commentService.getComments(this.hotelId, this.page, this.pageSize, this.search)
+    const ratingFilter = this.ratingFilter !== null ? this.ratingFilter : undefined;
+    const dateFilter = this.dateFilter !== null ? this.dateFilter : undefined;
+    this.commentService.getComments(this.hotelId, this.page, this.pageSize, this.search, ratingFilter,dateFilter, this.sortOrder)
       .subscribe(data => {
         this.comments = data.Comments;
         this.hotelName = data.HotelName;
         this.totalItems = data.TotalItems;
-        this.averageScores = data.AverageScore;
-        this.totalAverageScore = data.TotalAverageScore;
+        console.log('Comments Data:', data);
       });
   }
 
-// 加載評論數量
-loadCommentCounts(): void {
+  loadAverageScore(): void {
+    this.commentService.getAverageScores(this.hotelId).subscribe(
+      data => {
+        this.averageScores = data.averageScore;
+        this.totalAverageScore = data.totalAverageScore;
+        this.totalItems = data.totalItems; // 確保獲取評論總數
+        console.log('AVG Data:', data);
+      },
+      error => {
+        console.error('Error loading average scores:', error);
+      }
+    );
+  }
+
+ // 加載評論數量
+ loadCommentCounts(): void {
   this.commentService.getCommentCounts().subscribe(data => {
     this.totalItems = data.total;
 
@@ -94,16 +109,28 @@ loadCommentCounts(): void {
       const dateDetail = value as { Count: number; Comments: any[] };
       this.monthCounts.set(key, dateDetail.Count);
     }
+
+    // 構建月份範圍的選項
+    this.monthRanges = Object.keys(data.DateCommentDetails).map(key => ({
+      key,
+      label: key
+    }));
   });
 }
 
-    // 根據評分篩選評論
-    filterByRating(event: Event): void {
-      const target = event.target as HTMLSelectElement;
-      this.ratingFilter = Number(target.value);
-      this.page = 1; // 重置頁碼為第一頁
-      this.loadComments();
-    }
+
+
+
+filterByRating(rating: number | null): void {
+  this.ratingFilter = rating;
+  this.loadComments();
+}
+
+filterByDate(date: string | null): void {
+  this.dateFilter = date;
+  this.loadComments();
+}
+
 
     // 搜索評論
     searchComments(): void {
@@ -145,22 +172,8 @@ loadCommentCounts(): void {
       this.isSearchVisible = !this.isSearchVisible;
     }
 
-    // 根據日期篩選評論
-    filterByDate(event: Event): void {
-      const target = event.target as HTMLSelectElement;
-      this.dateFilter = target.value;
-      this.page = 1; // 重置頁碼為第一頁
-      this.loadComments();
-      this.loadCommentCounts();
-      this.updateMonthCounts();
-    }
 
-    updateMonthCounts(): void {
-      this.commentService.getMonthCounts().subscribe(counts => {
-        this.monthCounts = counts;
-        this.totalItems = Array.from(counts.values()).reduce((sum, count) => sum + count, 0);
-      });
-    }
+
 
     // 根據主題篩選評論
     filterByTopic(topic: string): void {

@@ -4,13 +4,14 @@
 <div class="container mt-5">
   <!-- 飯店名稱及總分 -->
   <div>
-    <h4 class="mb-3 font-sty">{{hotelName}} 住客評論</h4>
-    <span class="comment-cube">{{totalAverageScore.toFixed(1)}}</span>
+    <h4 class="mb-3 font-sty">飯店名稱{{hotelName}} 住客評論</h4>
+    <span class="comment-cube">{{totalAverageScore | number:'1.1-1'}}</span>
     <span>共{{totalItems}}則評論</span>
+
   </div>
   <hr />
-
-    <!-- 各項目評分 -->
+<!--
+    各項目評分 -->
     <div>
       <div class="container">
         <h6 class="m-2 p-3">各項目評分：</h6>
@@ -29,36 +30,36 @@
     </div>
 
    <!-- 篩選條件 -->
-   <hr class="mt-5" />
+   <!-- <hr class="mt-5" />
    <h5 class="font-sty">篩選條件</h5>
    <div class="container">
-     <div class="row">
+     <div class="row"> -->
        <!-- 評分篩選 -->
-       <div class="col">
+       <!-- <div class="col">
          <label><span>評分</span></label>
          <div>
-          <select class="form-select" aria-label="filter-rate" (ngModelChange)="filterByRating($event)">
+          <select class="form-select" aria-label="filter-rate" [(ngModel)]="ratingFilter" (ngModelChange)="filterByRating($event)">
             <option [ngValue]="null" selected>全部({{ totalItems }})</option>
             <option *ngFor="let range of ratingRanges" [ngValue]="range.key">
               {{ range.label }}: ({{ rateCounts.get(range.key) || 0 }})
             </option>
           </select>
          </div>
-       </div>
+       </div> -->
        <!-- 住宿期間篩選 -->
-       <div class="col">
+       <!-- <div class="col">
          <label><span>住宿期間</span></label>
          <div>
-           <select class="form-select" aria-label="filter-during" (change)="filterByDate($event)">
-             <option value="" selected>全部 ({{ totalItems }})</option>
+           <select class="form-select" aria-label="filter-during"  [(ngModel)]="dateFilter" (ngModelChange)="filterByDate($event)">
+             <option [ngValue]="null" selected>全部 ({{ totalItems }})</option>
              <option *ngFor="let range of monthRanges" [ngValue]="range.key">
                {{ range.label }} ({{ monthCounts.get(range.key) || 0 }})
              </option>
            </select>
          </div>
-       </div>
+       </div> -->
        <!-- 排序依據篩選 -->
-       <div class="col">
+       <!-- <div class="col">
          <label><span>排序依據</span></label>
          <div>
            <select class="form-select" aria-label="filter-sort" (change)="sortBy($event)">
@@ -70,10 +71,10 @@
          </div>
        </div>
      </div>
-   </div>
+   </div> -->
 
   <!-- 主題篩選 -->
-  <h5 class="font-sty mt-5">選擇主題以瀏覽相關評語</h5>
+  <!-- <h5 class="font-sty mt-5">選擇主題以瀏覽相關評語</h5>
   <div class="mt-3">
     <label data-testid="topic-filter-component" *ngFor="let topic of ['客房', '地點', '床', '廁所', '安靜', '晚餐', '小孩', '停車']">
       <button type="button" class="btn btn-outline-primary" (click)="filterByTopic(topic)">
@@ -97,7 +98,7 @@
       <input *ngIf="isSearchVisible" type="button" class="btn btn-outline-primary" id="searchBtn" value="搜尋">
     </div>
   </div>
-</div>
+</div> -->
 
 
 
@@ -112,7 +113,7 @@
         <span aria-hidden="true">&laquo;</span>
       </a>
     </li>
-    <li class="page-item" *ngFor="let page of getPageNumbers()" [class.active]="page === queryParameters.page">
+    <li class="page-item" *ngFor="let page of getPageNumbers()" [class.active]="page">
       <a class="page-link" href="#" (click)="setPage(page)">{{page}}</a>
     </li>
     <li class="page-item" [class.disabled]="page * pageSize >= totalItems">
@@ -123,8 +124,8 @@
   </ul>
 </nav> -->
 
-<!--評論bar(後面要加一個<hr />)-->
-
+<!-- 評論bar(後面要加一個<hr />) -->
+<!--
 <div class="container">
   <div class="row">
       <div class="col-4 p-2 ">
@@ -149,7 +150,7 @@
       </div>
   </div>
 </div>
-<hr class="container" />
+<hr class="container" /> -->
 
 
 
@@ -160,7 +161,7 @@
       <div class="col-4 p-2">
         <div class="py-2">
           <span class="commentList-left-score me-2">{{comment.rating.toFixed(1)}}</span>
-          <span class="commentList-left-scoretxt">{{getRatingLabel(comment.rating)}}</span>
+          <span class="commentList-left-scoretxt">{{(comment.rating)}}</span>
         </div>
         <div class="fw-bold comment-left-fontsty"><i class="fa-solid fa-user "></i> {{comment.userName}}</div>
         <div><i class="fa-solid fa-suitcase fa-sm"></i> 入住{{comment.stayDuration}}（{{comment.stayDate}}）</div>
@@ -179,7 +180,7 @@
       </div>
     </div>
   </div>
-  <hr *ngIf="!isLastComment(comment)" class="container" />
+  <hr *ngIf="(comment)" class="container" />
 </div> -->
 
 <!-- 分頁導航 -->
@@ -190,7 +191,7 @@
         <span aria-hidden="true">&laquo;</span>
       </a>
     </li>
-    <li class="page-item" *ngFor="let page of getPageNumbers()" [class.active]="page === queryParameters.page">
+    <li class="page-item" *ngFor="let page of getPageNumbers()" [class.active]="page ">
       <a class="page-link" href="#" (click)="setPage(page)">{{page}}</a>
     </li>
     <li class="page-item" [class.disabled]="page * pageSize >= totalItems">
