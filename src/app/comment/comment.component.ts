@@ -34,13 +34,16 @@ export class CommentComponent implements OnInit{
   ratingFilter: number | null = null;
   dateFilter: string | null = null;
   sortOrder: string = 'newest'; // 預設排序為最新
-
-  comments: any[] = [];
+  selectedTopics: string[] = [];
   totalItems: number = 0;
+  totalComments = 0; // 获取总评论笔数
+  totalCommentcounts = 0;
+  comments: any[] = [];
+  memberInfo: any[] = [];
+  combinedData: any[] = [];
   averageScores: any[] = [];
   totalAverageScore: number = 0;
   isSearchVisible: boolean = false;
-  totalCommentCount: number = 0;
 
   rateCounts: Map<number, number> = new Map();
   monthCounts: Map<string, number> = new Map();
@@ -69,26 +72,79 @@ export class CommentComponent implements OnInit{
   }
 
 
-  // loadMonthRanges(): void {
-  //   this.commentService.getMonthRanges().subscribe(ranges => {
-  //     this.monthRanges = ranges;
-  //   });
-  // }
-
-
 
   // 加載評論
   loadComments(): void {
     const ratingFilter = this.ratingFilter !== null ? this.ratingFilter : undefined;
     const dateFilter = this.dateFilter !== null ? this.dateFilter : undefined;
-    this.commentService.getComments(this.hotelId, this.page, this.pageSize, this.search, ratingFilter,dateFilter, this.sortOrder)
+    const combinedSearch = [...this.selectedTopics, this.search].filter(Boolean).join(' ');
+
+    console.log('Loading comments with params:', {
+      hotelId: this.hotelId,
+      page: this.page,
+      pageSize: this.pageSize,
+      search: combinedSearch,
+      ratingFilter: ratingFilter,
+      dateFilter: dateFilter,
+      sortOrder: this.sortOrder,
+      topics: this.selectedTopics.join(' ')
+    });
+
+    this.commentService.getComments(this.hotelId, this.page, this.pageSize, combinedSearch, ratingFilter, dateFilter, this.sortOrder, this.selectedTopics.join(' '))
       .subscribe(data => {
-        this.comments = data.Comments;
+        this.comments = data.comments;
+        this.memberInfo = data.memberInfo;
         this.hotelName = data.hotelName;
         this.totalItems = data.totalItems;
-        console.log('Comments Data:', data);
+        this.totalPages = Math.ceil(this.totalItems / this.pageSize);
+        this.totalComments = data.totalComments;
+        this.totalAverageScore = data.totalAverageScore;
+        console.log('Received data:', data);
+
+        this.combineData();
+        this.applySort(); // 调用排序方法
       });
   }
+
+
+  combineData() {
+    this.combinedData = this.memberInfo.map(member => {
+      const comment = this.comments.find(c => c.commentId === member.commentId);
+      if (comment) {
+        const ratingScores = comment.ratingScores || [];
+
+        const avgScoresPerCom = {
+          totalAverageScore: (
+            this.calculateAverage(ratingScores, 'cleanlinessScore') +
+            this.calculateAverage(ratingScores, 'comfortScore') +
+            this.calculateAverage(ratingScores, 'facilitiesScore') +
+            this.calculateAverage(ratingScores, 'freeWifiScore') +
+            this.calculateAverage(ratingScores, 'locationScore') +
+            this.calculateAverage(ratingScores, 'staffScore') +
+            this.calculateAverage(ratingScores, 'valueScore')
+          ) / 7
+        };
+
+        return {
+          ...member,
+          ...comment,
+          avgScoresPerCom
+        };
+      } else {
+        console.warn(`Comment with ID ${member.commentId} not found in comments`);
+        return member;
+      }
+    });
+
+    console.log('Combined Data:', this.combinedData);
+  }
+
+  calculateAverage(scores: any[], key: string): number {
+    const total = scores.reduce((sum, score) => sum + score[key], 0);
+    return total / scores.length;
+  }
+
+
 
   loadAverageScore(): void {
     this.commentService.getAverageScores(this.hotelId).subscribe(
@@ -99,7 +155,7 @@ export class CommentComponent implements OnInit{
         }));
         this.totalAverageScore = data.totalAverageScore;
 
-        console.log('AVG Data:', data);
+        // console.log('AVG Data:', data);
       },
       error => {
         console.error('Error loading average scores:', error);
@@ -110,7 +166,7 @@ export class CommentComponent implements OnInit{
  // 加載評論數量
  loadCommentCounts(): void {
   this.commentService.getCommentCounts().subscribe(data => {
-    console.log('Received Comment Counts:', data);
+    this.totalCommentcounts = data.total;
 
     const ratingCommentDetailsArray = Object.entries(data.ratingCommentDetails);
     ratingCommentDetailsArray.forEach(([rating, detail]) => {
@@ -118,30 +174,33 @@ export class CommentComponent implements OnInit{
       this.rateCounts.set(parseInt(rating, 10), ratingDetail.count);
     });
 
-
     console.log('Updated Rating Counts:', Array.from(this.rateCounts.entries()));
 
-    // 更新月份範圍的計數
-    for (const [key, value] of Object.entries(data.DateCommentDetails)) {
-      const dateDetail = value as { Count: number; Comments: any[] };
-      this.monthCounts.set(key, dateDetail.Count);
+    const dateCommentDetailsArray = Object.entries(data.dateCommentDetails);
+    dateCommentDetailsArray.forEach(([dateRange, detail]) => {
+      const dateDetail = detail as { count: number; comments: any[] };
+      this.monthCounts.set(dateRange, dateDetail.count);
+    });
 
-    }
     console.log('Updated Month Counts:', Array.from(this.monthCounts.entries()));
-
-    // 構建月份範圍的選項
-    this.monthRanges = Object.keys(data.DateCommentDetails).map(key => ({ key, label: key }));
-
   });
 }
 
+
+
+
 filterByRating(event: any): void {
+  this.ratingFilter = event;
+  this.page = 1;
   this.loadComments();
+  console.log('Rating Filter:', this.ratingFilter);
 }
 
 filterByDate(date: string | null): void {
   this.dateFilter = date;
+  this.page = 1;
   this.loadComments();
+  console.log('Date Filter:', this.dateFilter);
 }
 
 
@@ -174,11 +233,7 @@ filterByDate(date: string | null): void {
       }
     }
 
-    // 設定當前頁碼
-    setPage(page: number): void {
-      this.page = page;
-      this.loadComments();
-    }
+
 
     // 顯示或隱藏搜索欄
     toggleSearch(): void {
@@ -190,34 +245,87 @@ filterByDate(date: string | null): void {
 
     // 根據主題篩選評論
     filterByTopic(topic: string): void {
-      this.search = topic;
+      const index = this.selectedTopics.indexOf(topic);
+      if (index === -1) {
+        this.selectedTopics.push(topic);
+      } else {
+        this.selectedTopics.splice(index, 1);
+      }
+      this.applyFilters();
+    }
+
+    applyFilters(): void {
       this.page = 1;
       this.loadComments();
     }
 
     // 根據排序方式篩選評論
-    sortBy(event: Event): void {
-      const target = event.target as HTMLSelectElement;
-      this.sortOrder = target.value;
-      this.page = 1; // 重置頁碼為第一頁
+    sortBy(event: any): void {
+      this.sortOrder = event;
+      this.page = 1;
       this.loadComments();
+      console.log('Sort Order:', this.sortOrder);
     }
 
-    // 獲取所有頁碼數
+    applySort(): void {
+      if (this.sortOrder === 'highestScore') {
+        this.combinedData.sort((a, b) => b.avgScoresPerCom.totalAverageScore - a.avgScoresPerCom.totalAverageScore);
+      } else if (this.sortOrder === 'lowestScore') {
+        this.combinedData.sort((a, b) => a.avgScoresPerCom.totalAverageScore - b.avgScoresPerCom.totalAverageScore);
+      } else if (this.sortOrder === 'newest') {
+        this.combinedData.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      } else if (this.sortOrder === 'oldest') {
+        this.combinedData.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+      }
+      console.log('Sorted Combined Data:', this.combinedData);
+    }
+
+
+    //TODO 分頁尚未處理(選別頁會一直跳第一頁)
+    currentPage: number = 1; // 預設當前頁碼為 1
+    visiblePages: number = 5;
+    totalPages: number = 0;
     getPageNumbers(): number[] {
-      const totalPages = Math.ceil(this.totalItems / this.pageSize);
-      return Array.from({ length: totalPages }, (_, i) => i + 1);
+      let startPage: number, endPage: number;
+
+      if (this.totalPages <= this.visiblePages) {
+        startPage = 1;
+        endPage = this.totalPages;
+      } else {
+        if (this.currentPage <= Math.floor(this.visiblePages / 2)) {
+          startPage = 1;
+          endPage = this.visiblePages;
+        } else if (this.currentPage + Math.floor(this.visiblePages / 2) >= this.totalPages) {
+          startPage = this.totalPages - this.visiblePages + 1;
+          endPage = this.totalPages;
+        } else {
+          startPage = this.currentPage - Math.floor(this.visiblePages / 2);
+          endPage = this.currentPage + Math.floor(this.visiblePages / 2);
+        }
+      }
+
+      // 確保 endPage 始終大於或等於 startPage
+      endPage = Math.max(endPage, startPage);
+
+      return Array.from({ length: (endPage - startPage + 1) }, (_, i) => startPage + i);
     }
 
-
-
-
-
-
-
-
-
+    setPage(page: number) {
+      if (page > 0 && page <= this.totalPages) {
+        this.currentPage = page;
+        console.log('Current Page:', this.currentPage);
+        this.loadComments(); // 添加頁面切換邏輯
+      }
+    }
   }
+
+
+
+
+
+
+
+
 
 
 

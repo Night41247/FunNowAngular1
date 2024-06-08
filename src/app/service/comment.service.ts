@@ -23,7 +23,7 @@ export class CommentService {
    * @param dateFilter 日期篩選 (可選)
    * @param sortBy 排序方式 (可選)
    */
- getComments(hotelId: number, page: number, pageSize: number, search?: string, ratingFilter?: number, dateFilter?: string, sortBy?: string): Observable<any> {
+ getComments(hotelId: number, page: number, pageSize: number, search?: string, ratingFilter?: number, dateFilter?: string, sortBy?: string, topics?: string): Observable<any> {
   let params = new HttpParams()
     .set('page', page.toString())
     .set('pageSize', pageSize.toString());
@@ -39,6 +39,9 @@ export class CommentService {
   }
   if (sortBy) {
     params = params.set('sortBy', sortBy);
+  }
+  if (topics) {
+    params = params.set('topics', topics);
   }
 
   return this.http.get<any>(`${this.apiUrl}/${hotelId}/GetComments`, { params });
@@ -63,27 +66,6 @@ postCommentAPI(comment: any): Observable<any> {
 }
 
 
-/**
-   * 獲取月份評論數量
-   */
-// getMonthCounts(): Observable<Map<string, number>> {
-//   return this.http.get<{ [key: string]: number }>(`${this.apiUrl}/monthCounts`).pipe(
-//     map(data => {
-//       const counts = new Map<string, number>();
-//       for (const [key, value] of Object.entries(data)) {
-//         counts.set(key, value);
-//       }
-//       return counts;
-//     })
-//   );
-// }
-
-/**
- * 獲取月份範圍
- */
-// getMonthRanges(): Observable<{ key: string, label: string }[]> {
-//   return this.http.get<{ key: string, label: string }[]>(`${this.apiUrl}/monthRanges`);
-// }
 
 /**
  * 獲取評分平均
