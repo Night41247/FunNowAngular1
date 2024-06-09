@@ -1,0 +1,174 @@
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark gradient-custom">
+  <!-- Container wrapper -->
+  <div class="container-fluid">
+    <!-- Navbar brand -->
+    <a class="navbar-brand" href="#">FunNow</a>
+
+    <!-- Toggle button -->
+    <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="fas fa-bars text-light"></i>
+    </button>
+
+    <!-- Collapsible wrapper -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <!-- Left links -->
+      <ul class="navbar-nav me-auto d-flex flex-row mt-3 mt-lg-0">
+        <li class="nav-item text-center mx-2 mx-lg-1">
+          <a class="nav-link" href="#!">
+            <div>
+
+              <fa-icon [icon]="faUser"></fa-icon>
+              <span class="badge rounded-pill badge-notification bg-dark"></span>
+            </div>
+            會員
+          </a>
+        </li>
+        <li class="nav-item text-center mx-2 mx-lg-1">
+          <a class="nav-link" href="#!">
+            <div>
+              <fa-icon [icon]="faHouse"></fa-icon>
+              <span class="badge rounded-pill badge-notification bg-dark">2</span>
+            </div>
+            房東
+          </a>
+        </li>
+        <li class="nav-item text-center mx-2 mx-lg-1">
+          <a class="nav-link" href="#!">
+            <div>
+              <fa-icon [icon]="faFaceSmile"></fa-icon>
+              <span class="badge rounded-pill badge-notification bg-dark">11</span>
+            </div>
+            評論
+          </a>
+        </li>
+        <li class="nav-item text-center mx-2 mx-lg-1">
+          <a class="nav-link" href="#!">
+            <div>
+              <fa-icon [icon]="faComment"></fa-icon>
+              <span class="badge rounded-pill badge-notification bg-dark">1</span>
+            </div>
+            訊息
+          </a>
+        </li>
+        <li class="nav-item text-center mx-2 mx-lg-1">
+          <a class="nav-link" href="#!">
+            <div>
+              <fa-icon [icon]="faChartLine"></fa-icon>
+              <span class="badge rounded-pill badge-notification bg-dark"></span>
+            </div>
+            數據分析
+          </a>
+        </li>
+      </ul>
+      <!-- Left links -->
+    </div>
+    <!-- Collapsible wrapper -->
+  </div>
+  <!-- Container wrapper -->
+</nav>
+<!-- Navbar -->
+
+<div class="container mt-5">
+  <h3>評論審核</h3>
+</div>
+
+<!--篩選選單-->
+
+<div class="container mt-3 d-flex  ">
+  <div class="input-group width px-3 height">
+    <mat-form-field>
+      <mat-label>標題</mat-label>
+      <mat-select (selectionChange)="onTitleChange($event)">
+        <mat-option *ngFor="let title of titles" [value]="title.value">
+          {{title.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="input-group width px-3 height">
+    <mat-form-field>
+      <mat-label>副標題</mat-label>
+      <mat-select [(ngModel)]="selectedSubtitle">
+        <mat-option *ngFor="let subtitle of selectedSubtitles" [value]="subtitle.value">
+          {{subtitle.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field>
+      <mat-label>輸入日期範圍</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input matStartDate placeholder="Start date">
+        <input matEndDate placeholder="End date">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+  </div>
+  <div class="ms-auto ">
+    <form class="example-form">
+      <mat-form-field class="example-full-width">
+        <mat-label>輸入文字</mat-label>
+        <input matInput type="text" value="">
+      </mat-form-field>
+    </form>
+  </div>
+
+  <div class="justify-content-center">
+    <button id="searchBtn" mat-raised-button color="primary">搜尋</button>
+  </div>
+
+</div>
+<div class="d-flex justify-content-start mt-3 container">
+  <mat-chip-listbox aria-label="Fish selection">
+    <mat-chip-option>已審核</mat-chip-option>
+    <mat-chip-option>未審核</mat-chip-option>
+    <mat-chip-option>審核中</mat-chip-option>
+    <mat-chip-option>審核不通過</mat-chip-option>
+  </mat-chip-listbox>
+
+</div>
+
+
+
+<!--資料表格-->
+<div class="container mt-5">
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <td>編號</td>
+        <td>舉報人</td>
+        <td>聯絡Email</td>
+        <td>聯絡電話</td>
+        <td>標題</td>
+        <td>副標題</td>
+        <td>訊息</td>
+        <td>審核狀態</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let report of reports">
+        <td>{{report.reportId}}</td>
+        <td>{{ report.memberName }}</td>
+        <td>{{ report.memberEmail }}</td>
+        <td>{{ report.memberPhone }}</td>
+        <td>{{ getTitleViewValue(report.reportTitleId) }}</td>
+        <td>{{ getSubtitleViewValue(report.reportTitleId, report.reportSubtitleId) }}</td>
+        <td><button mat-button>詳細</button></td>
+        <td>
+          <mat-form-field>
+            <mat-select>
+              <mat-option>通過</mat-option>
+              <mat-option>不通過</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+
+</div>
