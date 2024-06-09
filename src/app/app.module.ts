@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { HotelCommentComponent } from './hotel-comment/hotel-comment.component';
 import { MemberCommentComponent } from './member-comment/member-comment.component';
 import { PgbackMemberComponent } from './pgback-member/pgback-member.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
@@ -28,6 +29,7 @@ import { PgbackMemberComponent } from './pgback-member/pgback-member.component';
     FormsModule,
     HttpClientModule,
     ReactiveFormsModule,
+    BrowserAnimationsModule,
 
   ],
   providers: [],
