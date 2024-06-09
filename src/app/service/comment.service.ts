@@ -75,7 +75,9 @@ getAverageScores(hotelId: number): Observable<any> {
   return this.http.get<any>(`${this.apiUrl}/${hotelId}/AverageScores`);
 }
 
-
+getReport(): Observable<any> {
+  return this.http.get<any>(`${this.apiUrl}/filter`);
+}
 
 
 }

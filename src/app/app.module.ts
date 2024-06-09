@@ -1,3 +1,4 @@
+
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -10,7 +11,8 @@ import { CommonModule } from '@angular/common';
 import { HotelCommentComponent } from './hotel-comment/hotel-comment.component';
 import { MemberCommentComponent } from './member-comment/member-comment.component';
 import { PgbackMemberComponent } from './pgback-member/pgback-member.component';
-
+import { PlatformCommentComponent } from './platform-comment/platform-comment.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 @NgModule({
@@ -19,15 +21,11 @@ import { PgbackMemberComponent } from './pgback-member/pgback-member.component';
     HotelCommentComponent,
     MemberCommentComponent,
     PgbackMemberComponent,
+    PlatformCommentComponent,
   ],
   imports: [
-    BrowserModule,
-    AppRoutingModule,
-    CommonModule,
-    CommentModule,
-    FormsModule,
-    HttpClientModule,
-    ReactiveFormsModule,
+    FontAwesomeModule,
+    HttpClientModule
 
   ],
   providers: [],
