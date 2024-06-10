@@ -11,6 +11,12 @@ import { faChartLine } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { ReportDetailDialogComponent } from '../report-detail-dialog/report-detail-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ChangeDetectorRef } from '@angular/core';
+
+
+
+
+
 interface title {
   value: string;
   viewValue: string;
@@ -21,6 +27,22 @@ interface subtitle {
   viewValue: string;
 }
 
+interface Report {
+  reportId: number;
+  commentId: number;
+  memberId: number;
+  reportTitleId: number;  // 確保這些屬性是 number 類型
+  reportSubtitleId: number;  // 確保這些屬性是 number 類型
+  reportedAt: string;
+  reportReason: string;
+  reviewStatus: number;
+  reviewedBy: number;
+  reviewedAt: string;
+  memberName: string;
+  memberEmail: string;
+  memberPhone: string;
+}
+
 
 @Component({
   selector: 'app-platform-comment',
@@ -29,7 +51,7 @@ interface subtitle {
 })
 export class PlatformCommentComponent {
 
-  constructor(private commentService: CommentService , private route: ActivatedRoute, public dialog: MatDialog){}
+  constructor(private commentService: CommentService , private route: ActivatedRoute, public dialog: MatDialog,private cdr: ChangeDetectorRef){}
 
   faUser = faUser;
   faHouse = faHouse;
@@ -37,7 +59,8 @@ export class PlatformCommentComponent {
   faComment = faComment;
   faChartLine = faChartLine;
 
-  reports: any[] = [];
+  reports: Report[] = [];
+  filteredReports: Report[] = [];
   selectedTitleId: string = '';
   selectedSubtitles: subtitle[] = [];
   selectedSubtitle: string = '';
@@ -45,6 +68,8 @@ export class PlatformCommentComponent {
   endDate: Date | null = null;
   searchText: string = '';
   selectedStatus: string = '';
+
+
 
   titles: title[] = [
     {value: '1', viewValue: '訂單相關'},
@@ -54,9 +79,9 @@ export class PlatformCommentComponent {
   ];
 
   ordersubtitles: subtitle[] = [
-    {value: '1', viewValue: '顧客不當行為'},
+    {value: '1', viewValue: '住客評語'},
     {value: '2', viewValue: '訂單相關'},
-    {value: '3', viewValue: '住客評語'},
+    {value: '3', viewValue: '顧客不當行為'},
 
   ];
 
@@ -82,6 +107,13 @@ export class PlatformCommentComponent {
 
   ];
 
+  reviewStatusMapping: { [key: number]: string } = {
+    1: '未審核',
+    2: '審核中',
+    3: '審核通過',
+    4: '審核不通過'
+  };
+
   ngOnInit(): void {
     this.loadReports();
   }
@@ -90,15 +122,20 @@ export class PlatformCommentComponent {
     const filters = {
       titleId: this.selectedTitleId,
       subtitleId: this.selectedSubtitle,
-      startDate: this.startDate,
-      endDate: this.endDate,
+      startDate: this.startDate ? this.startDate.toISOString() : null,
+      endDate: this.endDate ? this.endDate.toISOString() : null,
       searchText: this.searchText,
       status: this.selectedStatus,
     };
+
+    console.log('Applying filters:', filters); // 調試日志
+
     this.commentService.getReportComment(filters).subscribe(
       data => {
-        this.reports = data;
-        console.log('Reports loaded:', this.reports);
+        console.log('Loaded reports:', data); // 調試日志
+        this.reports = data; // 確保這裡獲取到的數據是最新的
+        this.filterReportsByStatus();
+        this.cdr.detectChanges();
       },
       error => {
         console.error('Error loading reports:', error);
@@ -107,8 +144,64 @@ export class PlatformCommentComponent {
   }
 
 
+  clearFilters(): void {
+    this.selectedTitleId = '';
+    this.selectedSubtitle = '';
+    this.startDate = null;
+    this.endDate = null;
+    this.searchText = '';
+    this.selectedStatus = '';
+    this.loadReports();
+  }
+
+  filterReportsByStatus(): void {
+    this.filteredReports = this.reports;
+
+    if (this.selectedStatus) {
+      console.log('Filtering by status:', this.selectedStatus);
+      this.filteredReports = this.filteredReports.filter(report => this.reviewStatusMapping[report.reviewStatus] === this.selectedStatus);
+    }
+
+    if (this.selectedTitleId) {
+      console.log('Filtering by title:', this.selectedTitleId);
+      this.filteredReports = this.filteredReports.filter(report => report.reportTitleId === parseInt(this.selectedTitleId, 10));
+    }
+
+    if (this.selectedSubtitle) {
+      console.log('Filtering by subtitle:', this.selectedSubtitle);
+      this.filteredReports = this.filteredReports.filter(report => report.reportSubtitleId === parseInt(this.selectedSubtitle, 10));
+    }
+
+    if (this.startDate && this.endDate) {
+      const start = new Date(this.startDate).getTime();
+      const end = new Date(this.endDate).getTime();
+      console.log('Filtering by date range:', start, end);
+      this.filteredReports = this.filteredReports.filter(report => {
+        const reportedAt = new Date(report.reportedAt).getTime();
+        return reportedAt >= start && reportedAt <= end;
+      });
+    }
+
+    if (this.searchText) {
+      const searchTextLower = this.searchText.toLowerCase();
+      console.log('Filtering by search text:', searchTextLower);
+      this.filteredReports = this.filteredReports.filter(report =>
+        report.memberName.toLowerCase().includes(searchTextLower) ||
+        report.memberEmail.toLowerCase().includes(searchTextLower) ||
+        report.memberPhone.includes(this.searchText)
+      );
+    }
+
+    console.log('Filtered reports:', this.filteredReports); // 調試日志
+    this.cdr.detectChanges();
+  }
 
 
+
+
+  onStatusChange(): void {
+    this.filterReportsByStatus();
+  }
 
   onTitleChange(event: any): void {
     this.selectedTitleId = event.value;
@@ -117,6 +210,14 @@ export class PlatformCommentComponent {
   }
 
   onSearch(): void {
+    this.loadReports();
+  }
+
+  onDateChange(): void {
+    this.loadReports();
+  }
+
+  onSearchTextChange(): void {
     this.loadReports();
   }
 
@@ -149,6 +250,7 @@ export class PlatformCommentComponent {
     return title ? title.viewValue : '';
   }
 
+
   getSubtitleViewValue(titleId: string, subtitleId: string): string {
     let subtitles: subtitle[] = [];
     switch (titleId) {
@@ -166,20 +268,50 @@ export class PlatformCommentComponent {
         break;
       default:
         subtitles = [];
-        break;
     }
     const subtitle = subtitles.find(s => s.value === subtitleId);
     return subtitle ? subtitle.viewValue : '';
   }
 
+
+trackByReportId(index: number, report: any): number {
+  return report.reportId;
+}
+
+
+
+
+
+
+
   openDialog(report: any): void {
     this.dialog.open(ReportDetailDialogComponent, {
       width: '250px',
-      data: report
+      data: { reportReason: report.reportReason }
     });
+  }
 
 
-
+  onReviewStatusChange(report: Report): void {
+    // 直接使用選擇的狀態來更新
+    const newStatus = report.reviewStatus;
+    this.commentService.updateCommentStatus(report.commentId, newStatus).subscribe(
+      response => {
+        console.log('Comment status updated:', response);
+        // 更新報告的審核狀態
+        const updatedReport = this.reports.find(r => r.reportId === report.reportId);
+        if (updatedReport) {
+          updatedReport.reviewStatus = report.reviewStatus;
+        }
+        // 重新應用篩選條件
+        this.filterReportsByStatus();
+        this.cdr.detectChanges();
+      },
+      error => {
+        console.error('Error updating comment status:', error);
+      }
+    );
+  }
 
 
 
@@ -187,4 +319,4 @@ export class PlatformCommentComponent {
 
 
 }
-}
+

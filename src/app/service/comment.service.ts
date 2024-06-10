@@ -97,6 +97,9 @@ getReportComment(filters: any): Observable<any> {
   return this.http.post<any>(`${this.apiUrl}/filter`, filters);
 }
 
+updateCommentStatus(commentId: number, status: number): Observable<any> {
+  return this.http.put(`${this.apiUrl}/UpdateCommentStatus`, { commentId, status });
+}
 
 }
 

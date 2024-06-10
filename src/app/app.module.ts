@@ -15,17 +15,26 @@ import { PlatformCommentComponent } from './platform-comment/platform-comment.co
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
 import {NgFor} from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule} from '@angular/material/dialog';
-import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { ReportDetailDialogComponent } from './report-detail-dialog/report-detail-dialog.component';
-
-
+import { CustomDateFnsAdapter } from './custom-date-fns-adapter';
+const MAT_DATE_FORMATS_CUSTOM = {
+  parse: {
+    dateInput: 'yyyy-MM-dd',
+  },
+  display: {
+    dateInput: 'yyyy-MM-dd',
+    monthYearLabel: 'yyyy MMM',
+    dateA11yLabel: 'yyyy-MM-dd',
+    monthYearA11yLabel: 'yyyy MMM',
+  },
+};
 
 @NgModule({
   declarations: [
@@ -56,12 +65,13 @@ import { ReportDetailDialogComponent } from './report-detail-dialog/report-detai
     MatInputModule,
     NgFor,
     MatButtonModule,
-    MatDialogModule,
-    MatMomentDateModule
+    MatDialogModule
 
   ],
   providers: [
-    { provide: MAT_DATE_LOCALE, useValue: 'zh-TW' }
+    { provide: MAT_DATE_LOCALE, useValue: 'zh-TW' },
+    { provide: DateAdapter, useClass: CustomDateFnsAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: MAT_DATE_FORMATS_CUSTOM },
   ],
   bootstrap: [AppComponent]
 })
