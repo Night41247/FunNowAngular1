@@ -142,7 +142,7 @@
           <div class="d-flex justify-content-between">
               <div class="comment-font-color">評論日期：{{ comment.createdAt | date:'yyyy.MM.dd ' }}</div>
               <div class="comment-font-color text-end">
-                <a routerLink="/reportform" class="link">檢舉</a>
+                <button mat-button (click)="report(comment)" color="primary" >檢舉</button>
               </div>
           </div>
       </div>

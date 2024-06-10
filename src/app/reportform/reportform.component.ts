@@ -1,4 +1,8 @@
+
+import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CommentService } from '../service/comment.service';
 
 
 
@@ -19,7 +23,7 @@ interface Subtitle {
   styleUrls: ['./reportform.component.css']
 })
 export class ReportformComponent {
-  constructor() {}
+  constructor(private route: ActivatedRoute,private http: HttpClient,private commentService: CommentService) {}
 
   selectedSubtitles: Subtitle[] = [];
   selectedSubtitle: string = '';
@@ -58,6 +62,39 @@ export class ReportformComponent {
     { value: '3', viewValue: '被FunNow終止合約' }
   ];
 
+  memberName: string = '';
+  memberEmail: string = '';
+  commentFirstName: string = '';
+  commentRoomTypeName: string = '';
+  commentTravelerType: string = '';
+  commentTitle: string = '';
+  commentText: string = '';
+  commentCreatedAt: string = '';
+  reportReason: string = '';
+  commentID: number = 0;
+  memberID: number = 0;
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      this.memberName = params['memberName'] || 'John Doe'; // 默认值用于测试
+      this.memberEmail = params['memberEmail'] || 'john.doe@example.com'; // 默认值用于测试
+      this.commentFirstName = params['commentFirstName'] || '';
+      this.commentRoomTypeName = params['commentRoomTypeName'] || '';
+      this.commentTravelerType = params['commentTravelerType'] || '';
+      this.commentTitle = params['commentTitle'] || '';
+      this.commentText = params['commentText'] || '';
+      this.commentCreatedAt = params['commentCreatedAt'] || '';
+      this.commentID = +params['commentID'] || 0;
+      this.memberID = +params['memberID'] || 0;
+    });
+
+  }
+
+
+
+
+
+
   onTitleChange(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
     const title = selectElement.value;
@@ -93,8 +130,29 @@ export class ReportformComponent {
     this.selectedTitle = selectElement.value;
   }
 
+
+
+  onSubmit(): void {
+    const reportReview = {
+      CommentID: this.commentID,
+      MemberID: this.memberID,
+      ReportTitleID: this.selectedTitle,
+      ReportSubtitleID: this.selectedSubtitle,
+      ReportedAt: new Date(),
+      ReportReason: this.reportReason,
+      ReviewStatus: 1
+    };
+
+    this.commentService.submitReport(reportReview).subscribe(
+      response => {
+        console.log('Report submitted successfully', response);
+      },
+      error => {
+        console.error('Error submitting report', error);
+      }
+    );
+  }
+
+
+
 }
-
-
-
-

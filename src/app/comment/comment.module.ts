@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CommentComponent } from './comment.component';
 import { CommentService } from '../service/comment.service';
 import { RouterModule, Routes } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 
 const routes: Routes = [
   { path: '', component: CommentComponent }
@@ -17,6 +18,7 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     RouterModule.forChild(routes),
+    MatButtonModule
   ],
   providers:[CommentService],
   exports:[

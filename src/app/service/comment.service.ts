@@ -115,7 +115,9 @@ sendEmail(to: string, subject: string, body: string): Observable<any> {
   const emailRequest = { to, subject, body };
   return this.http.post(`https://localhost:7103/api/Email/SendEmail`, emailRequest);
 }
-
+submitReport(reportReview: any): Observable<any> {
+  return this.http.post(`${this.apiUrl}/api/SubmitReportReview`, reportReview);
+}
 
 }
 

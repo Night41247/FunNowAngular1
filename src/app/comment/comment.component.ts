@@ -1,7 +1,7 @@
 import { CommentService } from './../service/comment.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { CommentQueryParameters, Score } from '../model/comment';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-comment',
@@ -58,7 +58,7 @@ export class CommentComponent implements OnInit{
     valueScore: '性價比'
   };
 
-  constructor(private commentService: CommentService , private route: ActivatedRoute){}
+  constructor(private commentService: CommentService , private route: ActivatedRoute,private router: Router){}
 
 
   ngOnInit(): void {
@@ -71,7 +71,20 @@ export class CommentComponent implements OnInit{
     this.loadAverageScore();
   }
 
-
+  report(comment: any): void {
+    this.router.navigate(['/reportform'], { queryParams: {
+      memberName: 'John Doe', // 檢舉人（測試）
+      memberEmail: 'john.doe@example.com', // 檢舉人信箱（測試）
+      commentFirstName: comment.firstName,
+      commentRoomTypeName: comment.roomTypeName,
+      commentTravelerType: comment.travelerType,
+      commentTitle: comment.commentTitle,
+      commentText: comment.commentText,
+      commentCreatedAt: comment.createdAt,
+      commentID: comment.id,
+      memberID: comment.memberID
+    } });
+  }
 
   // 加載評論
   loadComments(): void {
