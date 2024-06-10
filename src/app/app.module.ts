@@ -25,7 +25,7 @@ import { MatDialogModule} from '@angular/material/dialog';
 import { ReportDetailDialogComponent } from './report-detail-dialog/report-detail-dialog.component';
 import { CustomDateFnsAdapter } from './custom-date-fns-adapter';
 import { ReportformComponent } from './reportform/reportform.component';
-
+import {MatRadioModule} from '@angular/material/radio';
 
 const MAT_DATE_FORMATS_CUSTOM = {
   parse: {
@@ -69,7 +69,8 @@ const MAT_DATE_FORMATS_CUSTOM = {
     MatInputModule,
     NgFor,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    MatRadioModule
 
   ],
   providers: [

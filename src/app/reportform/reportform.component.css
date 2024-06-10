@@ -1,0 +1,53 @@
+html, body {
+  background-color: #F0F0F0;
+}
+.container-adj {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.border1 {
+  border: 1px solid #004B97;
+  border-radius: 15px;
+}
+
+.font-size {
+  font-size: 17px;
+}
+
+.commentitem {
+  font-size: 30px;
+}
+.commentitem1 {
+  font-size: 18px;
+}
+
+.fixed-container {
+  position: fixed;
+  top: 20px;
+  left: 30px;
+}
+.container {
+  width:50%;
+  border:1px solid gray;
+  border-radius:5px;
+}
+.form-container {
+  width: 50%;
+  margin:auto;
+}
+.titile-font-sty {
+  font-weight: bold;
+  color: #003D79;
+}
+.form-align {
+  text-align:start;
+}
+.reporttxtbox {
+  background-color: #EEF7FF;
+}
+.report-order-section {
+  display: none;
+}

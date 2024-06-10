@@ -103,7 +103,13 @@ getReportComment(filters: any): Observable<any> {
 updateCommentStatus(commentId: number, status: number): Observable<any> {
   return this.http.put(`${this.apiUrl}/UpdateCommentStatus`, { commentId, status });
 }
-
+updateCommentAndReportStatus(commentId: number, reportId: number, status: number): Observable<any> {
+  return this.http.put(`${this.apiUrl}/UpdateCommentStatus`, {
+    commentId,
+    reportId,
+    status
+  });
+}
 
 sendEmail(to: string, subject: string, body: string): Observable<any> {
   const emailRequest = { to, subject, body };
