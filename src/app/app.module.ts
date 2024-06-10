@@ -24,6 +24,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule} from '@angular/material/dialog';
 import { ReportDetailDialogComponent } from './report-detail-dialog/report-detail-dialog.component';
 import { CustomDateFnsAdapter } from './custom-date-fns-adapter';
+import { ReportformComponent } from './reportform/reportform.component';
+
+
 const MAT_DATE_FORMATS_CUSTOM = {
   parse: {
     dateInput: 'yyyy-MM-dd',
@@ -44,6 +47,7 @@ const MAT_DATE_FORMATS_CUSTOM = {
     PgbackMemberComponent,
     PlatformCommentComponent,
     ReportDetailDialogComponent,
+    ReportformComponent,
 
   ],
   imports: [

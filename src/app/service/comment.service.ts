@@ -23,7 +23,7 @@ export class CommentService {
    * @param dateFilter 日期篩選 (可選)
    * @param sortBy 排序方式 (可選)
    */
- getComments(hotelId: number, page: number, pageSize: number, search?: string, ratingFilter?: number, dateFilter?: string, sortBy?: string): Observable<any> {
+ getComments(hotelId: number, page: number, pageSize: number, search?: string, ratingFilter?: number, dateFilter?: string, sortBy?: string, topics?: string): Observable<any> {
   let params = new HttpParams()
     .set('page', page.toString())
     .set('pageSize', pageSize.toString());
@@ -39,6 +39,9 @@ export class CommentService {
   }
   if (sortBy) {
     params = params.set('sortBy', sortBy);
+  }
+  if (topics) {
+    params = params.set('topics', topics);
   }
 
   return this.http.get<any>(`${this.apiUrl}/${hotelId}/GetComments`, { params });
@@ -100,6 +103,13 @@ getReportComment(filters: any): Observable<any> {
 updateCommentStatus(commentId: number, status: number): Observable<any> {
   return this.http.put(`${this.apiUrl}/UpdateCommentStatus`, { commentId, status });
 }
+
+
+sendEmail(to: string, subject: string, body: string): Observable<any> {
+  const emailRequest = { to, subject, body };
+  return this.http.post(`https://localhost:7103/api/Email/SendEmail`, emailRequest);
+}
+
 
 }
 

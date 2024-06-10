@@ -293,16 +293,35 @@ trackByReportId(index: number, report: any): number {
 
 
   onReviewStatusChange(report: Report): void {
-    // 直接使用選擇的狀態來更新
+    // 2 for "審核中", 3 for "通過", 4 for "不通過"
     const newStatus = report.reviewStatus;
+
+    // 更新審核狀態
     this.commentService.updateCommentStatus(report.commentId, newStatus).subscribe(
       response => {
         console.log('Comment status updated:', response);
         // 更新報告的審核狀態
         const updatedReport = this.reports.find(r => r.reportId === report.reportId);
         if (updatedReport) {
-          updatedReport.reviewStatus = report.reviewStatus;
+          updatedReport.reviewStatus = newStatus;
         }
+
+        // 如果狀態是不通過，發送郵件
+        if (newStatus === 4) {
+          const email = "5525asd9896@gmail.com";  // 指定的信箱
+          const subject = "審核結果通知";
+          const body = `用戶 ${report.memberName} 的評論未通過審核，請遵守我們的評論規範。`;
+
+          this.commentService.sendEmail(email, subject, body).subscribe(
+            emailResponse => {
+              console.log('Email sent successfully:', emailResponse);
+            },
+            emailError => {
+              console.error('Error sending email:', emailError);
+            }
+          );
+        }
+
         // 重新應用篩選條件
         this.filterReportsByStatus();
         this.cdr.detectChanges();

@@ -73,128 +73,118 @@ export class CommentComponent implements OnInit{
 
 
 
+  // 加載評論
+  loadComments(): void {
+    const ratingFilter = this.ratingFilter !== null ? this.ratingFilter : undefined;
+    const dateFilter = this.dateFilter !== null ? this.dateFilter : undefined;
+    const combinedSearch = [...this.selectedTopics, this.search].filter(Boolean).join(' ');
 
-
- // 加載評論
- loadComments(): void {
-  const ratingFilter = this.ratingFilter !== null ? this.ratingFilter : undefined;
-  const dateFilter = this.dateFilter !== null ? this.dateFilter : undefined;
-  const combinedSearch = [...this.selectedTopics, this.search].filter(Boolean).join(' ');
-
-  console.log('Loading comments with params:', {
-    hotelId: this.hotelId,
-    page: this.page,
-    pageSize: this.pageSize,
-    search: combinedSearch,
-    ratingFilter: ratingFilter,
-    dateFilter: dateFilter,
-    sortOrder: this.sortOrder,
-    topics: this.selectedTopics.join(' ')
-  });
-
-  this.commentService.getComments(this.hotelId, this.page, this.pageSize, combinedSearch, ratingFilter, dateFilter, this.sortOrder)
-    .subscribe(data => {
-      this.comments = data.comments;
-      this.memberInfo = data.memberInfo;
-      this.hotelName = data.hotelName;
-      this.totalItems = data.totalItems;
-      this.totalPages = Math.ceil(this.totalItems / this.pageSize);
-      this.totalComments = data.totalComments;
-      this.totalAverageScore = data.totalAverageScore;
-      console.log('Received data:', data);
-
-      this.combineData();
-      this.applySort(); // 调用排序方法
+    console.log('Loading comments with params:', {
+      hotelId: this.hotelId,
+      page: this.page,
+      pageSize: this.pageSize,
+      search: combinedSearch,
+      ratingFilter: ratingFilter,
+      dateFilter: dateFilter,
+      sortOrder: this.sortOrder,
+      topics: this.selectedTopics.join(' ')
     });
-}
+
+    this.commentService.getComments(this.hotelId, this.page, this.pageSize, combinedSearch, ratingFilter, dateFilter, this.sortOrder, this.selectedTopics.join(' '))
+      .subscribe(data => {
+        this.comments = data.comments;
+        this.memberInfo = data.memberInfo;
+        this.hotelName = data.hotelName;
+        this.totalItems = data.totalItems;
+        this.totalPages = Math.ceil(this.totalItems / this.pageSize);
+        this.totalComments = data.totalComments;
+        this.totalAverageScore = data.totalAverageScore;
+        console.log('Received data:', data);
+
+        this.combineData();
+        this.applySort(); // 调用排序方法
+      });
+  }
 
 
-combineData() {
-  this.combinedData = this.memberInfo.map(member => {
-    const comment = this.comments.find(c => c.commentId === member.commentId);
-    if (comment) {
-      const ratingScores = comment.ratingScores || [];
+  combineData() {
+    this.combinedData = this.memberInfo.map(member => {
+      const comment = this.comments.find(c => c.commentId === member.commentId);
+      if (comment) {
+        const ratingScores = comment.ratingScores || [];
 
-      const avgScoresPerCom = {
-        totalAverageScore: (
-          this.calculateAverage(ratingScores, 'cleanlinessScore') +
-          this.calculateAverage(ratingScores, 'comfortScore') +
-          this.calculateAverage(ratingScores, 'facilitiesScore') +
-          this.calculateAverage(ratingScores, 'freeWifiScore') +
-          this.calculateAverage(ratingScores, 'locationScore') +
-          this.calculateAverage(ratingScores, 'staffScore') +
-          this.calculateAverage(ratingScores, 'valueScore')
-        ) / 7
-      };
+        const avgScoresPerCom = {
+          totalAverageScore: (
+            this.calculateAverage(ratingScores, 'cleanlinessScore') +
+            this.calculateAverage(ratingScores, 'comfortScore') +
+            this.calculateAverage(ratingScores, 'facilitiesScore') +
+            this.calculateAverage(ratingScores, 'freeWifiScore') +
+            this.calculateAverage(ratingScores, 'locationScore') +
+            this.calculateAverage(ratingScores, 'staffScore') +
+            this.calculateAverage(ratingScores, 'valueScore')
+          ) / 7
+        };
 
-      return {
-        ...member,
-        ...comment,
-        avgScoresPerCom
-      };
-    } else {
-      console.warn(`Comment with ID ${member.commentId} not found in comments`);
-      return member;
-    }
-  });
+        return {
+          ...member,
+          ...comment,
+          avgScoresPerCom
+        };
+      } else {
+        console.warn(`Comment with ID ${member.commentId} not found in comments`);
+        return member;
+      }
+    });
 
-  console.log('Combined Data:', this.combinedData);
-}
+    console.log('Combined Data:', this.combinedData);
+  }
 
-calculateAverage(scores: any[], key: string): number {
-  const total = scores.reduce((sum, score) => sum + score[key], 0);
-  return total / scores.length;
-}
-
-
-
-
-
-
-
-loadAverageScore(): void {
-  this.commentService.getAverageScores(this.hotelId).subscribe(
-    data => {
-      this.averageScores = Object.entries(data.averageScore).map(([key, value]) => ({
-        key: this.scoreKeyMap[key] || key, // 將key轉換為中文名稱
-        value
-      }));
-      this.totalAverageScore = data.totalAverageScore;
-
-      // console.log('AVG Data:', data);
-    },
-    error => {
-      console.error('Error loading average scores:', error);
-    }
-  );
-}
+  calculateAverage(scores: any[], key: string): number {
+    const total = scores.reduce((sum, score) => sum + score[key], 0);
+    return total / scores.length;
+  }
 
 
 
+  loadAverageScore(): void {
+    this.commentService.getAverageScores(this.hotelId).subscribe(
+      data => {
+        this.averageScores = Object.entries(data.averageScore).map(([key, value]) => ({
+          key: this.scoreKeyMap[key] || key, // 將key轉換為中文名稱
+          value
+        }));
+        this.totalAverageScore = data.totalAverageScore;
+
+        // console.log('AVG Data:', data);
+      },
+      error => {
+        console.error('Error loading average scores:', error);
+      }
+    );
+  }
 
  // 加載評論數量
-  // 加載評論數量
-  loadCommentCounts(): void {
-    this.commentService.getCommentCounts().subscribe(data => {
-      this.totalCommentcounts = data.total;
+ loadCommentCounts(): void {
+  this.commentService.getCommentCounts().subscribe(data => {
+    this.totalCommentcounts = data.total;
 
-      const ratingCommentDetailsArray = Object.entries(data.ratingCommentDetails);
-      ratingCommentDetailsArray.forEach(([rating, detail]) => {
-        const ratingDetail = detail as { count: number; comments: any[] };
-        this.rateCounts.set(parseInt(rating, 10), ratingDetail.count);
-      });
-
-      console.log('Updated Rating Counts:', Array.from(this.rateCounts.entries()));
-
-      const dateCommentDetailsArray = Object.entries(data.dateCommentDetails);
-      dateCommentDetailsArray.forEach(([dateRange, detail]) => {
-        const dateDetail = detail as { count: number; comments: any[] };
-        this.monthCounts.set(dateRange, dateDetail.count);
-      });
-
-      console.log('Updated Month Counts:', Array.from(this.monthCounts.entries()));
+    const ratingCommentDetailsArray = Object.entries(data.ratingCommentDetails);
+    ratingCommentDetailsArray.forEach(([rating, detail]) => {
+      const ratingDetail = detail as { count: number; comments: any[] };
+      this.rateCounts.set(parseInt(rating, 10), ratingDetail.count);
     });
-  }
+
+    console.log('Updated Rating Counts:', Array.from(this.rateCounts.entries()));
+
+    const dateCommentDetailsArray = Object.entries(data.dateCommentDetails);
+    dateCommentDetailsArray.forEach(([dateRange, detail]) => {
+      const dateDetail = detail as { count: number; comments: any[] };
+      this.monthCounts.set(dateRange, dateDetail.count);
+    });
+
+    console.log('Updated Month Counts:', Array.from(this.monthCounts.entries()));
+  });
+}
 
 
 
@@ -212,8 +202,6 @@ filterByDate(date: string | null): void {
   this.loadComments();
   console.log('Date Filter:', this.dateFilter);
 }
-
-
 
 
     // 搜索評論
@@ -329,16 +317,15 @@ filterByDate(date: string | null): void {
         this.loadComments(); // 添加頁面切換邏輯
       }
     }
-
-
-
-
-
-
-
-
-
   }
+
+
+
+
+
+
+
+
 
 
 
