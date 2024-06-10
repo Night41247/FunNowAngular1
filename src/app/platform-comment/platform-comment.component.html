@@ -90,7 +90,7 @@
   <div class="input-group width px-3 height">
     <mat-form-field>
       <mat-label>副標題</mat-label>
-      <mat-select [(ngModel)]="selectedSubtitle">
+      <mat-select [(ngModel)]="selectedSubtitle"  name="selectedSubtitle">
         <mat-option *ngFor="let subtitle of selectedSubtitles" [value]="subtitle.value">
           {{subtitle.viewValue}}
         </mat-option>
@@ -101,8 +101,8 @@
     <mat-form-field>
       <mat-label>輸入日期範圍</mat-label>
       <mat-date-range-input [rangePicker]="picker">
-        <input matStartDate placeholder="Start date">
-        <input matEndDate placeholder="End date">
+        <input matStartDate placeholder="開始日期" [(ngModel)]="startDate" name="startDate">
+        <input matEndDate placeholder="結束日期" [(ngModel)]="endDate" name="endDate">
       </mat-date-range-input>
       <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-date-range-picker #picker></mat-date-range-picker>
@@ -112,21 +112,21 @@
     <form class="example-form">
       <mat-form-field class="example-full-width">
         <mat-label>輸入文字</mat-label>
-        <input matInput type="text" value="">
+        <input matInput type="text" [(ngModel)]="searchText" name="searchText">
       </mat-form-field>
     </form>
   </div>
 
   <div class="justify-content-center">
-    <button id="searchBtn" mat-raised-button color="primary">搜尋</button>
+    <button id="searchBtn" mat-raised-button color="primary"  (click)="onSearch()">搜尋</button>
   </div>
 
 </div>
 <div class="d-flex justify-content-start mt-3 container">
-  <mat-chip-listbox aria-label="Fish selection">
-    <mat-chip-option>已審核</mat-chip-option>
+  <mat-chip-listbox aria-label="Fish selection"  [(ngModel)]="selectedStatus" name="selectedStatus">
     <mat-chip-option>未審核</mat-chip-option>
     <mat-chip-option>審核中</mat-chip-option>
+    <mat-chip-option>審核通過</mat-chip-option>
     <mat-chip-option>審核不通過</mat-chip-option>
   </mat-chip-listbox>
 
@@ -157,7 +157,7 @@
         <td>{{ report.memberPhone }}</td>
         <td>{{ getTitleViewValue(report.reportTitleId) }}</td>
         <td>{{ getSubtitleViewValue(report.reportTitleId, report.reportSubtitleId) }}</td>
-        <td><button mat-button>詳細</button></td>
+        <td><button mat-button (click)="openDialog(report)">詳細</button></td>
         <td>
           <mat-form-field>
             <mat-select>

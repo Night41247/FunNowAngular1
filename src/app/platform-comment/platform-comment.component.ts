@@ -9,6 +9,8 @@ import { faFaceSmile } from '@fortawesome/free-solid-svg-icons';
 import { faComment } from '@fortawesome/free-solid-svg-icons';
 import { faChartLine } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
+import { ReportDetailDialogComponent } from '../report-detail-dialog/report-detail-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 interface title {
   value: string;
   viewValue: string;
@@ -27,7 +29,7 @@ interface subtitle {
 })
 export class PlatformCommentComponent {
 
-  constructor(private commentService: CommentService , private route: ActivatedRoute){}
+  constructor(private commentService: CommentService , private route: ActivatedRoute, public dialog: MatDialog){}
 
   faUser = faUser;
   faHouse = faHouse;
@@ -39,7 +41,10 @@ export class PlatformCommentComponent {
   selectedTitleId: string = '';
   selectedSubtitles: subtitle[] = [];
   selectedSubtitle: string = '';
-
+  startDate: Date | null = null;
+  endDate: Date | null = null;
+  searchText: string = '';
+  selectedStatus: string = '';
 
   titles: title[] = [
     {value: '1', viewValue: '訂單相關'},
@@ -82,7 +87,15 @@ export class PlatformCommentComponent {
   }
 
   loadReports(): void {
-    this.commentService.getReportComment().subscribe(
+    const filters = {
+      titleId: this.selectedTitleId,
+      subtitleId: this.selectedSubtitle,
+      startDate: this.startDate,
+      endDate: this.endDate,
+      searchText: this.searchText,
+      status: this.selectedStatus,
+    };
+    this.commentService.getReportComment(filters).subscribe(
       data => {
         this.reports = data;
         console.log('Reports loaded:', this.reports);
@@ -93,14 +106,18 @@ export class PlatformCommentComponent {
     );
   }
 
-  getTitleViewValue(titleId: string): string {
-    const title = this.titles.find(t => t.value === titleId);
-    return title ? title.viewValue : '';
-  }
+
+
+
 
   onTitleChange(event: any): void {
     this.selectedTitleId = event.value;
     this.updateSubtitles();
+    this.loadReports();
+  }
+
+  onSearch(): void {
+    this.loadReports();
   }
 
   updateSubtitles(): void {
@@ -124,8 +141,13 @@ export class PlatformCommentComponent {
     if (this.selectedSubtitles.length > 0) {
       this.selectedSubtitle = this.selectedSubtitles[0].value;
     }
+    this.loadReports();
   }
 
+  getTitleViewValue(titleId: string): string {
+    const title = this.titles.find(t => t.value === titleId);
+    return title ? title.viewValue : '';
+  }
 
   getSubtitleViewValue(titleId: string, subtitleId: string): string {
     let subtitles: subtitle[] = [];
@@ -142,11 +164,19 @@ export class PlatformCommentComponent {
       case '4':
         subtitles = this.contractsubtitles;
         break;
+      default:
+        subtitles = [];
+        break;
     }
     const subtitle = subtitles.find(s => s.value === subtitleId);
     return subtitle ? subtitle.viewValue : '';
   }
 
+  openDialog(report: any): void {
+    this.dialog.open(ReportDetailDialogComponent, {
+      width: '250px',
+      data: report
+    });
 
 
 
@@ -156,6 +186,5 @@ export class PlatformCommentComponent {
 
 
 
-
-
+}
 }

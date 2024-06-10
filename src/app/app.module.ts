@@ -15,13 +15,17 @@ import { PlatformCommentComponent } from './platform-comment/platform-comment.co
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
 import {NgFor} from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule} from '@angular/material/dialog';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { ReportDetailDialogComponent } from './report-detail-dialog/report-detail-dialog.component';
+
+
 
 @NgModule({
   declarations: [
@@ -30,6 +34,7 @@ import { MatDialogModule} from '@angular/material/dialog';
     MemberCommentComponent,
     PgbackMemberComponent,
     PlatformCommentComponent,
+    ReportDetailDialogComponent,
 
   ],
   imports: [
@@ -51,10 +56,21 @@ import { MatDialogModule} from '@angular/material/dialog';
     MatInputModule,
     NgFor,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    MatMomentDateModule
 
   ],
-  providers: [],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'zh-TW' }
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+
+
+
+
+
+
+
+ }

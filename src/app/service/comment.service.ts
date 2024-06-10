@@ -93,8 +93,8 @@ getAverageScores(hotelId: number): Observable<any> {
   return this.http.get<any>(`${this.apiUrl}/${hotelId}/AverageScores`);
 }
 
-getReportComment(): Observable<any> {
-  return this.http.post<any>(`${this.apiUrl}/filter`, {});
+getReportComment(filters: any): Observable<any> {
+  return this.http.post<any>(`${this.apiUrl}/filter`, filters);
 }
 
 
