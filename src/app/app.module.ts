@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { CommentModule } from './comment/comment.module';
 import { CommonModule } from '@angular/common';
 import { HotelCommentComponent } from './hotel-comment/hotel-comment.component';
 import { MemberCommentComponent } from './member-comment/member-comment.component';
@@ -26,6 +25,8 @@ import { ReportDetailDialogComponent } from './report-detail-dialog/report-detai
 import { CustomDateFnsAdapter } from './custom-date-fns-adapter';
 import { ReportformComponent } from './reportform/reportform.component';
 import {MatRadioModule} from '@angular/material/radio';
+import { CommentComponent } from './comment/comment.component';
+import { RouterModule } from '@angular/router';
 
 const MAT_DATE_FORMATS_CUSTOM = {
   parse: {
@@ -48,13 +49,13 @@ const MAT_DATE_FORMATS_CUSTOM = {
     PlatformCommentComponent,
     ReportDetailDialogComponent,
     ReportformComponent,
+    CommentComponent
 
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     CommonModule,
-    CommentModule,
     FormsModule,
     HttpClientModule,
     ReactiveFormsModule,
@@ -70,7 +71,7 @@ const MAT_DATE_FORMATS_CUSTOM = {
     NgFor,
     MatButtonModule,
     MatDialogModule,
-    MatRadioModule
+    MatRadioModule,
 
   ],
   providers: [

@@ -132,10 +132,14 @@ export class PlatformCommentComponent {
 
     this.commentService.getReportComment(filters).subscribe(
       data => {
-        console.log('Loaded reports:', data); // 調試日志
-        this.reports = data; // 確保這裡獲取到的數據是最新的
-        this.filterReportsByStatus();
-        this.cdr.detectChanges();
+        console.log('Loaded reports:', data); // 调试日志
+        if (Array.isArray(data)) {
+          this.reports = data; // 确保这里获取到的数据是数组
+          this.filterReportsByStatus();
+          this.cdr.detectChanges();
+        } else {
+          console.error('Data is not an array:', data);
+        }
       },
       error => {
         console.error('Error loading reports:', error);
@@ -278,12 +282,6 @@ trackByReportId(index: number, report: any): number {
   return report.reportId;
 }
 
-
-
-
-
-
-
   openDialog(report: any): void {
     this.dialog.open(ReportDetailDialogComponent, {
       width: '250px',
@@ -311,21 +309,7 @@ trackByReportId(index: number, report: any): number {
             };
           }
 
-          if (newStatus === 4) {
-            const email = "5525asd9896@gmail.com";  // 指定的信箱
-            const subject = "審核結果通知";
-            const body = `用戶 ${report.memberName} 的評論未通過審核，請遵守我們的評論規範。`;
-
-            this.commentService.sendEmail(email, subject, body).subscribe(
-              emailResponse => {
-                console.log('Email sent successfully:', emailResponse);
-              },
-              emailError => {
-                console.error('Error sending email:', emailError);
-              }
-            );
-          }
-
+          this.handleEmailSending(newStatus, report);
           this.filterReportsByStatus();
           this.cdr.detectChanges();
         } else {
@@ -334,8 +318,29 @@ trackByReportId(index: number, report: any): number {
       },
       error => {
         console.error('Error updating comment and report status:', error);
+        this.handleEmailSending(newStatus, report, error);
       }
     );
+  }
+
+  handleEmailSending(newStatus: number, report: Report, error?: any): void {
+    if (newStatus === 4) {
+      const email = "5525asd9896@gmail.com";  // 指定的信箱
+      const subject = "審核結果通知";
+      const body = `用戶 ${report.memberName} 的評論未通過審核，請遵守我們的評論規範。`;
+
+      this.commentService.sendEmail(email, subject, body).subscribe(
+        emailResponse => {
+          console.log('Email sent successfully:', emailResponse);
+        },
+        emailError => {
+          console.error('Error sending email:', emailError);
+        }
+      );
+    } else if (error) {
+      // 處理錯誤情況下的邏輯
+      // 可以在此處添加發送電子郵件的代碼
+    }
   }
 
 

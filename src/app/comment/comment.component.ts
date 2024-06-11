@@ -72,20 +72,22 @@ export class CommentComponent implements OnInit{
   }
 
   report(comment: any): void {
-    this.router.navigate(['/reportform'], { queryParams: {
-      memberName: 'John Doe', // 檢舉人（測試）
-      memberEmail: 'john.doe@example.com', // 檢舉人信箱（測試）
-      commentFirstName: comment.firstName,
-      commentRoomTypeName: comment.roomTypeName,
-      commentTravelerType: comment.travelerType,
-      commentTitle: comment.commentTitle,
-      commentText: comment.commentText,
-      commentCreatedAt: comment.createdAt,
-      commentID: comment.id,
-      memberID: comment.memberID
-    } });
+    console.log('Navigating with comment:', comment);
+    this.router.navigate(['/reportform'], {
+      queryParams: {
+        memberName: 'John Doe', // 檢舉人（測試）
+        memberEmail: 'john.doe@example.com', // 檢舉人信箱（測試）
+        commentFirstName: comment.firstName,
+        commentRoomTypeName: comment.roomTypeName,
+        commentTravelerType: comment.travelerType,
+        commentTitle: comment.commentTitle,
+        commentText: comment.commentText,
+        commentCreatedAt: comment.createdAt,
+        commentID: comment.commentId,
+        memberID: comment.memberId
+      }
+    });
   }
-
   // 加載評論
   loadComments(): void {
     const ratingFilter = this.ratingFilter !== null ? this.ratingFilter : undefined;
@@ -112,6 +114,7 @@ export class CommentComponent implements OnInit{
         this.totalPages = Math.ceil(this.totalItems / this.pageSize);
         this.totalComments = data.totalComments;
         this.totalAverageScore = data.totalAverageScore;
+
         console.log('Received data:', data);
 
         this.combineData();

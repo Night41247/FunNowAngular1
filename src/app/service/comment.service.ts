@@ -111,12 +111,18 @@ updateCommentAndReportStatus(commentId: number, reportId: number, status: number
   });
 }
 
+// updateCommentAndReportStatus(commentId: number, reportId: number, newStatus: number): Observable<any> {
+//   const url = `https://localhost:7103/api/Comment/UpdateCommentStatus`;
+//   const body = { commentId, reportId, newStatus };
+//   return this.http.post<any>(url, body);
+// }
+
 sendEmail(to: string, subject: string, body: string): Observable<any> {
   const emailRequest = { to, subject, body };
   return this.http.post(`https://localhost:7103/api/Email/SendEmail`, emailRequest);
 }
 submitReport(reportReview: any): Observable<any> {
-  return this.http.post(`${this.apiUrl}/api/SubmitReportReview`, reportReview);
+  return this.http.post(`${this.apiUrl}/SubmitReportReview`, reportReview);
 }
 
 }
