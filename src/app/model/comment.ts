@@ -59,3 +59,21 @@ export interface Score {
   key: string;
   value: number;
 }
+
+export interface Commentsdata {
+  commentId: number;
+  commentStatus: string; // 确保这个字段是 string 类型
+  commentText: string;
+  commentTitle: string;
+  commentTravelerTypes: any[];
+  createdAt: string;
+  hotel: any;
+  hotelId: number;
+  isReported: boolean;
+  member: any;
+  memberId: number;
+  orderId: number;
+  ratingScores: any[];
+  reportReviews: any[];
+  updatedAt: string;
+}

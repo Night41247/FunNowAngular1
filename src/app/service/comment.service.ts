@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map, throwError } from 'rxjs';
+import { Commentsdata } from '../model/comment';
 
 
 
@@ -124,6 +125,17 @@ sendEmail(to: string, subject: string, body: string): Observable<any> {
 submitReport(reportReview: any): Observable<any> {
   return this.http.post(`${this.apiUrl}/SubmitReportReview`, reportReview);
 }
+
+
+getCommentsByStatus(memberId: number): Observable<Commentsdata[]> {
+  return this.http.get<Commentsdata[]>(`${this.apiUrl}/GetCommentsByStatus/${memberId}`);
+}
+
+addComment(comment: Comment): Observable<Commentsdata> {
+  return this.http.post<Commentsdata>(`${this.apiUrl}/AddComment`, comment);
+}
+
+
 
 }
 

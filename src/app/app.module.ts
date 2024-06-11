@@ -27,6 +27,8 @@ import { ReportformComponent } from './reportform/reportform.component';
 import {MatRadioModule} from '@angular/material/radio';
 import { CommentComponent } from './comment/comment.component';
 import { RouterModule } from '@angular/router';
+import {MatTabsModule} from '@angular/material/tabs';
+
 
 const MAT_DATE_FORMATS_CUSTOM = {
   parse: {
@@ -72,6 +74,7 @@ const MAT_DATE_FORMATS_CUSTOM = {
     MatButtonModule,
     MatDialogModule,
     MatRadioModule,
+    MatTabsModule
 
   ],
   providers: [
