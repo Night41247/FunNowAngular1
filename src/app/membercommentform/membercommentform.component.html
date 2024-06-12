@@ -1,1 +1,169 @@
-<p>membercommentform works!</p>
+<div class="container-fluid container-adj ">
+  <div class="row">
+      <div class="col-md-6">
+          <!-- 左下角的容器 -->
+          <div class="container mt-5 fixed-container">
+              <div class="">
+                  <div class="text-blur-out 2">
+                      <h3 class="card-title">雀客旅館台中中山</h3>
+                      <div class="d-inline-flex p-2 bd-highlight"><i class="fa-solid fa-bed"> 標準四人房</i></div>
+                      <div class="d-flex p-2 align-items-end justify-content-between"><i class="fa-solid fa-calendar-days">  2024年4月15號 - 2024年4月17號</i></div>
+                  </div>
+
+                  <!--進度條
+                  <div class="progress" style="height: 1px;">
+                      <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>-->
+
+              </div>
+          </div>
+      </div>
+      <div class="col-md-4">
+          <!-- 右下角的容器 -->
+          <div class="container text-center mt-5  ">
+              <div>
+                  <div class="modal-dialog">
+                      <div class="modal-content">
+                          <div class="modal-body text-center mt-3">
+                            <fa-icon class="animatetime iconcolorred" [icon]="faHeart" animation="bounce" size="2xl"></fa-icon>
+                              <p class="mt-2">請花3分鐘與其他人分享您的住宿體驗！</p>
+                              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1">
+                                  開始評論
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+
+
+              <!-- 評論選項 -->
+              <div>
+                  <div class="modal-dialog">
+                      <div class="modal-content">
+                          <div class="modal-body text-center mt-5">
+                            <fa-icon class="animatetime iconcolor " [icon]="fafacesmilewink" animation="bounce" size="2xl"></fa-icon>
+                              <p class="mt-3 commentitem">舒適程度</p>
+                              <label for="customRange2" class="form-label">10.0</label>
+                              <input type="range" class="form-range" min="0" max="10" id="customRange2">
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div>
+                  <div class="modal-dialog">
+                      <div class="modal-content">
+                          <div class="modal-body text-center mt-5">
+                            <fa-icon class="animatetime iconcolor " [icon]="faspraycansparkles" animation="bounce" size="2xl"></fa-icon>
+                              <p class="mt-2 commentitem">清潔程度</p>
+                              <label for="customRange2" class="form-label">10.0</label>
+                              <input type="range" class="form-range" min="0" max="10" id="customRange2">
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+
+              <div>
+                  <div class="modal-dialog">
+                      <div class="modal-content">
+                          <div class="modal-body text-center mt-5">
+                            <fa-icon class="animatetime iconcolor mt-3" [icon]="fauserlarge" animation="bounce" size="2xl"></fa-icon>
+                              <p class="mt-2 commentitem">員工素質</p>
+                              <label for="customRange2" class="form-label">10.0</label>
+                              <input type="range" class="form-range" min="0" max="10" id="customRange2">
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div>
+                  <div class="modal-dialog">
+                      <div class="modal-content">
+                          <div class="modal-body text-center mt-5">
+                            <fa-icon class="animatetime iconcolor" [icon]="facouch" animation="bounce" size="2xl"></fa-icon>
+                              <p class="mt-2 commentitem">設施</p>
+                              <label for="customRange2" class="form-label">10.0</label>
+                              <input type="range" class="form-range" min="0" max="10" id="customRange2">
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+
+              <div>
+                  <div class="modal-dialog">
+                      <div class="modal-content">
+                          <div class="modal-body text-center mt-5">
+                            <fa-icon class="animatetime iconcolor" [icon]="faCalculator" animation="bounce" size="2xl"></fa-icon>
+                              <p class="mt-2 commentitem">性價比</p>
+                              <label for="customRange2" class="form-label">10.0</label>
+                              <input type="range" class="form-range" min="0" max="10" id="customRange2">
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+
+              <div>
+                  <div class="modal-dialog">
+                      <div class="modal-content">
+                          <div class="modal-body text-center mt-5">
+                            <fa-icon class="animatetime iconcolor" [icon]="faLocationdot" animation="bounce" size="2xl"></fa-icon>
+                              <p class="mt-2 commentitem">住宿地點</p>
+                              <label for="customRange2" class="form-label">10.0</label>
+                              <input type="range" class="form-range" min="0" max="10" id="customRange2">
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+
+              <div>
+                  <div class="modal-dialog">
+                      <div class="modal-content">
+                          <div class="modal-body text-center mt-5">
+                            <fa-icon class="animatetime iconcolor" [icon]="faWifi" animation="bounce" size="2xl"></fa-icon>
+                              <p class="mt-2 commentitem">免費WIFI</p>
+                              <label for="customRange2" class="form-label">10.0</label>
+                              <input type="range" class="form-range" min="0" max="10" id="customRange2">
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+
+              <div>
+                  <div class="modal-dialog">
+                      <div class="modal-content">
+                          <div class="modal-body text-center mt-5">
+                              <fieldset class=" p-2">
+                                  <legend class="w-auto font-size">旅客類型</legend>
+                                  <select class="form-select" aria-label="Default select example">
+                                      <option selected>單人旅遊</option>
+                                      <option value="1">單人旅遊</option>
+                                      <option value="2">情侶/夫妻</option>
+                                      <option value="3">商務旅客</option>
+                                      <option value="4">家庭(嬰幼兒隨行)</option>
+                                      <option value="5">家庭(未成年孩童隨行)</option>
+                                      <option value="6">團體(2人以上)</option>
+                                  </select>
+                              </fieldset>
+                              <div>
+                                  <input type="text" class="form-control" id="commentInput" placeholder="評論標題">
+                              </div>
+                              <div>
+                                  <textarea class="form-control mt-2" id="commentTextarea" rows="3" style="resize: none;height:150px;" placeholder="評論內容"></textarea>
+                              </div>
+                              <button id="btnsubmit" type="button" class="btn btn-outline-primary mt-2">送出住宿評論</button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+
+          </div>
+      </div>
+  </div>
+</div>

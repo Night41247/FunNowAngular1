@@ -13,6 +13,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'comment', pathMatch: 'full' }, //預設路由頁
   { path: 'reportform', component: ReportformComponent },
   { path: 'comment', component: CommentComponent },
+  { path: 'membercommentform'}
 ];
 
 @NgModule({
