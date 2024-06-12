@@ -23,6 +23,9 @@
   -webkit-animation: swing-in-left-bck .6s cubic-bezier(.175,.885,.32,1.275) both;
   animation: swing-in-left-bck .6s cubic-bezier(.175,.885,.32,1.275) both
 }
+.width{
+  width: 60%;
+}
 
 @-webkit-keyframes swing-in-left-bck {
   0% {

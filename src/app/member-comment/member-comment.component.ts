@@ -1,6 +1,19 @@
 import { Component } from '@angular/core';
 import { CommentService } from './../service/comment.service';
-import { Commentsdata } from '../model/comment';
+import { CommentInfo, Commentsdata, OrderDetaileDTO } from '../model/comment';
+
+interface RatingScoreDTO {
+  ratingId: number;
+  commentId: number;
+  comfortScore: number;
+  cleanlinessScore: number;
+  staffScore: number;
+  facilitiesScore: number;
+  valueScore: number;
+  locationScore: number;
+  freeWifiScore: number;
+  travelerType: string;
+}
 
 
 @Component({
@@ -11,21 +24,50 @@ import { Commentsdata } from '../model/comment';
 export class MemberCommentComponent {
 
   comments: Commentsdata[] = [];
-  unfinishedComments: Commentsdata[] = [];
-
+  commentInfos: CommentInfo[] = [];
+  combinedComments: any[] = [];
+  orders:OrderDetaileDTO[]=[];
+  unfinishedComments: any[] = [];
+  pendingComments: any[] = [];
+  completedComments: any[] = [];
+  hotelImage:any[]=[];
 
   constructor(private commentService: CommentService) { }
 
 
 
+
   ngOnInit(): void {
-    const memberId = 20; // TODO 先寫死
+    const memberId = 20; // TODO 先写死
 
     this.commentService.getCommentsByStatus(memberId).subscribe(
-      (data: Commentsdata[]) => {
-        this.comments = data;
-        console.log(data);
-        this.unfinishedComments = this.comments.filter(comment => comment.commentStatus === "6");
+      (data) => {
+        this.comments = data.comments;
+        this.commentInfos = data.commentinfo;
+        this.orders = data.orders;
+        this.hotelImage = data.hotelImage;
+        // 合并评论和评论信息
+        this.combinedComments = this.comments.map(comment => {
+          const info = this.commentInfos.find(ci => ci.commentId === comment.commentId);
+          const order = this.orders.find(o => o.memberId === comment.memberId);
+          const nights = order ? this.calculateNights(order.checkInDate, order.checkOutDate) : null;
+          const image = this.hotelImage.find(h => h.hotelId === comment.hotelId)
+          return {
+            ...comment,
+            ...info,
+            ...order,
+            ...image,
+            checkInDate: order ? order.checkInDate : null,
+            checkOutDate: order ? order.checkOutDate : null,
+            nights
+
+          };
+        });
+
+        console.log(this.combinedComments);
+        this.unfinishedComments = this.combinedComments.filter(comment => comment.commentStatus === '6');
+        this.pendingComments = this.combinedComments.filter(comment => comment.commentStatus === '5');
+        this.completedComments = this.combinedComments.filter(comment => comment.commentStatus === '7');
         sessionStorage.setItem('unfinishedComments', JSON.stringify(this.unfinishedComments));
       },
       (error) => {
@@ -33,6 +75,8 @@ export class MemberCommentComponent {
       }
     );
   }
+
+
 
 
   addNewComment(newComment: Comment): void {
@@ -48,5 +92,12 @@ export class MemberCommentComponent {
     );
   }
 
+  private calculateNights(checkInDate: Date, checkOutDate: Date): number {
+    const checkIn = new Date(checkInDate);
+    const checkOut = new Date(checkOutDate);
+    const diffTime = Math.abs(checkOut.getTime() - checkIn.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  }
 
 }

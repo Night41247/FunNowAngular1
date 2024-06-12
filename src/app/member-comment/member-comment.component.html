@@ -38,35 +38,88 @@
 
 
 <mat-tab-group>
-  <mat-tab label="尚未評論"> </mat-tab>
-  <mat-tab label="未完成評論"> </mat-tab>
-  <mat-tab label="已完成評論"> </mat-tab>
+  <mat-tab label="尚未評論">
+    <div class="d-flex justify-content-center swing-in-left-bck" *ngFor="let comment of pendingComments">
+      <div class="card my-3 width">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img [src]="comment.hotelImage1" class="img-fluid rounded-start" alt="Hotel Image">
+          </div>
+          <div class="col-md-8">
+            <div class="container">
+              <div class="left card-body">
+                <h5 class="card-title">{{ comment.hotelName }}</h5>
+                <p><i class="fa-solid fa-location-dot">{{ comment.hotelAddress }}</i></p>
+                <div class="d-inline-flex p-2 bd-highlight"><i class="fa-solid fa-bed">{{ comment.roomTypeName }}</i></div>
+                <div class="d-flex p-2 align-items-end justify-content-between">
+                  <i class="fa-solid fa-calendar-days">入住日期：({{ comment.nights }}晚) {{ comment.checkInDate | date:'yyyy.MM.dd' }} - {{ comment.checkOutDate | date:'yyyy.MM.dd' }}</i>
+                </div>
+              </div>
+              <div class="right d-flex align-items-center">
+                <a href="member_comment_form.html" class="btn btn-outline-primary">開始評論</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+
+  <mat-tab label="未完成評論">
+    <div class="d-flex justify-content-center swing-in-left-bck" *ngFor="let comment of unfinishedComments">
+      <div class="card my-3 width">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img [src]="comment.hotelImage1" class="img-fluid rounded-start" alt="Hotel Image">
+          </div>
+          <div class="col-md-8">
+            <div class="container">
+              <div class="left card-body">
+                <h5 class="card-title">{{ comment.hotelName }}</h5>
+                <p><i class="fa-solid fa-location-dot">{{ comment.hotelAddress }}</i></p>
+                <div class="d-inline-flex p-2 bd-highlight"><i class="fa-solid fa-bed">{{ comment.roomTypeName }}</i></div>
+                <div class="d-flex p-2 align-items-end justify-content-between">
+                  <i class="fa-solid fa-calendar-days">入住日期：({{ comment.nights }}晚) {{ comment.checkInDate | date:'yyyy.MM.dd' }} - {{ comment.checkOutDate | date:'yyyy.MM.dd' }}</i>
+                </div>
+              </div>
+              <div class="right d-flex align-items-center">
+                <a href="member_comment_form.html" class="btn btn-outline-primary">開始評論</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+
+  <mat-tab label="已完成評論">
+    <div class="d-flex justify-content-center swing-in-left-bck" *ngFor="let comment of completedComments">
+      <div class="card my-3 width">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img [src]="comment.hotelImage1" class="img-fluid rounded-start" alt="Hotel Image">
+          </div>
+          <div class="col-md-8">
+            <div class="container">
+              <div class="left card-body">
+                <h5 class="card-title">{{ comment.hotelName }}</h5>
+                <p><i class="fa-solid fa-location-dot">{{ comment.hotelAddress }}</i></p>
+                <div class="d-inline-flex p-2 bd-highlight"><i class="fa-solid fa-bed">{{ comment.roomTypeName }}</i></div>
+                <div class="d-flex p-2 align-items-end justify-content-between">
+                  <i class="fa-solid fa-calendar-days">入住日期：({{ comment.nights }}晚) {{ comment.checkInDate | date:'yyyy.MM.dd' }} - {{ comment.checkOutDate | date:'yyyy.MM.dd' }}</i>
+                </div>
+              </div>
+              <div class="right d-flex align-items-center">
+                <a href="member_comment_form.html" class="btn btn-outline-primary">開始評論</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
 </mat-tab-group>
 
-<!--第一個評論格-->
-<div class="card-body d-flex justify-content-center cardbody-width swing-in-left-bck ">
-  <div class="card my-3" style="max-width: 900px;">
-      <div class="row g-0">
-          <div class="col-md-4 ">
-              <img  class="img-fluid rounded-start" alt="...">
-          </div>
-          <div class="col-md-8 ">
-              <div class="container">
-                  <div class="left card-body ">
-                      <h5 class="card-title">雀客旅館台中中山</h5>
-                      <p><i class="fa-solid fa-location-dot">台中中區市府路66號</i></p>
-                      <div class="d-inline-flex p-2 bd-highlight"><i class="fa-solid fa-bed">標準四人房</i></div>
-                      <div class="d-flex p-2 bd-highlight"><i class="fa-solid fa-door-open">1間客房</i></div>
-                      <div class="d-flex p-2 align-items-end justify-content-between"><i class="fa-solid fa-calendar-days">入住日期：(2晚) 2024年4月15號 - 2024年4月17號</i></div>
-                  </div>
-                  <div class="right d-flex align-items-center ">
-                      <a href="member_comment_form.html" class="btn btn-outline-primary ">開始評論</a>
-                  </div>
-              </div>
 
-          </div>
-      </div>
-  </div>
-</div>
 
 

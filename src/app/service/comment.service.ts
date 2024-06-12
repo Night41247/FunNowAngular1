@@ -1,7 +1,8 @@
+
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map, throwError } from 'rxjs';
-import { Commentsdata } from '../model/comment';
+import { CommentInfo, Commentsdata, HotelImage, OrderDetaileDTO } from '../model/comment';
 
 
 
@@ -127,8 +128,8 @@ submitReport(reportReview: any): Observable<any> {
 }
 
 
-getCommentsByStatus(memberId: number): Observable<Commentsdata[]> {
-  return this.http.get<Commentsdata[]>(`${this.apiUrl}/GetCommentsByStatus/${memberId}`);
+getCommentsByStatus(memberId: number): Observable<{ commentinfo: CommentInfo[], comments: Commentsdata[] ,orders: OrderDetaileDTO[],hotelImage:HotelImage[]}> {
+  return this.http.get<{ commentinfo: CommentInfo[], comments: Commentsdata[],orders: OrderDetaileDTO[], hotelImage:HotelImage[] }>(`${this.apiUrl}/GetCommentsByStatus/${memberId}`);
 }
 
 addComment(comment: Comment): Observable<Commentsdata> {

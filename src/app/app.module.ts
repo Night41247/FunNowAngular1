@@ -28,6 +28,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import { CommentComponent } from './comment/comment.component';
 import { RouterModule } from '@angular/router';
 import {MatTabsModule} from '@angular/material/tabs';
+import { MembercommentformComponent } from './membercommentform/membercommentform.component';
 
 
 const MAT_DATE_FORMATS_CUSTOM = {
@@ -51,7 +52,8 @@ const MAT_DATE_FORMATS_CUSTOM = {
     PlatformCommentComponent,
     ReportDetailDialogComponent,
     ReportformComponent,
-    CommentComponent
+    CommentComponent,
+    MembercommentformComponent
 
   ],
   imports: [
