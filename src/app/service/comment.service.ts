@@ -2,7 +2,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map, throwError } from 'rxjs';
-import { CommentInfo, Commentsdata, HotelImage, OrderDetaileDTO } from '../model/comment';
+import { CommentInfo, Commentdata, Commentsdata, HotelImage, OrderDetaileDTO } from '../model/comment';
 
 
 
@@ -132,8 +132,12 @@ getCommentsByStatus(memberId: number): Observable<{ commentinfo: CommentInfo[], 
   return this.http.get<{ commentinfo: CommentInfo[], comments: Commentsdata[],orders: OrderDetaileDTO[], hotelImage:HotelImage[] }>(`${this.apiUrl}/GetCommentsByStatus/${memberId}`);
 }
 
-addComment(comment: Comment): Observable<Commentsdata> {
-  return this.http.post<Commentsdata>(`${this.apiUrl}/AddComment`, comment);
+addComment(comment: any): Observable<any> {
+  return this.http.post<any>(`${this.apiUrl}/AddComment`, comment);
+}
+
+getAvgTxt(hotelId: number): Observable<any> {
+  return this.http.get<any>(`${this.apiUrl}/averageRatingText/${hotelId}`);
 }
 
 

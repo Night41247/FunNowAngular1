@@ -66,7 +66,7 @@ export interface CommentInfo {
 }
 
 export interface RatingScoreDTO {
-  ratingId: number;
+
   commentId: number;
   comfortScore: number;
   cleanlinessScore: number;
@@ -78,6 +78,7 @@ export interface RatingScoreDTO {
   travelerType: string;
   commentTitle:string;
   commentText:string;
+  roomId:number;
 }
 
 export interface OrderDetaileDTO {
@@ -93,3 +94,56 @@ export interface OrderDetaileDTO {
 export interface HotelImage {
   hotelImagee:string;
 }
+
+export class Commentdata {
+  CommentID: number;
+  RoomID: number;
+  ComfortScore: number;
+  CleankinessScore: number;
+  StaffScore: number;
+  FacilitiesScore: number;
+  ValueScore: number;
+  LocationScore: number;
+  FreeWifiScore: number;
+  TravelerType: string;
+
+  constructor(
+    commentID: number,
+    roomID: number,
+    comfortScore: number,
+    cleankinessScore: number,
+    staffScore: number,
+    facilitiesScore: number,
+    valueScore: number,
+    locationScore: number,
+    freeWifiScore: number,
+    travelerType: string
+  ) {
+    this.CommentID = commentID;
+    this.RoomID = roomID;
+    this.ComfortScore = comfortScore;
+    this.CleankinessScore = cleankinessScore;
+    this.StaffScore = staffScore;
+    this.FacilitiesScore = facilitiesScore;
+    this.ValueScore = valueScore;
+    this.LocationScore = locationScore;
+    this.FreeWifiScore = freeWifiScore;
+    this.TravelerType = travelerType;
+  }
+}
+
+export interface Commentdata{
+  CommentID:number ;
+  RoomID:number ;
+  ComfortScore:number;
+  CleankinessScore:number ;
+  StaffScore:number ;
+  FacilitiesScore:number ;
+  ValueScore:number ;
+  LocationScore:number;
+  FreeWifiScore:number ;
+  TravelerType:string;
+}
+
+
+

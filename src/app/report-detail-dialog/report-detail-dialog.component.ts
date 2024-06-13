@@ -38,11 +38,11 @@ export class ReportDetailDialogComponent {
     const reportReview = {
       commentID: this.data.commentID,
       memberID: this.data.memberID,
-      reportTitleID: this.data.reportSubtitleID, // 如果有其他数据需要传递，可以在这里添加
-      reportSubtitleID: this.data.reportTitleID, // 如果有其他数据需要传递，可以在这里添加
-      reportedAt: this.formatDate(new Date()), // 确保这里传递了格式化的日期
+      reportTitleID: this.data.reportSubtitleID,
+      reportSubtitleID: this.data.reportTitleID,
+      reportedAt: this.formatDate(new Date()),
       reportReason: this.data.reportReason,
-      reviewStatus: '1' // 示例值，根据需要调整
+      reviewStatus: '1' // 示例值，根
     };
 
     console.log('Report Review Data:', reportReview); // 调试日志

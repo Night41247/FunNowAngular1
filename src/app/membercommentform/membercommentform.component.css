@@ -102,3 +102,7 @@ mat-slider {
   overflow-y: auto;
   padding-right: 15px; /* 预留空间以便在滚动时不遮挡内容 */
 }
+.text
+{
+  font:bold;
+}

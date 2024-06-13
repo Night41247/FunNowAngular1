@@ -1,6 +1,6 @@
 .comment-cube {
   border-radius: 8px;
-  background-color: #3f62ee;
+  background-color: #0072E3;
   color:white;
   padding:8px;
 }
@@ -10,6 +10,11 @@
 }
 .font-sty {
   font-weight:bold;
+}
+.avgtext{
+  font-weight:bold;
+  font-size: 20px;
+  color:#0072E3;
 }
 /*各項評分條*/
 .grid-container {

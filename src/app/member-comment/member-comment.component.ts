@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { CommentService } from './../service/comment.service';
 import { CommentInfo, Commentsdata, OrderDetaileDTO } from '../model/comment';
+import { Router } from '@angular/router';
+
 
 interface RatingScoreDTO {
   ratingId: number;
@@ -32,7 +34,7 @@ export class MemberCommentComponent {
   completedComments: any[] = [];
   hotelImage:any[]=[];
 
-  constructor(private commentService: CommentService) { }
+  constructor(private commentService: CommentService,private router: Router) { }
 
 
 
@@ -41,6 +43,7 @@ export class MemberCommentComponent {
     const memberId = 20; // TODO 先写死
 
     this.commentService.getCommentsByStatus(memberId).subscribe(
+
       (data) => {
         this.comments = data.comments;
         this.commentInfos = data.commentinfo;
@@ -63,7 +66,7 @@ export class MemberCommentComponent {
 
           };
         });
-
+        console.log(data);
         console.log(this.combinedComments);
         this.unfinishedComments = this.combinedComments.filter(comment => comment.commentStatus === '6');
         this.pendingComments = this.combinedComments.filter(comment => comment.commentStatus === '5');
@@ -76,21 +79,21 @@ export class MemberCommentComponent {
     );
   }
 
-
-
-
-  addNewComment(newComment: Comment): void {
-    this.commentService.addComment(newComment).subscribe(
-      (data: Commentsdata) => {
-        console.log('Comment added successfully', data);
-        // 重新获取评论以更新列表
-        this.ngOnInit();
-      },
-      (error) => {
-        console.error('Error adding comment', error);
+  startReview(commentID: number, hotelName: string, roomtypeName: string, checkinDate: string, checkoutDate: string,roomId:number): void {
+    this.router.navigate(['/membercommentform', commentID], {
+      queryParams: {
+        hotelName: hotelName,
+        roomtypeName: roomtypeName,
+        checkinDate: checkinDate,
+        checkoutDate: checkoutDate,
+        roomId:roomId,
       }
-    );
+    });
+    console.log(commentID);
   }
+
+
+
 
   private calculateNights(checkInDate: Date, checkOutDate: Date): number {
     const checkIn = new Date(checkInDate);

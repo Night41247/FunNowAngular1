@@ -7,11 +7,12 @@ import { faSprayCanSparkles } from '@fortawesome/free-solid-svg-icons';
 import { faUserLarge } from '@fortawesome/free-solid-svg-icons';
 import { faCouch } from '@fortawesome/free-solid-svg-icons';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
-import { RatingScoreDTO } from '../model/comment';
+import { Commentdata, RatingScoreDTO } from '../model/comment';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-
+import { ActivatedRoute } from '@angular/router';
+import { CommentService } from './../service/comment.service';
 
 @Component({
   selector: 'app-membercommentform',
@@ -43,11 +44,20 @@ export class MembercommentformComponent {
   commentTitle = '';
   commentText = '';
 
+  UpdatedAt :string = '';
+
+  hotelName: string = '';
+  roomtypeName: string = '';
+  checkinDate: string = '';
+  checkoutDate: string = '';
+  roomId:number = 0;
+  CommentStatus:string='';
 
   fieldsMoved = new Set<string>();
   currentFieldIndex: number = -1;
 
   displayedFieldsCount: number = 0;
+  commentID: number = 0;
 
   fields = [
     { controlName: 'comfortScore', label: '舒適程度', icon: faFaceSmileWink as IconProp },
@@ -63,7 +73,26 @@ export class MembercommentformComponent {
   ];
 
 
-  constructor(private http: HttpClient) {}
+  constructor(private route: ActivatedRoute,private http: HttpClient,private commentService : CommentService) {}
+
+  ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      this.commentID = +params['commentID'];
+    });
+
+    this.route.queryParams.subscribe(params => {
+      this.hotelName = params['hotelName'];
+      this.roomtypeName = params['roomtypeName'];
+      this.checkinDate = params['checkinDate'];
+      this.checkoutDate = params['checkoutDate'];
+      this.roomId = params['roomId'];
+
+      // 使用这些参数进行其他初始化操作
+      console.log('Received parameters:', this.commentID, this.hotelName, this.roomtypeName, this.checkinDate, this.checkoutDate,this.roomId);
+    });
+  }
+
+
 
 formatLabel(value: number): string {
   return `${value}`;
@@ -87,24 +116,27 @@ scrollToBottom(): void {
 }
 
 onSubmit(): void {
-  const ratingData: RatingScoreDTO = {
-    ratingId: 0,
-    commentId: 0,
-    comfortScore: this.comfortScore,
-    cleanlinessScore: this.cleanlinessScore,
-    staffScore: this.staffScore,
-    facilitiesScore: this.facilitiesScore,
-    valueScore: this.valueScore,
-    locationScore: this.locationScore,
-    freeWifiScore: this.freeWifiScore,
-    travelerType: this.travelerType,
-    commentTitle: this.commentTitle,
-    commentText: this.commentText
+  const commentRequest = {
+    CommentID : this.commentID,
+    CommentTitle: this.commentTitle,
+    CommentText: this.commentText,
+    RoomID: this.roomId,
+    ComfortScore: this.comfortScore,
+    CleanlinessScore: this.cleanlinessScore,
+    StaffScore: this.staffScore,
+    FacilitiesScore: this.facilitiesScore,
+    ValueScore: this.valueScore,
+    LocationScore: this.locationScore,
+    FreeWifiScore: this.freeWifiScore,
+    TravelerType: this.travelerType,
+    UpdatedAt:this.UpdatedAt,
+    CommentStatus:this.CommentStatus,
+
   };
 
-  console.log('Form Data:', ratingData);
+  console.log('Form Data:', commentRequest);
 
-  this.http.post('YOUR_API_ENDPOINT', ratingData).subscribe(response => {
+  this.commentService.addComment(commentRequest).subscribe(response => {
     console.log('Data submitted successfully', response);
   }, error => {
     console.error('Error submitting data', error);
@@ -121,8 +153,20 @@ onSubmit(): void {
 
 
 
-
-
-
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

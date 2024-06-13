@@ -5,8 +5,9 @@
   <!-- 飯店名稱及總分 -->
   <div>
     <h4 class="mb-3 font-sty">{{hotelName}} 住客評論</h4>
-    <span class="comment-cube">{{totalAverageScore | number:'1.1-1'}}</span>
-    <span>共{{totalCommentcounts}}則評論</span>
+    <span class="comment-cube">{{totalAverageScore | number:'1.1-1'}}  </span>
+    <span class="avgtext ms-2">{{ratingText}}</span>
+    <div class="mt-2">共{{totalCommentcounts}}則評論</div>
 
   </div>
   <hr />

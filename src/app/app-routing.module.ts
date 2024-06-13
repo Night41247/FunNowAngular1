@@ -1,3 +1,4 @@
+import { MemberCommentComponent } from './member-comment/member-comment.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HotelCommentComponent } from './hotel-comment/hotel-comment.component';
@@ -11,10 +12,12 @@ import { MembercommentformComponent } from './membercommentform/membercommentfor
 const routes: Routes = [
   { path: 'platformcomment', component: PlatformCommentComponent },
   { path: 'hotel_comment', component: HotelCommentComponent }, //其他人接過來要這樣設定
-  { path: '', redirectTo: 'comment', pathMatch: 'full' }, //預設路由頁
+  { path: '', redirectTo: 'membercomment', pathMatch: 'full' }, //預設路由頁
   { path: 'reportform', component: ReportformComponent },
   { path: 'comment', component: CommentComponent },
-  { path: 'membercommentform' , component:MembercommentformComponent},
+  { path: 'membercomment' , component:MemberCommentComponent},
+  { path: 'membercommentform/:commentID' , component:MembercommentformComponent},
+
 ];
 
 @NgModule({

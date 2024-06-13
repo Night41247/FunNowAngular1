@@ -31,7 +31,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import { MembercommentformComponent } from './membercommentform/membercommentform.component';
 import {MatSliderModule} from '@angular/material/slider';
 import { MatSliderValueAccessorDirective } from './directives/mat-slider-value-accessor.directive';
-
+import {ProgressSpinnerMode, MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 const MAT_DATE_FORMATS_CUSTOM = {
   parse: {
@@ -80,7 +80,10 @@ const MAT_DATE_FORMATS_CUSTOM = {
     MatDialogModule,
     MatRadioModule,
     MatTabsModule,
-    MatSliderModule
+    MatSliderModule,
+    MatProgressSpinnerModule,
+    // ProgressSpinnerMode,
+
 
   ],
   providers: [

@@ -44,7 +44,7 @@ export class CommentComponent implements OnInit{
   averageScores: any[] = [];
   totalAverageScore: number = 0;
   isSearchVisible: boolean = false;
-
+  ratingText:string='';
   rateCounts: Map<number, number> = new Map();
   monthCounts: Map<string, number> = new Map();
 
@@ -69,6 +69,18 @@ export class CommentComponent implements OnInit{
     this.loadComments();
     this.loadCommentCounts();
     this.loadAverageScore();
+    this.AvgText();
+  }
+
+
+  AvgText() {
+    this.commentService.getAvgTxt(this.hotelId).subscribe(data => {
+
+      this.hotelId = data.hotelId;
+      this.ratingText = data.ratingText;
+    }, error => {
+      console.error('Error fetching rating text:', error);
+    });
   }
 
   report(comment: any): void {
