@@ -58,7 +58,7 @@
   }
 }
 .animatetime {
-  --fa-animation-iteration-count:3;
+  --fa-animation-iteration-count:1;
 }
 .iconcolorred{
   color: #f46c6c;
@@ -93,4 +93,12 @@ html, body {
   position: fixed;
   top: 20px;
   left: 30px;
+}
+mat-slider {
+  width: 300px;
+}
+.review-container {
+  max-height: 80vh; /* 根据需要调整高度 */
+  overflow-y: auto;
+  padding-right: 15px; /* 预留空间以便在滚动时不遮挡内容 */
 }

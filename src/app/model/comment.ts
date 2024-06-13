@@ -76,6 +76,8 @@ export interface RatingScoreDTO {
   locationScore: number;
   freeWifiScore: number;
   travelerType: string;
+  commentTitle:string;
+  commentText:string;
 }
 
 export interface OrderDetaileDTO {

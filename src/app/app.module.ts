@@ -29,6 +29,8 @@ import { CommentComponent } from './comment/comment.component';
 import { RouterModule } from '@angular/router';
 import {MatTabsModule} from '@angular/material/tabs';
 import { MembercommentformComponent } from './membercommentform/membercommentform.component';
+import {MatSliderModule} from '@angular/material/slider';
+import { MatSliderValueAccessorDirective } from './directives/mat-slider-value-accessor.directive';
 
 
 const MAT_DATE_FORMATS_CUSTOM = {
@@ -53,7 +55,8 @@ const MAT_DATE_FORMATS_CUSTOM = {
     ReportDetailDialogComponent,
     ReportformComponent,
     CommentComponent,
-    MembercommentformComponent
+    MembercommentformComponent,
+    MatSliderValueAccessorDirective
 
   ],
   imports: [
@@ -76,7 +79,8 @@ const MAT_DATE_FORMATS_CUSTOM = {
     MatButtonModule,
     MatDialogModule,
     MatRadioModule,
-    MatTabsModule
+    MatTabsModule,
+    MatSliderModule
 
   ],
   providers: [
