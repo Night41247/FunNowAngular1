@@ -12,7 +12,7 @@ import { MembercommentformComponent } from './membercommentform/membercommentfor
 const routes: Routes = [
   { path: 'platformcomment', component: PlatformCommentComponent },
   { path: 'hotel_comment', component: HotelCommentComponent }, //其他人接過來要這樣設定
-  { path: '', redirectTo: 'membercomment', pathMatch: 'full' }, //預設路由頁
+  { path: '', redirectTo: 'comment', pathMatch: 'full' }, //預設路由頁
   { path: 'reportform', component: ReportformComponent },
   { path: 'comment', component: CommentComponent },
   { path: 'membercomment' , component:MemberCommentComponent},
@@ -21,7 +21,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true })],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

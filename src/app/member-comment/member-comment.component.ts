@@ -74,7 +74,7 @@ export class MemberCommentComponent {
         sessionStorage.setItem('unfinishedComments', JSON.stringify(this.unfinishedComments));
       },
       (error) => {
-        console.error('Error fetching comments', error);
+        console.error('Error fetching comments',error);
       }
     );
   }
@@ -89,7 +89,7 @@ export class MemberCommentComponent {
         roomId:roomId,
       }
     });
-      console.log(Comment);
+      console.log(commentID);
   }
 
 
