@@ -89,7 +89,7 @@ export class MemberCommentComponent {
         roomId:roomId,
       }
     });
-    console.log(commentID);
+      console.log(Comment);
   }
 
 

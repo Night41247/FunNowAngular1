@@ -147,3 +147,34 @@ export interface Commentdata{
 
 
 
+export interface CommentRequest {
+  CommentID: number;
+  RoomID: number;
+  ComfortScore: number;
+  CleanlinessScore: number;
+  StaffScore: number;
+  FacilitiesScore: number;
+  ValueScore: number;
+  LocationScore: number;
+  FreeWifiScore: number;
+  TravelerType: string;
+}
+
+export interface CommentUpdateRequest {
+  CommentTitle: string;
+  CommentText: string;
+  CommentStatus: string;
+}
+
+export interface RatingScore {
+  commentId: number;
+  roomId: number;
+  comfortScore: number;
+  cleanlinessScore: number;
+  staffScore: number;
+  facilitiesScore: number;
+  valueScore: number;
+  locationScore: number;
+  freeWifiScore: number;
+  travelerType: string;
+}

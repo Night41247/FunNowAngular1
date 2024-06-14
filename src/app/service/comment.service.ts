@@ -2,7 +2,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map, throwError } from 'rxjs';
-import { CommentInfo, Commentdata, Commentsdata, HotelImage, OrderDetaileDTO } from '../model/comment';
+import { CommentInfo, CommentRequest, CommentUpdateRequest, Commentdata, Commentsdata, HotelImage, OrderDetaileDTO, RatingScore } from '../model/comment';
 
 
 
@@ -132,8 +132,14 @@ getCommentsByStatus(memberId: number): Observable<{ commentinfo: CommentInfo[], 
   return this.http.get<{ commentinfo: CommentInfo[], comments: Commentsdata[],orders: OrderDetaileDTO[], hotelImage:HotelImage[] }>(`${this.apiUrl}/GetCommentsByStatus/${memberId}`);
 }
 
-addComment(comment: any): Observable<any> {
-  return this.http.post<any>(`${this.apiUrl}/AddComment`, comment);
+//未填寫評論，存入DB
+addComment(commentRequest: CommentRequest): Observable<RatingScore> {
+  return this.http.post<RatingScore>(`${this.apiUrl}/AddComment`, commentRequest);
+}
+
+//修改comment後存入DB
+updateComment(commentId: number, updateRequest: CommentUpdateRequest): Observable<any> {
+  return this.http.put(`${this.apiUrl}/UpdateCommentStatus/${commentId}`, updateRequest);
 }
 
 getAvgTxt(hotelId: number): Observable<any> {
