@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import lottie from 'lottie-web';
+
 
 @Component({
   selector: 'app-notfoundpage',
@@ -6,21 +8,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./notfoundpage.component.css']
 })
 export class NotfoundpageComponent {
-
-ngOnInit(): void {
-  var svgContainer = document.getElementById('svgContainer');
-    var animItem = bodymovin.loadAnimation({
-        wrapper: svgContainer,
-        animType: 'svg',
-        loop: true,
-        animationData: JSON.parse(animationData)
-    });
-
-}
-
-
-
-
+  ngOnInit(): void {
+    // Initialization logic if needed
+  }
 
 
 

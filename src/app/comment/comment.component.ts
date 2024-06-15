@@ -10,6 +10,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 
 export class CommentComponent implements OnInit{
+
+navigateToPgHotel() {
+  //PgHotel/pgHotel/?hotelId=2&checkInDate=2024-06-29&checkOutDate=2024-06-30
+  //TODO 寫死port(注意DEMO要用的port)，常見作法會寫死port
+  const url = `https://localhost:44341/PgHotel/pgHotel/?hotelId=${this.backMvcParam.hotelId}&checkInDate=${this.backMvcParam.checkInDate}&checkOutDate=${this.backMvcParam.checkOutDate}`;
+  window.location.href = url;
+
+}
   ratingRanges = [
     { key: 2, label: '超讚:9+' },
     { key: 3, label: '很讚:7-9' },
@@ -58,7 +66,18 @@ export class CommentComponent implements OnInit{
     valueScore: '性價比'
   };
 
-  constructor(private commentService: CommentService , private route: ActivatedRoute,private router: Router){}
+  //MVC hotel頁有帶的參數
+  backMvcParam = {
+    hotelId : 0,
+    checkInDate : '',
+    checkOutDate : '',
+  }
+
+  constructor(private commentService: CommentService , private route: ActivatedRoute,private router: Router){
+    this.backMvcParam.hotelId = this.route.snapshot.params['hotelId'];
+    this.backMvcParam.checkInDate = this.route.snapshot.queryParams['checkInDate'];
+    this.backMvcParam.checkOutDate = this.route.snapshot.queryParams['checkOutDate'];
+  }
 
 
   ngOnInit(): void {

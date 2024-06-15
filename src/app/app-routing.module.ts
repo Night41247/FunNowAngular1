@@ -15,10 +15,10 @@ const routes: Routes = [
   { path: 'platformcomment', component: PlatformCommentComponent },
   { path: 'hotel_comment', component: HotelCommentComponent }, //其他人接過來要這樣設定
   { path: 'reportform', component: ReportformComponent },
-  { path: 'comment', component: CommentComponent },
+  { path: 'comment/:hotelId', component: CommentComponent },
   { path: 'membercomment' , component:MemberCommentComponent},
   { path: 'membercommentform/:commentID' , component:MembercommentformComponent},
-  { path: '**' , component:NotfoundpageComponent }
+  { path: '**' , component:NotfoundpageComponent } //萬用路由，導到404 not found
 ];
 
 @NgModule({

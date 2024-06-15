@@ -86,6 +86,7 @@ const MAT_DATE_FORMATS_CUSTOM = {
     MatTabsModule,
     MatSliderModule,
     MatProgressSpinnerModule,
+
     // ProgressSpinnerMode,
 
 

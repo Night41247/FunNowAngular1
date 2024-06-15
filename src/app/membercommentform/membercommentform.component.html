@@ -2,7 +2,8 @@
   <div class="row ">
     <div class="col-md-6">
       <!-- 左下角的容器 -->
-      <button mat-raised-button class="m-3" routerLink="/membercomment">返回</button>
+       <a href=""></a>
+      <button mat-raised-button class="m-3" routerLink="/membercomment" >返回</button>
       <div class="container mt-5 fixed-container ">
         <div class="">
           <div class="text-blur-out 2 mt-4">
@@ -43,8 +44,8 @@
 
         <div>
           <form (ngSubmit)="onSubmit()" *ngIf="displayedFieldsCount > 0">
-            <div *ngFor="let field of fields; let i = index">
-              <div *ngIf="i < displayedFieldsCount" class="modal-dialog">
+            <div *ngFor="let field of fields; let i = index"  >
+              <div *ngIf="i < displayedFieldsCount" class="modal-dialog"  >
                 <div class="modal-content">
                   <div class="modal-body text-center mt-5">
                     <fa-icon *ngIf="field.icon" class="animatetime iconcolor" [icon]="field.icon" animation="bounce"

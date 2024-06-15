@@ -1,5 +1,5 @@
 
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 
 import { faCalculator, faHeart, faLocationDot, faWifi } from '@fortawesome/free-solid-svg-icons';
 import { faFaceSmileWink } from '@fortawesome/free-solid-svg-icons';
@@ -23,7 +23,9 @@ import { CommentService } from './../service/comment.service';
 
 
 export class MembercommentformComponent implements OnInit, OnDestroy {
-  @ViewChild('container', { static: false }) container: ElementRef | undefined;
+  // @ViewChild('container', { static: false }) container: ElementRef | undefined;
+  @ViewChildren('commentItem') commentItems!: QueryList<ElementRef>;
+  // @ViewChildren('scrollTarget') scrollTargets: QueryList<ElementRef> | undefined;
 
   commentRequest: CommentRequest = {
     CommentID: 0,
@@ -87,7 +89,19 @@ export class MembercommentformComponent implements OnInit, OnDestroy {
   ];
 
 
-  constructor(private route: ActivatedRoute, private http: HttpClient, private commentService: CommentService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private http: HttpClient,
+    private commentService: CommentService,
+    private activatedRoute :ActivatedRoute
+  ) {
+
+    this.activatedRoute.params.subscribe((para)=>{
+      console.log(para);
+    })
+    console.log('!!!',this.activatedRoute.snapshot.params);
+
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -152,21 +166,36 @@ export class MembercommentformComponent implements OnInit, OnDestroy {
   }
   startReview(): void {
     this.displayedFieldsCount = 1; // 开始评论，显示第一个评分项目
-    setTimeout(() => this.scrollToBottom(), 0); // 滚动到底部
+
   }
   onSliderChange(controlName: string): void {
     const currentFieldIndex = this.fields.findIndex(field => field.controlName === controlName);
     if (currentFieldIndex >= this.displayedFieldsCount - 1 && this.displayedFieldsCount < this.fields.length) {
       this.displayedFieldsCount++;
-      setTimeout(() => this.scrollToBottom(), 0); // 滚动到底部
+      this.scrollToCurrentField();
+
     }
   }
 
-  scrollToBottom(): void {
-    if (this.container) {
-      this.container.nativeElement.scrollTop = this.container.nativeElement.scrollHeight;
+  ngAfterViewInit(): void {
+    this.scrollToCurrentField();
+  }
+
+  scrollToCurrentField(): void {
+    if (this.displayedFieldsCount > 0 && this.displayedFieldsCount <= this.commentItems.length) {
+      setTimeout(() => {
+        const currentItem = this.commentItems.toArray()[this.displayedFieldsCount - 1];
+        const rect = currentItem.nativeElement.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const fixedPosition = rect.top + scrollTop - (window.innerHeight / 2) + (currentItem.nativeElement.offsetHeight / 2);
+        window.scrollTo({
+          top: fixedPosition,
+          behavior: 'smooth'
+        });
+      }, 0);
     }
   }
+
 
   onSubmit(): void {
     const isFormComplete = this.isFormComplete();
