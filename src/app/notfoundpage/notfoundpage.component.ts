@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import lottie from 'lottie-web';
-
 
 @Component({
   selector: 'app-notfoundpage',

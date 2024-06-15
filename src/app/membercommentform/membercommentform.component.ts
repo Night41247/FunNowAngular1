@@ -1,5 +1,5 @@
 
-import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 
 import { faCalculator, faHeart, faLocationDot, faWifi } from '@fortawesome/free-solid-svg-icons';
 import { faFaceSmileWink } from '@fortawesome/free-solid-svg-icons';
@@ -93,7 +93,8 @@ export class MembercommentformComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private http: HttpClient,
     private commentService: CommentService,
-    private activatedRoute :ActivatedRoute
+    private activatedRoute :ActivatedRoute,
+    private renderer: Renderer2
   ) {
 
     this.activatedRoute.params.subscribe((para)=>{
@@ -136,7 +137,7 @@ export class MembercommentformComponent implements OnInit, OnDestroy {
       this.freeWifiScore = formData.freeWifiScore;
       this.travelerType = formData.travelerType;
     }
-
+    this.initBlobs();
   }
 
 
@@ -261,6 +262,80 @@ export class MembercommentformComponent implements OnInit, OnDestroy {
 
 
 
+
+  // 背景
+
+  private readonly MIN_SPEED = 1.5;
+  private readonly MAX_SPEED = 2.5;
+
+  private randomNumber(min: number, max: number): number {
+    return Math.random() * (max - min) + min;
+  }
+
+  private initBlobs() {
+    const blobEls = document.querySelectorAll('.bouncing-blob');
+    const blobs = Array.from(blobEls).map(blobEl => new this.Blob(blobEl as HTMLElement, this.randomNumber.bind(this), this.renderer));
+
+    const update = () => {
+      requestAnimationFrame(update);
+      blobs.forEach(blob => {
+        blob.update();
+        blob.move();
+      });
+    };
+
+    requestAnimationFrame(update);
+  }
+
+  private Blob = class {
+    private el: HTMLElement;
+    private size: number;
+    private initialX: number;
+    private initialY: number;
+    private vx: number;
+    private vy: number;
+    private x: number;
+    private y: number;
+
+    constructor(el: HTMLElement, private randomNumber: (min: number, max: number) => number, private renderer: Renderer2) {
+      this.el = el;
+      const boundingRect = this.el.getBoundingClientRect();
+      this.size = boundingRect.width;
+      this.initialX = this.randomNumber(0, window.innerWidth - this.size);
+      this.initialY = this.randomNumber(0, window.innerHeight - this.size);
+      this.renderer.setStyle(this.el, 'top', `${this.initialY}px`);
+      this.renderer.setStyle(this.el, 'left', `${this.initialX}px`);
+      this.vx = this.randomNumber(1.5, 2.5) * (Math.random() > 0.5 ? 1 : -1);
+      this.vy = this.randomNumber(1.5, 2.5) * (Math.random() > 0.5 ? 1 : -1);
+      this.x = this.initialX;
+      this.y = this.initialY;
+    }
+
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      if (this.x >= window.innerWidth - this.size) {
+        this.x = window.innerWidth - this.size;
+        this.vx *= -1;
+      }
+      if (this.y >= window.innerHeight - this.size) {
+        this.y = window.innerHeight - this.size;
+        this.vy *= -1;
+      }
+      if (this.x <= 0) {
+        this.x = 0;
+        this.vx *= -1;
+      }
+      if (this.y <= 0) {
+        this.y = 0;
+        this.vy *= -1;
+      }
+    }
+
+    move() {
+      this.renderer.setStyle(this.el, 'transform', `translate(${this.x - this.initialX}px, ${this.y - this.initialY}px)`);
+    }
+  };
 
 
 
