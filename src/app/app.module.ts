@@ -32,6 +32,8 @@ import { MembercommentformComponent } from './membercommentform/membercommentfor
 import {MatSliderModule} from '@angular/material/slider';
 import { MatSliderValueAccessorDirective } from './directives/mat-slider-value-accessor.directive';
 import {ProgressSpinnerMode, MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { NotfoundpageComponent } from './notfoundpage/notfoundpage.component';
+
 
 const MAT_DATE_FORMATS_CUSTOM = {
   parse: {
@@ -56,7 +58,9 @@ const MAT_DATE_FORMATS_CUSTOM = {
     ReportformComponent,
     CommentComponent,
     MembercommentformComponent,
-    MatSliderValueAccessorDirective
+    MatSliderValueAccessorDirective,
+    NotfoundpageComponent,
+
 
   ],
   imports: [
