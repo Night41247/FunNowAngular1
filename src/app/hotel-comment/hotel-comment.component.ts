@@ -14,7 +14,7 @@ export class HotelCommentComponent implements OnInit{
   @ViewChild('commentContainer') commentContainer!: ElementRef;
 
 
-
+  currentSlide = 0;
   ratingRanges = [
     { key: 2, label: '超讚:9+' },
     { key: 3, label: '很讚:7-9' },
@@ -381,6 +381,21 @@ filterByDate(date: string | null): void {
           card.style.transform = `translateY(${index * cardHeight - containerHeight}px)`;
         });
       }, 50); // 每 50 毫秒更新一次位置
+    }
+
+    nextSlide() {
+      this.currentSlide = (this.currentSlide + 1) % (this.combinedData.length / 3);
+    }
+
+    prevSlide() {
+      this.currentSlide = (this.currentSlide - 1 + (this.combinedData.length / 3)) % (this.combinedData.length / 3);
+    }
+    getChunks(array: any[], size: number): any[][] {
+      const chunks = [];
+      for (let i = 0; i < array.length; i += size) {
+        chunks.push(array.slice(i, i + size));
+      }
+      return chunks;
     }
 
 }

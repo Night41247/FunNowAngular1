@@ -38,7 +38,7 @@
       <a  routerLink="/hotel_comment" class="btn btn-outline-primary" id="searchBtn">查看所有評論</a>
   </div>
 
-  <div class="row d-flex justify-content-center " #commentContainer *ngFor="let chunk of combinedData | chunk: 3">
+  <!-- <div class="row d-flex justify-content-center " #commentContainer *ngFor="let chunk of combinedData | chunk: 3">
     <div class="col-lg-3 " *ngFor="let data of chunk">
       <div>
         <div class="card-body p-2">
@@ -57,3 +57,91 @@
       </div>
     </div>
   </div>
+ -->
+
+ <!-- <div class="carousel-container">
+  <div class="carousel" [style.transform]="'translateX(-' + (currentSlide * 100) + '%)'">
+    <div class="carousel-slide" *ngFor="let chunk of combinedData | chunk: 3">
+      <div *ngFor="let data of chunk" class="comment-card">
+        <div class="card">
+          <div class="card-body">
+            <p>{{ truncateText(data.commentText, 24) }}</p>
+            <div class="d-flex justify-content-between">
+              <div class="d-flex flex-row align-items-center">
+                <fa-icon [icon]="fauserlarge"></fa-icon>
+                <p class="small mb-0 ms-2">{{ data.firstName }}</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button (click)="prevSlide()">Previous</button>
+  <button (click)="nextSlide()">Next</button>
+</div> -->
+
+
+<!-- <div class="carousel-container">
+  <div class="carousel" [style.transform]="'translateX(-' + (currentSlide * 100) + '%)'">
+    <div class="carousel-slide" *ngFor="let chunk of getChunks(combinedData, 3); let i = index" [class.active]="i === 0">
+      <div class="row">
+        <div *ngFor="let data of chunk" class="col-md-4">
+          <div class="card mb-2" style="background-color: #f0f2f5;">
+            <div class="card-body">
+              <p>{{ truncateText(data.commentText, 24) }}</p>
+              <div class="d-flex justify-content-between">
+                <div class="d-flex flex-row align-items-center">
+                  <fa-icon [icon]="fauserlarge"></fa-icon>
+                  <p class="small mb-0 ms-2">{{ data.firstName }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="chunk.length < 3">
+          <div *ngFor="let empty of [].constructor(3 - chunk.length)" class="col-md-4">
+            <div class="card mb-2" style="background-color: #f0f2f5; visibility: hidden;">
+              <div class="card-body"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button (click)="prevSlide()">Previous</button>
+  <button (click)="nextSlide()">Next</button>
+</div> -->
+
+
+<div class="carousel-container">
+  <div class="carousel" [style.transform]="'translateX(-' + (currentSlide * 100) + '%)'">
+    <div class="carousel-slide" *ngFor="let chunk of getChunks(combinedData, 3); let i = index">
+      <div class="row justify-content-center">
+        <div *ngFor="let data of chunk" class="col-md-4">
+          <div class="card mb-2" style="background-color: #f0f2f5;">
+            <div class="card-body">
+              <p>{{ truncateText(data.commentText, 24) }}</p>
+              <div class="d-flex justify-content-between">
+                <div class="d-flex flex-row align-items-center">
+                  <fa-icon [icon]="fauserlarge"></fa-icon>
+                  <p class="small mb-0 ms-2">{{ data.firstName }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="chunk.length < 3">
+          <div *ngFor="let empty of [].constructor(3 - chunk.length)" class="col-md-4">
+            <div class="card mb-2" style="background-color: #f0f2f5; visibility: hidden;">
+              <div class="card-body"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button (click)="prevSlide()">Previous</button>
+  <button (click)="nextSlide()">Next</button>
+</div>
