@@ -4,6 +4,7 @@ import { SearchParametersDTO } from '../interface/SearchParametersDTO';
 import { PgbackMemberService } from '../service/pgback-member.service';
 import { CPaging } from '../interface/CPaging';
 
+//列舉
 enum FilterCondition {
   AllMembers,
   NormalMembers,
