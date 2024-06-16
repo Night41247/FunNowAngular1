@@ -40,7 +40,7 @@ export class MemberCommentComponent {
 
 
   ngOnInit(): void {
-    const memberId = 20; // TODO 先写死
+    const memberId = 1; // TODO 先写死
 
     this.commentService.getCommentsByStatus(memberId).subscribe(
 
@@ -79,23 +79,35 @@ export class MemberCommentComponent {
     );
   }
 
-  startReview(commentID: number, hotelName: string, roomtypeName: string, checkinDate: string, checkoutDate: string,roomId:number): void {
-    this.router.navigate(['/membercommentform', commentID], {
+  startReview(commentID: number, hotelName: string, roomtypeName: string, checkinDate: string, checkoutDate: string, roomId: number): void {
+    const formattedCheckinDate = new Date(checkinDate).toISOString().split('T')[0];
+    const formattedCheckoutDate = new Date(checkoutDate).toISOString().split('T')[0];
+
+    const nights = this.calculateNights(new Date(formattedCheckinDate), new Date(formattedCheckoutDate));
+    console.log(`Number of nights: ${nights}`);
+
+    this.router.navigate(['/membercommentform'], {
       queryParams: {
+        commentID: commentID,
         hotelName: hotelName,
         roomtypeName: roomtypeName,
-        checkinDate: checkinDate,
-        checkoutDate: checkoutDate,
-        roomId:roomId,
+        checkinDate: formattedCheckinDate,
+        checkoutDate: formattedCheckoutDate,
+        roomId: roomId,
       }
+    }).then(success => {
+      if (success) {
+        console.log('Navigation is successful!');
+      } else {
+        console.error('Navigation has failed!');
+      }
+    }).catch(err => {
+      console.error('Navigation error:', err);
     });
-      console.log(commentID);
+
+    console.log(commentID);
   }
-
-
-
-
-  private calculateNights(checkInDate: Date, checkOutDate: Date): number {
+  private calculateNights(checkInDate: Date | string, checkOutDate: Date | string): number {
     const checkIn = new Date(checkInDate);
     const checkOut = new Date(checkOutDate);
     const diffTime = Math.abs(checkOut.getTime() - checkIn.getTime());

@@ -6,7 +6,7 @@
 }
 
 .container {
-  width: 70%;
+  width: 40%;
 }
 
 .font-sty {
@@ -32,11 +32,11 @@
   border-radius: 30px;
   background: #D0D0D0;
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px rgba(255, 255, 255, 0.08);
-  width: 90%;
+  width: 70%;
 }
 
 .progress-bar2 {
-  height: 10px;
+  height: 3px;
   border-radius: 30px;
   background-image: linear-gradient(to bottom, #005AB5, #0066CC);
   transition: 0.4s linear;
@@ -44,10 +44,12 @@
 }
 
 .progress-moved .progress-bar2 {
-  width: 80%;
+
   background-color: #0072E3;
   animation: progressAnimation 1s;
 }
+
+
 
 
 
@@ -123,7 +125,7 @@
   width: 70%;
   padding-left: 10%;
   padding-right: 10%;
-  font-size: 11px;
+  font-size: 10px;
 }
 
 .font-sty2 {
@@ -151,7 +153,9 @@
   border: 1px solid #45a2ae;
   border-radius: 8px;
 }
-
+.bubble-font{
+  font-size: 7px;
+}
 .comment-sm-border {
   border: 1px solid #45a2ae;
   border-radius: 8px;
@@ -182,4 +186,35 @@
   border-radius: 4px;
 }
 .height {height:10px;
+}
+
+/* ratingscore分成左右 */
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-grow-1 {
+  flex: 5;
+}
+
+.flex-grow-2 {
+  flex: 5;
+}
+
+
+/*material style */
+
+.review-group {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+
+  padding: 20px;
+}
+
+.review-item {
+  flex: 1;
+  margin: 0 10px;
+  padding-left: 20px;
+  padding-right: 20px;
 }

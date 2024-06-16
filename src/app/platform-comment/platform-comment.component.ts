@@ -126,6 +126,7 @@ export class PlatformCommentComponent {
       endDate: this.endDate ? this.endDate.toISOString() : null,
       searchText: this.searchText,
       status: this.selectedStatus,
+
     };
 
     console.log('Applying filters:', filters); // 調試日志

@@ -33,6 +33,12 @@ import {MatSliderModule} from '@angular/material/slider';
 import { MatSliderValueAccessorDirective } from './directives/mat-slider-value-accessor.directive';
 import {ProgressSpinnerMode, MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { NotfoundpageComponent } from './notfoundpage/notfoundpage.component';
+import { ChunkPipe } from './chunk.pipe';
+import {MatCardModule} from '@angular/material/card';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+
+
+
 
 
 const MAT_DATE_FORMATS_CUSTOM = {
@@ -60,6 +66,8 @@ const MAT_DATE_FORMATS_CUSTOM = {
     MembercommentformComponent,
     MatSliderValueAccessorDirective,
     NotfoundpageComponent,
+    ChunkPipe,
+
 
 
   ],
@@ -86,7 +94,8 @@ const MAT_DATE_FORMATS_CUSTOM = {
     MatTabsModule,
     MatSliderModule,
     MatProgressSpinnerModule,
-
+    MatCardModule,
+    MatProgressBarModule,
     // ProgressSpinnerMode,
 
 

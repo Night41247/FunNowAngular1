@@ -17,8 +17,9 @@ const routes: Routes = [
   { path: 'reportform', component: ReportformComponent },
   { path: 'comment/:hotelId', component: CommentComponent },
   { path: 'membercomment' , component:MemberCommentComponent},
-  { path: 'membercommentform/:commentID' , component:MembercommentformComponent},
-  { path: '**' , component:NotfoundpageComponent } //萬用路由，導到404 not found
+  {path: 'membercommentform', component: MembercommentformComponent},
+  { path: '**' , component:NotfoundpageComponent }, //萬用路由，導到404 not found
+  { path: 'hotel',component:HotelCommentComponent},
 ];
 
 @NgModule({

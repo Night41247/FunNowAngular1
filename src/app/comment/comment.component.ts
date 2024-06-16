@@ -14,8 +14,7 @@ export class CommentComponent implements OnInit{
 navigateToPgHotel() {
   //PgHotel/pgHotel/?hotelId=2&checkInDate=2024-06-29&checkOutDate=2024-06-30
   //TODO 寫死port(注意DEMO要用的port)，常見作法會寫死port
-  const url = `https://localhost:44341/PgHotel/pgHotel/?hotelId=${this.backMvcParam.hotelId}&checkInDate=${this.backMvcParam.checkInDate}&checkOutDate=${this.backMvcParam.checkOutDate}`;
-  // 家裡用  const url = `https://localhost:7284/PgHotel/pgHotel/?hotelId=${this.backMvcParam.hotelId}&checkInDate=${this.backMvcParam.checkInDate}&checkOutDate=${this.backMvcParam.checkOutDate}`;
+  const url = `https://localhost:7284/PgHotel/pgHotel/?hotelId=${this.backMvcParam.hotelId}&checkInDate=${this.backMvcParam.checkInDate}&checkOutDate=${this.backMvcParam.checkOutDate}`;
   window.location.href = url;
 
 }

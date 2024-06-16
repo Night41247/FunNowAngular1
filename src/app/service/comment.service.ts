@@ -98,8 +98,9 @@ getAverageScores(hotelId: number): Observable<any> {
   return this.http.get<any>(`${this.apiUrl}/${hotelId}/AverageScores`);
 }
 
+//platform_comment(第三方審核檢舉表單)
 getReportComment(filters: any): Observable<any> {
-  return this.http.post<any>(`${this.apiUrl}/filter`, filters);
+  return this.http.post<any>(`${this.apiUrl}/ReportedComment`, filters);
 }
 
 updateCommentStatus(commentId: number, status: number): Observable<any> {
@@ -133,8 +134,8 @@ getCommentsByStatus(memberId: number): Observable<{ commentinfo: CommentInfo[], 
 }
 
 //未填寫評論，存入DB
-addComment(commentRequest: CommentRequest): Observable<RatingScore> {
-  return this.http.post<RatingScore>(`${this.apiUrl}/AddComment`, commentRequest);
+addComment(Ratingscore: RatingScore): Observable<RatingScore> {
+  return this.http.post<RatingScore>(`${this.apiUrl}/AddComment`, Ratingscore);
 }
 
 //修改comment後存入DB

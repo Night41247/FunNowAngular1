@@ -7,7 +7,7 @@ import { faSprayCanSparkles } from '@fortawesome/free-solid-svg-icons';
 import { faUserLarge } from '@fortawesome/free-solid-svg-icons';
 import { faCouch } from '@fortawesome/free-solid-svg-icons';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { CommentRequest, Commentdata, RatingScoreDTO } from '../model/comment';
+import { CommentRequest, Commentdata, RatingScore, RatingScoreDTO } from '../model/comment';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
@@ -93,23 +93,19 @@ export class MembercommentformComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private http: HttpClient,
     private commentService: CommentService,
-    private activatedRoute :ActivatedRoute,
     private renderer: Renderer2
   ) {
 
-    this.activatedRoute.params.subscribe((para)=>{
+    this.route.params.subscribe((para)=>{
       console.log(para);
     })
-    console.log('!!!',this.activatedRoute.snapshot.params);
+    console.log('!!!',this.route.snapshot.params);
 
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      this.commentID = +params['commentID'];
-    });
-
     this.route.queryParams.subscribe(params => {
+      this.commentID = +params['commentID'];
       this.hotelName = params['hotelName'];
       this.roomtypeName = params['roomtypeName'];
       this.checkinDate = params['checkinDate'];
@@ -137,6 +133,7 @@ export class MembercommentformComponent implements OnInit, OnDestroy {
       this.freeWifiScore = formData.freeWifiScore;
       this.travelerType = formData.travelerType;
     }
+    //背景
     this.initBlobs();
   }
 
@@ -200,23 +197,22 @@ export class MembercommentformComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     const isFormComplete = this.isFormComplete();
-    const commentRequest = {
-      CommentID: this.commentID,
-      RoomID: this.roomId,
-      ComfortScore: this.comfortScore,
-      CleanlinessScore: this.cleanlinessScore,
-      StaffScore: this.staffScore,
-      FacilitiesScore: this.facilitiesScore,
-      ValueScore: this.valueScore,
-      LocationScore: this.locationScore,
-      FreeWifiScore: this.freeWifiScore,
-      TravelerType: this.travelerType,
-      UpdatedAt: this.UpdatedAt,
+    const ratingScore: RatingScore = {
+      commentId: this.commentID,
+      roomId: this.roomId,
+      comfortScore: this.comfortScore,
+      cleanlinessScore: this.cleanlinessScore,
+      staffScore: this.staffScore,
+      facilitiesScore: this.facilitiesScore,
+      valueScore: this.valueScore,
+      locationScore: this.locationScore,
+      freeWifiScore: this.freeWifiScore,
+      travelerType: this.travelerType,
     };
 
-    console.log('Form Data:', commentRequest);
+    console.log('Form Data:', ratingScore);
 
-    this.commentService.addComment(commentRequest).subscribe(response => {
+    this.commentService.addComment(ratingScore).subscribe(response => {
       console.log('Data submitted successfully', response);
     }, error => {
       console.error('Error submitting data', error);
@@ -228,7 +224,7 @@ export class MembercommentformComponent implements OnInit, OnDestroy {
       CommentStatus: isFormComplete ? '7' : '6',
 
     };
-    console.log('Form Data:', updateRequest);
+    console.log('updateRequest Form Data:', updateRequest);
     this.commentService.updateComment(this.commentID, updateRequest).subscribe(response => {
       console.log('Comment status updated successfully', response);
     }, error => {
