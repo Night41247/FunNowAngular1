@@ -13,7 +13,6 @@ import { faUserLarge } from '@fortawesome/free-solid-svg-icons';
 export class HotelCommentComponent implements OnInit{
   @ViewChild('commentContainer') commentContainer!: ElementRef;
 
-
   currentSlide = 0;
   ratingRanges = [
     { key: 2, label: '超讚:9+' },
@@ -76,16 +75,15 @@ export class HotelCommentComponent implements OnInit{
     this.backMvcParam.checkOutDate = this.route.snapshot.queryParams['checkOutDate'];
   }
 
-  ngAfterViewInit() {
-    this.startScrolling();
-  }
+  // ngAfterViewInit() {
+  //   this.startScrolling();
+  // }
   ngOnInit(): void {
     const hotelId = this.route.snapshot.paramMap.get('hotelId');
     if (hotelId) {
       this.hotelId = +hotelId; // 將 hotelId 轉換為數字類型
     }
     this.loadComments();
-    this.loadCommentCounts();
     this.loadAverageScore();
     this.AvgText();
 
@@ -147,9 +145,8 @@ export class HotelCommentComponent implements OnInit{
         this.totalAverageScore = data.totalAverageScore;
 
         console.log('Received data:', data);
-
         this.combineData();
-        this.applySort(); // 调用排序方法
+
       });
   }
 
@@ -210,59 +207,12 @@ export class HotelCommentComponent implements OnInit{
     );
   }
 
- // 加載評論數量
- loadCommentCounts(): void {
-  this.commentService.getCommentCounts().subscribe(data => {
-    this.totalCommentcounts = data.total;
-
-    const ratingCommentDetailsArray = Object.entries(data.ratingCommentDetails);
-    ratingCommentDetailsArray.forEach(([rating, detail]) => {
-      const ratingDetail = detail as { count: number; comments: any[] };
-      this.rateCounts.set(parseInt(rating, 10), ratingDetail.count);
-    });
-
-    console.log('Updated Rating Counts:', Array.from(this.rateCounts.entries()));
-
-    const dateCommentDetailsArray = Object.entries(data.dateCommentDetails);
-    dateCommentDetailsArray.forEach(([dateRange, detail]) => {
-      const dateDetail = detail as { count: number; comments: any[] };
-      this.monthCounts.set(dateRange, dateDetail.count);
-    });
-
-    console.log('Updated Month Counts:', Array.from(this.monthCounts.entries()));
-  });
-}
 
 
 
 
-filterByRating(event: any): void {
-  this.ratingFilter = event;
-  this.page = 1;
-  this.loadComments();
-  console.log('Rating Filter:', this.ratingFilter);
-}
-
-filterByDate(date: string | null): void {
-  this.dateFilter = date;
-  this.page = 1;
-  this.loadComments();
-  console.log('Date Filter:', this.dateFilter);
-}
 
 
-    // 搜索評論
-    searchComments(): void {
-      this.page = 1;
-      this.loadComments();
-    }
-
-    // 添加評論
-    addComment(newComment: any): void {
-      this.commentService.postCommentAPI(newComment).subscribe(() => {
-        this.loadComments();
-      });
-    }
 
     // 切換到下一頁
     nextPage(): void {
@@ -282,50 +232,9 @@ filterByDate(date: string | null): void {
 
 
 
-    // 顯示或隱藏搜索欄
-    toggleSearch(): void {
-      this.isSearchVisible = !this.isSearchVisible;
-    }
 
 
 
-
-    // 根據主題篩選評論
-    filterByTopic(topic: string): void {
-      const index = this.selectedTopics.indexOf(topic);
-      if (index === -1) {
-        this.selectedTopics.push(topic);
-      } else {
-        this.selectedTopics.splice(index, 1);
-      }
-      this.applyFilters();
-    }
-
-    applyFilters(): void {
-      this.page = 1;
-      this.loadComments();
-    }
-
-    // 根據排序方式篩選評論
-    sortBy(event: any): void {
-      this.sortOrder = event;
-      this.page = 1;
-      this.loadComments();
-      console.log('Sort Order:', this.sortOrder);
-    }
-
-    applySort(): void {
-      if (this.sortOrder === 'highestScore') {
-        this.combinedData.sort((a, b) => b.avgScoresPerCom.totalAverageScore - a.avgScoresPerCom.totalAverageScore);
-      } else if (this.sortOrder === 'lowestScore') {
-        this.combinedData.sort((a, b) => a.avgScoresPerCom.totalAverageScore - b.avgScoresPerCom.totalAverageScore);
-      } else if (this.sortOrder === 'newest') {
-        this.combinedData.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-      } else if (this.sortOrder === 'oldest') {
-        this.combinedData.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-      }
-      console.log('Sorted Combined Data:', this.combinedData);
-    }
 
 
     //TODO 分頁尚未處理(選別頁會一直跳第一頁)
@@ -370,18 +279,7 @@ filterByDate(date: string | null): void {
       return commentText.length > limit ? commentText.substring(0, limit) + '...' : commentText;
     }
 
-    startScrolling() {
-      setInterval(() => {
-        const container = this.commentContainer.nativeElement;
-        const containerHeight = container.offsetHeight;
-        const cards = container.querySelectorAll('.comment-card') as NodeListOf<HTMLElement>;
-        const cardHeight = cards[0].offsetHeight;
 
-        Array.from(cards).forEach((card, index) => {
-          card.style.transform = `translateY(${index * cardHeight - containerHeight}px)`;
-        });
-      }, 50); // 每 50 毫秒更新一次位置
-    }
 
     nextSlide() {
       this.currentSlide = (this.currentSlide + 1) % (this.combinedData.length / 3);
@@ -390,12 +288,17 @@ filterByDate(date: string | null): void {
     prevSlide() {
       this.currentSlide = (this.currentSlide - 1 + (this.combinedData.length / 3)) % (this.combinedData.length / 3);
     }
+    //3個卡片一組
     getChunks(array: any[], size: number): any[][] {
       const chunks = [];
       for (let i = 0; i < array.length; i += size) {
         chunks.push(array.slice(i, i + size));
       }
       return chunks;
+    }
+    //資料不是3的倍數時，補齊卡片
+    getEmptyCards(length: number): number[] {
+      return Array(3 - length).fill(0);
     }
 
 }
