@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } fro
 import { CommentService } from './../service/comment.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faUserLarge } from '@fortawesome/free-solid-svg-icons';
+import { faCaretRight } from '@fortawesome/free-solid-svg-icons';
+import { faCaretLeft } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -28,7 +30,13 @@ export class HotelCommentComponent implements OnInit{
     { key: '9-11月', label: '9-11月' },
     { key: '12-2月', label: '12-2月' },
   ];
+
+  //icon
   fauserlarge = faUserLarge;
+  // <i class="fa-solid fa-caret-right fa-2xl"></i>
+facaretright = faCaretRight;
+facaretleft = faCaretLeft;
+
   hotelId = 2; // TODO: 測試時寫死
   hotelName!: string; // 使用非空斷言操作符
   statistics: any;

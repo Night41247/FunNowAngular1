@@ -10,7 +10,7 @@ import { CommentInfo, CommentRequest, CommentUpdateRequest, Commentdata, Comment
   providedIn: 'root'
 })
 export class CommentService {
-
+  isLoading = false;
   private apiUrl = 'https://localhost:7103/api/Comment';
 
   constructor(private http:HttpClient) { }
@@ -24,8 +24,11 @@ export class CommentService {
    * @param ratingFilter 評分篩選 (可選)
    * @param dateFilter 日期篩選 (可選)
    * @param sortBy 排序方式 (可選)
+   *
    */
+
  getComments(hotelId: number, page: number, pageSize: number, search?: string, ratingFilter?: number, dateFilter?: string, sortBy?: string, topics?: string): Observable<any> {
+
   let params = new HttpParams()
     .set('page', page.toString())
     .set('pageSize', pageSize.toString());
@@ -48,6 +51,7 @@ export class CommentService {
 
   return this.http.get<any>(`${this.apiUrl}/${hotelId}/GetComments`, { params });
 }
+
 
 
 
@@ -146,6 +150,8 @@ updateComment(commentId: number, updateRequest: CommentUpdateRequest): Observabl
 getAvgTxt(hotelId: number): Observable<any> {
   return this.http.get<any>(`${this.apiUrl}/averageRatingText/${hotelId}`);
 }
+
+
 
 
 

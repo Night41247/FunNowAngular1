@@ -53,17 +53,7 @@
 
 
 
-@keyframes progressAnimation {
-  0% {
-      width: 5%;
-      background-color: #F9BCCA;
-  }
 
-  100% {
-
-      background-color: #EF476F;
-  }
-}
 
 .commentList-right {
   background-color: #ECF5FF;

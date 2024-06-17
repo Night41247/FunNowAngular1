@@ -12,7 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class CommentComponent implements OnInit{
 
 navigateToPgHotel() {
-  //PgHotel/pgHotel/?hotelId=2&checkInDate=2024-06-29&checkOutDate=2024-06-30
+  //https://localhost:7284/PgHotel/pgHotel/?hotelId=2&checkInDate=2024-06-25&checkOutDate=2024-06-26
   //TODO 寫死port(注意DEMO要用的port)，常見作法會寫死port
   const url = `https://localhost:7284/PgHotel/pgHotel/?hotelId=${this.backMvcParam.hotelId}&checkInDate=${this.backMvcParam.checkInDate}&checkOutDate=${this.backMvcParam.checkOutDate}`;
   window.location.href = url;
@@ -33,7 +33,7 @@ navigateToPgHotel() {
     { key: '12-2月', label: '12-2月' },
   ];
 
-  hotelId = 2; // TODO: 測試時寫死
+  hotelId = 0; // TODO: 測試時寫死
   hotelName!: string; // 使用非空斷言操作符
   statistics: any;
   page: number = 1;
@@ -73,23 +73,50 @@ navigateToPgHotel() {
     checkOutDate : '',
   }
 
-  constructor(private commentService: CommentService , private route: ActivatedRoute,private router: Router){
-    this.backMvcParam.hotelId = this.route.snapshot.params['hotelId'];
-    this.backMvcParam.checkInDate = this.route.snapshot.queryParams['checkInDate'];
-    this.backMvcParam.checkOutDate = this.route.snapshot.queryParams['checkOutDate'];
+  checkInDate:string='';
+  checkOutDate:string='';
+
+  constructor(
+    private commentService: CommentService ,
+    private route: ActivatedRoute,
+    private router: Router
+  )
+  {
+    this.backMvcParam.hotelId = +this.route.snapshot.params['hotelId'];
+    this.backMvcParam.checkInDate = this.route.snapshot.params['checkInDate']|| '';
+    this.backMvcParam.checkOutDate = this.route.snapshot.params['checkOutDate']|| '';
+    console.log('checkInDate',this.backMvcParam.checkInDate);
+    console.log('hotel',this.backMvcParam.hotelId);
   }
 
 
   ngOnInit(): void {
     const hotelId = this.route.snapshot.paramMap.get('hotelId');
+    const checkInDate = this.route.snapshot.paramMap.get('checkInDate');
+    const checkOutDate = this.route.snapshot.paramMap.get('checkOutDate');
+
     if (hotelId) {
-      this.hotelId = +hotelId; // 將 hotelId 轉換為數字類型
+      this.hotelId = +hotelId;
     }
+    if (checkInDate) {
+      this.checkInDate = checkInDate;
+    }
+    if (checkOutDate) {
+      this.checkOutDate = checkOutDate;
+    }
+
+    this.backMvcParam.hotelId = this.hotelId;
+    this.backMvcParam.checkInDate = this.checkInDate;
+    this.backMvcParam.checkOutDate = this.checkOutDate;
+    console.log('ng', this.backMvcParam.hotelId);
+    console.log('ng',  this.backMvcParam.checkInDate);
+    console.log('ng',  this.backMvcParam.checkOutDate);
     this.loadComments();
     this.loadCommentCounts();
     this.loadAverageScore();
     this.AvgText();
   }
+
 
 
   AvgText() {

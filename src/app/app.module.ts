@@ -36,6 +36,7 @@ import { NotfoundpageComponent } from './notfoundpage/notfoundpage.component';
 import { ChunkPipe } from './chunk.pipe';
 import {MatCardModule} from '@angular/material/card';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { LoadingpageComponent } from './loadingpage/loadingpage.component';
 
 
 
@@ -67,6 +68,7 @@ const MAT_DATE_FORMATS_CUSTOM = {
     MatSliderValueAccessorDirective,
     NotfoundpageComponent,
     ChunkPipe,
+    LoadingpageComponent,
 
 
 
