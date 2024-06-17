@@ -1,13 +1,13 @@
-<button mat-raised-button class="ms-2 mt-2" (click)="navigateToPgHotel()">返回</button>
+<!-- <button mat-raised-button class="ms-2 mt-2" (click)="navigateToPgHotel()">返回</button> -->
 
 <!--飯店評論-->
 <div class="container mt-5">
   <!-- 飯店名稱及總分 -->
   <div>
     <h4 class="mb-3 font-sty">{{hotelName}} 住客評論</h4>
-    <span class="comment-cube">{{totalAverageScore | number:'1.1-1'}}  </span>
+    <span class="comment-cube">{{hotelavgScore | number:'1.1-1'}}  </span>
     <span class="avgtext ms-2">{{ratingText}}</span>
-    <div class="mt-2">共{{totalItems}}則評論</div>
+    <div class="mt-2">共{{totalCommentcounts}}則評論</div>
 
   </div>
   <hr />
@@ -40,7 +40,7 @@
          <label><span>評分</span></label>
          <div>
           <select class="form-select" aria-label="filter-rate" [(ngModel)]="ratingFilter" (ngModelChange)="filterByRating($event)">
-            <option [ngValue]="null" selected>全部({{ totalItems }})</option>
+            <option [ngValue]="null" selected>全部({{ totalCommentcounts }})</option>
             <option *ngFor="let range of ratingRanges" [ngValue]="range.key">{{range.label}} ({{rateCounts.get(range.key)}})</option>
           </select>
          </div>
@@ -50,7 +50,7 @@
          <label><span>住宿期間</span></label>
          <div>
            <select class="form-select" aria-label="filter-during"  [(ngModel)]="dateFilter" (ngModelChange)="filterByDate($event)">
-             <option [ngValue]="null" selected>全部 ({{ totalItems }})</option>
+             <option [ngValue]="null" selected>全部 ({{ totalCommentcounts }})</option>
              <option *ngFor="let range of monthRanges" [ngValue]="range.key">{{range.label}} ({{monthCounts.get(range.key)}})</option>
            </select>
          </div>

@@ -51,6 +51,7 @@ navigateToPgHotel() {
   combinedData: any[] = [];
   averageScores: any[] = [];
   totalAverageScore: number = 0;
+  hotelavgScore:number = 0;
   isSearchVisible: boolean = false;
   ratingText:string='';
   rateCounts: Map<number, number> = new Map();
@@ -123,7 +124,9 @@ navigateToPgHotel() {
     this.commentService.getAvgTxt(this.hotelId).subscribe(data => {
 
       this.hotelId = data.hotelId;
+      this.hotelavgScore = data.averageScore;
       this.ratingText = data.ratingText;
+      this.totalCommentcounts = data.counts;
     }, error => {
       console.error('Error fetching rating text:', error);
     });
@@ -240,7 +243,7 @@ navigateToPgHotel() {
  // 加載評論數量
  loadCommentCounts(): void {
   this.commentService.getCommentCounts().subscribe(data => {
-    this.totalCommentcounts = data.total;
+
 
     const ratingCommentDetailsArray = Object.entries(data.ratingCommentDetails);
     ratingCommentDetailsArray.forEach(([rating, detail]) => {
