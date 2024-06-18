@@ -49,7 +49,7 @@ export class MemberCommentComponent {
         this.commentInfos = data.commentinfo;
         this.orders = data.orders;
         this.hotelImage = data.hotelImage;
-        // 合并评论和评论信息
+        // 合併評論和和評論內容
         this.combinedComments = this.comments.map(comment => {
           const info = this.commentInfos.find(ci => ci.commentId === comment.commentId);
           const order = this.orders.find(o => o.memberId === comment.memberId);
