@@ -10,10 +10,55 @@ import { CommentService } from '../service/comment.service';
 })
 export class ReportDetailDialogComponent {
 
-  constructor(public dialogRef: MatDialogRef<ReportDetailDialogComponent>,@Inject(MAT_DIALOG_DATA) public data: any,private commentService: CommentService)
-  {
-    console.log('Data received in dialog:', data); // 调试日志
+  reportReason: { commentTitle: string, commentText: string };
+  constructor(
+    public dialogRef: MatDialogRef<ReportDetailDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private commentService: CommentService)
+  {this.reportReason = data.reportReason;
+    console.log('Data received in dialog:', this.reportReason); // 调试日志
+
+
   }
+
+  ChangeStatus(): void {
+    // 调用服务来更新状态
+
+    this.commentService.updateCommentAndReportStatus(this.data.commentId, this.data.reportId, 4).subscribe(
+      (updatedReport: any) => {
+        if (updatedReport) {
+          console.log('Comment and report status updated:', updatedReport);
+          // 调用发送电子邮件的服务
+          this.sendEmail('5525asd9896@gmail.com', 'FunNow評論審核結果通知', `評論未通過審核，請遵守我們的評論規範。`);
+          this.dialogRef.close(true);
+        } else {
+          console.error('Failed to update the status.');
+          this.dialogRef.close(false);
+        }
+      },
+      error => {
+        console.error('Error updating status:', error);
+        this.sendEmail('5525asd9896@gmail.com', 'FunNow評論審核結果通知', `評論未通過審核，請遵守我們的評論規範。`);
+        this.dialogRef.close(false);
+
+      }
+    );
+  }
+
+  sendEmail(email: string, subject: string, body: string): void {
+    this.commentService.sendEmail(email, subject, body).subscribe(
+
+      response => {
+        console.log('Email sent successfully:', response);
+      },
+      error => {
+        console.error('Error sending email:', error);
+      }
+    );
+  }
+
+
+
 
   onCancel(): void {
     this.dialogRef.close();

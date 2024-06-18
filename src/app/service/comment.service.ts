@@ -126,7 +126,7 @@ updateCommentAndReportStatus(commentId: number, reportId: number, status: number
 
 sendEmail(to: string, subject: string, body: string): Observable<any> {
   const emailRequest = { to, subject, body };
-  return this.http.post(`https://localhost:7103/api/Email/SendEmail`, emailRequest);
+  return this.http.post(`https://localhost:7103/api/Email/SendMessage`, emailRequest);
 }
 submitReport(reportReview: any): Observable<any> {
   return this.http.post(`${this.apiUrl}/SubmitReportReview`, reportReview);
@@ -152,7 +152,9 @@ getAvgTxt(hotelId: number): Observable<any> {
 }
 
 
-
+getHotelImage(): Observable<any>{
+  return this.http.get<any>(`${this.apiUrl}/GetCHotelUrl`);
+}
 
 
 }

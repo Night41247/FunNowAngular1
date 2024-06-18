@@ -8,6 +8,20 @@
       <button mat-button mat-dialog-close>關閉</button>
     </div>
   </ng-container>
+
+<!-- platformcomment 審核不通過確認dialog -->
+  <ng-container *ngSwitchCase="'changeSatus'">
+    <h1 mat-dialog-title>再次確認</h1>
+    <div mat-dialog-content>
+      <p>是否變更為不通過?</p>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-button (click)="onCancel()">否</button>
+      <button mat-button color="primary" (click)="ChangeStatus()">是</button>
+    </div>
+  </ng-container >
+
+
   <ng-container *ngSwitchCase="'reportcomfirm'">
     <h1 mat-dialog-title>再次確認</h1>
     <div mat-dialog-content>
@@ -16,6 +30,18 @@
     <div mat-dialog-actions>
       <button mat-button (click)="onCancel()">否</button>
       <button mat-button color="primary" (click)="onConfirm()">是</button>
+    </div>
+  </ng-container >
+
+
+  <ng-container *ngSwitchCase="'reportedText'">
+    <h1 mat-dialog-title>被舉報內容</h1>
+    <div mat-dialog-content>
+      <p><strong>Title:</strong> {{ reportReason.commentTitle }}</p>
+      <p><strong>Text:</strong> {{ reportReason.commentText }}</p>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-button (click)="onCancel()">關閉</button>
     </div>
   </ng-container >
 
