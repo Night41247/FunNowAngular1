@@ -43,40 +43,55 @@ export class MemberCommentComponent {
     const memberId = 1; // TODO 先写死
 
     this.commentService.getCommentsByStatus(memberId).subscribe(
-
       (data) => {
         this.comments = data.comments;
         this.commentInfos = data.commentinfo;
         this.orders = data.orders;
         this.hotelImage = data.hotelImage;
+
         // 合并评论和评论信息
         this.combinedComments = this.comments.map(comment => {
           const info = this.commentInfos.find(ci => ci.commentId === comment.commentId);
           const order = this.orders.find(o => o.memberId === comment.memberId);
           const nights = order ? this.calculateNights(order.checkInDate, order.checkOutDate) : null;
-          const image = this.hotelImage.find(h => h.hotelId === comment.hotelId)
+          const image = this.hotelImage.find(h => h.hotelId === comment.hotelId);
+
+          const processedImage = image ? this.processImageUrl(image.imageUrl) : null;
+          console.log('Processed Image URL:', processedImage);
           return {
             ...comment,
             ...info,
             ...order,
-            ...image,
+            imageUrl: processedImage,
             checkInDate: order ? order.checkInDate : null,
             checkOutDate: order ? order.checkOutDate : null,
             nights
-
           };
         });
+
         console.log(data);
         console.log(this.combinedComments);
+
         this.unfinishedComments = this.combinedComments.filter(comment => comment.commentStatus === '6');
         this.pendingComments = this.combinedComments.filter(comment => comment.commentStatus === '5');
         this.completedComments = this.combinedComments.filter(comment => comment.commentStatus === '7');
+
         sessionStorage.setItem('unfinishedComments', JSON.stringify(this.unfinishedComments));
       },
       (error) => {
-        console.error('Error fetching comments',error);
+        console.error('Error fetching comments', error);
       }
     );
+  }
+
+  private processImageUrl(url: string): string {
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      // 處理網路圖片
+      return url;
+    } else {
+      // 本地圖片
+      return `/image/${url}`;
+    }
   }
 
   startReview(commentID: number, hotelName: string, roomtypeName: string, checkinDate: string, checkoutDate: string, roomId: number): void {
