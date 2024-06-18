@@ -41,75 +41,46 @@ export class MemberCommentComponent {
 
   ngOnInit(): void {
     const memberId = 1; // TODO 先写死
-    this.loadCommentsAndImages(memberId);
-  }
 
-  loadCommentsAndImages(memberId: number): void {
-    // 並行獲取評論數據和圖片數據
     this.commentService.getCommentsByStatus(memberId).subscribe(
-      (commentData) => {
-        this.comments = commentData.comments;
-        this.commentInfos = commentData.commentinfo;
-        this.orders = commentData.orders;
 
-        this.commentService.getHotelImage().subscribe(
-          (imageData) => {
-            this.hotelImage = imageData;
+      (data) => {
+        this.comments = data.comments;
+        this.commentInfos = data.commentinfo;
+        this.orders = data.orders;
+        this.hotelImage = data.hotelImage;
+        // 合并评论和评论信息
+        this.combinedComments = this.comments.map(comment => {
+          const info = this.commentInfos.find(ci => ci.commentId === comment.commentId);
+          const order = this.orders.find(o => o.memberId === comment.memberId);
+          const nights = order ? this.calculateNights(order.checkInDate, order.checkOutDate) : null;
+          const image = this.hotelImage.find(h => h.hotelId === comment.hotelId);
+          const hotelImageUrl = image ? `assets/${image.hotelImage1}` : null;
+          return {
+            ...comment,
+            ...info,
+            ...order,
+            hotelImageUrl,
+            checkInDate: order ? order.checkInDate : null,
+            checkOutDate: order ? order.checkOutDate : null,
+            nights
 
-            // 合併評論和圖片數據
-            this.combineCommentsWithImages();
-          },
-          (error) => {
-            console.error('Error fetching hotel images', error);
-          }
-        );
+          };
+        });
+        console.log('ng',data);
+        console.log('ngcombine',this.combinedComments);
+        this.unfinishedComments = this.combinedComments.filter(comment => comment.commentStatus === '6');
+        this.pendingComments = this.combinedComments.filter(comment => comment.commentStatus === '5');
+        this.completedComments = this.combinedComments.filter(comment => comment.commentStatus === '7');
+        sessionStorage.setItem('unfinishedComments', JSON.stringify(this.unfinishedComments));
       },
       (error) => {
-        console.error('Error fetching comments', error);
+        console.error('Error fetching comments',error);
       }
     );
   }
 
-  private combineCommentsWithImages() {
-    this.combinedComments = this.comments.map(comment => {
-      const info = this.commentInfos.find(ci => ci.commentId === comment.commentId);
-      const order = this.orders.find(o => o.memberId === comment.memberId);
-      const nights = order ? this.calculateNights(order.checkInDate, order.checkOutDate) : null;
-      const image = this.hotelImage.find(h => h.hotelId === comment.hotelId);
 
-      return {
-        ...comment,
-        ...info,
-        ...order,
-        hotelImageUrl: image ? image.hotelImageUrl : null, // 使用 API 返回的圖片 URL
-        checkInDate: order ? order.checkInDate : null,
-        checkOutDate: order ? order.checkOutDate : null,
-        nights
-      };
-    });
-
-    console.log('Combined Comments with Images:', this.combinedComments);
-    this.unfinishedComments = this.combinedComments.filter(comment => comment.commentStatus === '6');
-    this.pendingComments = this.combinedComments.filter(comment => comment.commentStatus === '5');
-    this.completedComments = this.combinedComments.filter(comment => comment.commentStatus === '7');
-    sessionStorage.setItem('unfinishedComments', JSON.stringify(this.unfinishedComments));
-  }
-
-//-----------------------------------------------------------------------
-  // getHotelImages() {
-  //   this.commentService.getHotelImage().subscribe(
-  //     (data: any) => {
-  //       // 處理從服務獲取的數據
-  //       console.log('Hotel Images:', data);
-  //       this.hotelImage = data;
-  //     },
-  //     (error: any) => {
-  //       // 處理錯誤
-  //       console.error(error);
-  //     }
-  //   );
-
-  // }
 
   startReview(commentID: number, hotelName: string, roomtypeName: string, checkinDate: string, checkoutDate: string, roomId: number): void {
     const formattedCheckinDate = new Date(checkinDate).toISOString().split('T')[0];
