@@ -1,3 +1,4 @@
+import { updateMemberRoleDTO } from './../interface/UpdateMemberRoleDTO';
 import { Component } from '@angular/core';
 import { pgBackMemberDTO } from '../interface/pgBackMemberDTO';
 import { SearchParametersDTO } from '../interface/SearchParametersDTO';
@@ -109,21 +110,31 @@ export class PgbackMemberComponent {
       this.showMemberContainsKeyword();
   }
   //更改狀態紐
-  setRoleColor(roleName: string): string {
-    return roleName === '房客' ? 'green' : 'red';
+setRoleColor(roleName: string): string {
+  return roleName === '房客' ? 'green' : 'red';
+}
+
+popConfirmMsg(member: pgBackMemberDTO) {
+  const confirmed = window.confirm(`確定要修改${member.fullName}的狀態嗎？`);
+  if (confirmed) {
+    this.changeRoleStatus(member);
   }
-  popConfirmMsg(member: pgBackMemberDTO) {
-    const confirmed = window.confirm(`確定要修改${member.fullName}的狀態嗎？`);
-    if (confirmed) {
-      this.changeRoleStatus(member);
-    }
-  }
-  changeRoleStatus(member: pgBackMemberDTO) {
-    const newRole = member.roleName === '房客' ? '封鎖中' : '房客';
-    this.service.callUpdateMemberRoleAPI(member.memberId, newRole).subscribe(() => {
-      member.roleName = newRole;
-    });
-  }
+}
+
+changeRoleStatus(member: pgBackMemberDTO) {
+  const newRole = member.roleName === '房客' ? '封鎖中' : '房客';
+  const updateMemberRole: updateMemberRoleDTO = {
+    memberId: member.memberId,
+    newRoleName: newRole
+  };
+
+  this.service.callUpdateMemberRoleAPI(updateMemberRole).subscribe(() => {
+    member.roleName = newRole;
+  }, error => {
+    console.error('Error updating member role:', error);
+  });
+}
+
   //分頁紐
   onPageChange(page: number) {
     if (page < 1 || page > this.totalPages) {
