@@ -55,7 +55,9 @@ export class MemberCommentComponent {
           const order = this.orders.find(o => o.memberId === comment.memberId);
           const nights = order ? this.calculateNights(order.checkInDate, order.checkOutDate) : null;
           const image = this.hotelImage.find(h => h.hotelId === comment.hotelId);
-          const hotelImageUrl = image ? `assets/${image.hotelImage1}` : null;
+          const hotelImageUrl = image
+          ? `/dist/fun-now-angular1/assets/${image.hotelImage1}`
+          : null;
           return {
             ...comment,
             ...info,

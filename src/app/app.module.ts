@@ -38,6 +38,7 @@ import {MatCardModule} from '@angular/material/card';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { LoadingpageComponent } from './loadingpage/loadingpage.component';
 import { createCustomElement } from '@angular/elements';
+import { HotelcommentboxComponent } from './hotelcommentbox/hotelcommentbox.component';
 
 
 
@@ -69,6 +70,7 @@ const MAT_DATE_FORMATS_CUSTOM = {
     NotfoundpageComponent,
     ChunkPipe,
     LoadingpageComponent,
+    HotelcommentboxComponent,
 
 
 
