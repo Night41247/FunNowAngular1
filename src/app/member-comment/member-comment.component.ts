@@ -34,7 +34,8 @@ export class MemberCommentComponent {
   completedComments: any[] = [];
   hotelImage:any[]=[];
 
-  constructor(private commentService: CommentService,private router: Router) { }
+  constructor(
+    private commentService: CommentService,private router: Router) { }
 
 
   commentID!: number;
@@ -43,8 +44,9 @@ export class MemberCommentComponent {
   checkinDate!: string;
   checkoutDate!: string;
   roomId!: number;
-  @Input() memberId!: number;
+  @Input() memberId: number = 0;
   @Output() navigateToForm = new EventEmitter<any>();
+
 
 ngOnInit(): void {
 

@@ -1,5 +1,5 @@
 
-import { Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 
 import { faCalculator, faHeart, faLocationDot, faWifi } from '@fortawesome/free-solid-svg-icons';
 import { faFaceSmileWink } from '@fortawesome/free-solid-svg-icons';
@@ -93,7 +93,7 @@ export class MembercommentformComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private http: HttpClient,
     private commentService: CommentService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
   ) {
 
     this.route.params.subscribe((para)=>{
