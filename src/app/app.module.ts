@@ -118,6 +118,12 @@ export class AppModule {
   constructor(private injector: Injector) {
     const memberCommentElement = createCustomElement(MemberCommentComponent, { injector });
     customElements.define('member-comment-element', memberCommentElement);
+
+    const hotelCommentElement = createCustomElement(HotelCommentComponent, { injector });
+    customElements.define('hotel-comment-element', hotelCommentElement);
+
+    const membercommentformElement = createCustomElement(HotelCommentComponent, { injector });
+    customElements.define('member-commentform-element', membercommentformElement);
   }
 
   ngDoBootstrap() {}

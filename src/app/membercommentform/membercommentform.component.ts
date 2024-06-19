@@ -60,21 +60,21 @@ export class MembercommentformComponent implements OnInit, OnDestroy {
   commentTitle = '';
   commentText = '';
 
-  UpdatedAt: string = '';
-
+  memberId: number = 0;
+  commentID: number = 0;
   hotelName: string = '';
   roomtypeName: string = '';
   checkinDate: string = '';
   checkoutDate: string = '';
   roomId: number = 0;
-  commentStatus: string = '';
 
+
+  commentStatus: string = '';
   fieldsMoved = new Set<string>();
   currentFieldIndex: number = -1;
-
   displayedFieldsCount: number = 0;
-  commentID: number = 0;
 
+  UpdatedAt: string = '';
   fields = [
     { controlName: 'comfortScore', label: '舒適程度', icon: faFaceSmileWink as IconProp },
     { controlName: 'cleanlinessScore', label: '清潔程度', icon: faSprayCanSparkles as IconProp },
@@ -110,10 +110,11 @@ export class MembercommentformComponent implements OnInit, OnDestroy {
       this.roomtypeName = params['roomtypeName'];
       this.checkinDate = params['checkinDate'];
       this.checkoutDate = params['checkoutDate'];
-      this.roomId = params['roomId'];
+      this.roomId = +params['roomId'];
+      this.memberId = params['memberId'];
 
       // 使用这些参数进行其他初始化操作
-      console.log('Received parameters:', this.commentID, this.hotelName, this.roomtypeName, this.checkinDate, this.checkoutDate, this.roomId);
+      console.log('Received parameters:', this.commentID, this.hotelName, this.roomtypeName, this.checkinDate, this.checkoutDate, this.roomId,this.memberId);
     });
 
     // 從 sessionStorage 恢復表單數據
