@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Injector, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -37,7 +37,8 @@ import { ChunkPipe } from './chunk.pipe';
 import {MatCardModule} from '@angular/material/card';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { LoadingpageComponent } from './loadingpage/loadingpage.component';
-
+import { createCustomElement } from '@angular/elements';
+import { HotelcommentboxComponent } from './hotelcommentbox/hotelcommentbox.component';
 
 
 
@@ -69,6 +70,7 @@ const MAT_DATE_FORMATS_CUSTOM = {
     NotfoundpageComponent,
     ChunkPipe,
     LoadingpageComponent,
+    HotelcommentboxComponent,
 
 
 
@@ -107,12 +109,24 @@ const MAT_DATE_FORMATS_CUSTOM = {
     { provide: DateAdapter, useClass: CustomDateFnsAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MAT_DATE_FORMATS_CUSTOM },
   ],
-  bootstrap: [AppComponent]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  bootstrap: [AppComponent] //預設是bootstrap: [AppComponent]
 })
 export class AppModule {
 
 
+  constructor(private injector: Injector) {
+    const memberCommentElement = createCustomElement(MemberCommentComponent, { injector });
+    customElements.define('member-comment-element', memberCommentElement);
 
+    const hotelCommentElement = createCustomElement(HotelCommentComponent, { injector });
+    customElements.define('hotel-comment-element', hotelCommentElement);
+
+    const membercommentformElement = createCustomElement(HotelCommentComponent, { injector });
+    customElements.define('member-commentform-element', membercommentformElement);
+  }
+
+  ngDoBootstrap() {}
 
 
 

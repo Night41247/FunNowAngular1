@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommentService } from './../service/comment.service';
 import { CommentInfo, Commentsdata, OrderDetaileDTO } from '../model/comment';
 import { Router } from '@angular/router';
@@ -37,46 +37,53 @@ export class MemberCommentComponent {
   constructor(private commentService: CommentService,private router: Router) { }
 
 
+  commentID!: number;
+  hotelName!: string;
+  roomtypeName!: string;
+  checkinDate!: string;
+  checkoutDate!: string;
+  roomId!: number;
+  @Input() memberId!: number;
+  @Output() navigateToForm = new EventEmitter<any>();
+
+ngOnInit(): void {
 
 
-  ngOnInit(): void {
-    const memberId = 1; // TODO 先写死
+    this.commentService.getCommentsByStatus(this.memberId).subscribe(
 
-    this.commentService.getCommentsByStatus(memberId).subscribe(
       (data) => {
         this.comments = data.comments;
         this.commentInfos = data.commentinfo;
         this.orders = data.orders;
         this.hotelImage = data.hotelImage;
-
-        // 合并评论和评论信息
+        // 合併評論和和評論內容
         this.combinedComments = this.comments.map(comment => {
           const info = this.commentInfos.find(ci => ci.commentId === comment.commentId);
           const order = this.orders.find(o => o.memberId === comment.memberId);
           const nights = order ? this.calculateNights(order.checkInDate, order.checkOutDate) : null;
           const image = this.hotelImage.find(h => h.hotelId === comment.hotelId);
-
-          const processedImage = image ? this.processImageUrl(image.imageUrl) : null;
-          console.log('Processed Image URL:', processedImage);
+          const hotelImageUrl = image
+          ? `/dist/fun-now-angular1/assets/${image.hotelImage1}`
+          : null;
           return {
             ...comment,
             ...info,
             ...order,
-            imageUrl: processedImage,
+            hotelImageUrl,
             checkInDate: order ? order.checkInDate : null,
             checkOutDate: order ? order.checkOutDate : null,
             nights
           };
         });
-
-        console.log(data);
-        console.log(this.combinedComments);
-
+        console.log('ng',data);
+        console.log('ngcombine',this.combinedComments);
+        console.log('Member ID:', this.memberId);
         this.unfinishedComments = this.combinedComments.filter(comment => comment.commentStatus === '6');
         this.pendingComments = this.combinedComments.filter(comment => comment.commentStatus === '5');
         this.completedComments = this.combinedComments.filter(comment => comment.commentStatus === '7');
 
         sessionStorage.setItem('unfinishedComments', JSON.stringify(this.unfinishedComments));
+
       },
       (error) => {
         console.error('Error fetching comments', error);
@@ -101,24 +108,18 @@ export class MemberCommentComponent {
     const nights = this.calculateNights(new Date(formattedCheckinDate), new Date(formattedCheckoutDate));
     console.log(`Number of nights: ${nights}`);
 
-    this.router.navigate(['/membercommentform'], {
-      queryParams: {
-        commentID: commentID,
-        hotelName: hotelName,
-        roomtypeName: roomtypeName,
-        checkinDate: formattedCheckinDate,
-        checkoutDate: formattedCheckoutDate,
-        roomId: roomId,
-      }
-    }).then(success => {
-      if (success) {
-        console.log('Navigation is successful!');
-      } else {
-        console.error('Navigation has failed!');
-      }
-    }).catch(err => {
-      console.error('Navigation error:', err);
-    });
+    const commentData = {
+      commentID,
+      hotelName,
+      roomtypeName,
+      checkinDate: formattedCheckinDate,
+      checkoutDate: formattedCheckoutDate,
+      roomId,
+      memberId: this.memberId,
+      nights
+    };
+
+    this.navigateToForm.emit(commentData);
 
     console.log(commentID);
   }

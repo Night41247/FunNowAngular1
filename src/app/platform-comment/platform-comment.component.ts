@@ -41,6 +41,8 @@ interface Report {
   memberName: string;
   memberEmail: string;
   memberPhone: string;
+  repoertedComment:string;
+  repoertedCommentTitle:string;
 }
 
 
@@ -133,9 +135,16 @@ export class PlatformCommentComponent {
 
     this.commentService.getReportComment(filters).subscribe(
       data => {
-        console.log('Loaded reports:', data); // 调试日志
         if (Array.isArray(data)) {
-          this.reports = data; // 确保这里获取到的数据是数组
+          this.reports = data.map((report: any) => ({
+            ...report,
+            memberName: report.firstName, // 确保正确映射字段
+            memberEmail: report.email, // 确保正确映射字段
+            memberPhone: report.phone, // 确保正确映射字段
+            repoertedComment:report.commentText,
+            repoertedCommentTitle:report.commentTitle,
+
+          })) as Report[];
           this.filterReportsByStatus();
           this.cdr.detectChanges();
         } else {
@@ -293,10 +302,52 @@ trackByReportId(index: number, report: any): number {
     });
   }
 
+  openReportedDialog(report: any): void {
+    this.dialog.open(ReportDetailDialogComponent, {
+      width: '250px',
+      data: {
+        dialogType: 'reportedText',
+        reportReason: {
+          commentTitle: report.commentTitle,
+          commentText: report.commentText
+        }
+      }
+    });
+  }
+
 
   onReviewStatusChange(report: Report): void {
     const newStatus = report.reviewStatus;
 
+    if (newStatus === 4) {
+      const dialogRef = this.dialog.open(ReportDetailDialogComponent, {
+        width: '250px',
+        data: {
+          dialogType: 'changeSatus',
+          message: '是否變更為不通過?',
+          commentId: report.commentId,
+          reportId: report.reportId,
+          memberEmail: report.memberEmail,
+          memberName: report.memberName
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          // 用户确认变更
+          this.updateStatus(report, newStatus);
+        } else {
+          // 用户取消变更，恢复原状态
+          report.reviewStatus = this.reports.find(r => r.reportId === report.reportId)?.reviewStatus!;
+          this.cdr.detectChanges();
+        }
+      });
+    } else {
+      this.updateStatus(report, newStatus);
+    }
+  }
+
+  updateStatus(report: Report, newStatus: number): void {
     this.commentService.updateCommentAndReportStatus(report.commentId, report.reportId, newStatus).subscribe(
       (updatedReport: any) => {
         if (updatedReport) {
@@ -323,6 +374,12 @@ trackByReportId(index: number, report: any): number {
       }
     );
   }
+
+
+
+
+
+
 
   handleEmailSending(newStatus: number, report: Report, error?: any): void {
     if (newStatus === 4) {

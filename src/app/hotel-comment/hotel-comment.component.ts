@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { faUserLarge } from '@fortawesome/free-solid-svg-icons';
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import { faCaretLeft } from '@fortawesome/free-solid-svg-icons';
-
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-hotel-comment',
@@ -16,6 +16,8 @@ export class HotelCommentComponent implements OnInit{
   @ViewChild('commentContainer') commentContainer!: ElementRef;
 
   currentSlide = 0;
+  leftColumnScores: { key: string, value: number }[] = [];
+  rightColumnScores: { key: string, value: number }[] = [];
   ratingRanges = [
     { key: 2, label: '超讚:9+' },
     { key: 3, label: '很讚:7-9' },
@@ -77,7 +79,11 @@ facaretleft = faCaretLeft;
     checkOutDate : '',
   }
 
-  constructor(private commentService: CommentService , private route: ActivatedRoute,private router: Router){
+  constructor(
+    private commentService: CommentService ,
+     private route: ActivatedRoute,
+     private router: Router,
+     private cdr: ChangeDetectorRef){
     this.backMvcParam.hotelId = this.route.snapshot.params['hotelId'];
     this.backMvcParam.checkInDate = this.route.snapshot.queryParams['checkInDate'];
     this.backMvcParam.checkOutDate = this.route.snapshot.queryParams['checkOutDate'];
@@ -94,6 +100,7 @@ facaretleft = faCaretLeft;
     this.loadComments();
     this.loadAverageScore();
     this.AvgText();
+    this.cdr.markForCheck();
 
   }
 
@@ -103,6 +110,7 @@ facaretleft = faCaretLeft;
 
       this.hotelId = data.hotelId;
       this.ratingText = data.ratingText;
+      this.cdr.markForCheck();
     }, error => {
       console.error('Error fetching rating text:', error);
     });
@@ -154,6 +162,7 @@ facaretleft = faCaretLeft;
 
         console.log('Received data:', data);
         this.combineData();
+        this.cdr.markForCheck();
 
       });
   }
@@ -206,7 +215,9 @@ facaretleft = faCaretLeft;
           value
         }));
         this.totalAverageScore = data.totalAverageScore;
-
+        this.leftColumnScores = this.averageScores.slice(0, 4); // 左边四个
+      this.rightColumnScores = this.averageScores.slice(4); // 右边三个
+        this.cdr.markForCheck();
         // console.log('AVG Data:', data);
       },
       error => {
