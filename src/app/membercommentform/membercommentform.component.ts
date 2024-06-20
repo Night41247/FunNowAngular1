@@ -1,6 +1,6 @@
 import { ReportDetailDialogComponent } from './../report-detail-dialog/report-detail-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { Component, ElementRef, Input, EventEmitter, Input, OnDestroy, OnInit, Output, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 
 import { faCalculator, faHeart, faLocationDot, faWifi } from '@fortawesome/free-solid-svg-icons';
 import { faFaceSmileWink } from '@fortawesome/free-solid-svg-icons';
