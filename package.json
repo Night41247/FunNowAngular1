@@ -21,6 +21,8 @@
     "@angular/platform-browser": "^16.2.0",
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/router": "^16.2.0",
+    "@azure/cognitiveservices-contentmoderator": "^5.0.1",
+    "@azure/ms-rest-js": "^2.7.0",
     "@fortawesome/angular-fontawesome": "^0.13.0",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@popperjs/core": "^2.11.8",

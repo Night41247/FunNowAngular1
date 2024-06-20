@@ -1,9 +1,10 @@
 
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map, throwError } from 'rxjs';
 import { CommentInfo, CommentRequest, CommentUpdateRequest, Commentdata, Commentsdata, HotelImage, OrderDetaileDTO, RatingScore } from '../model/comment';
-
+import { CognitiveServicesCredentials } from '@azure/ms-rest-js';
+import { ContentModeratorClient } from '@azure/cognitiveservices-contentmoderator';
 
 
 @Injectable({
@@ -13,7 +14,14 @@ export class CommentService {
   isLoading = false;
   private apiUrl = 'https://localhost:7103/api/Comment';
 
-  constructor(private http:HttpClient) { }
+  //azure 內容仲裁金鑰、端點
+  private endpoint = 'https://<your-endpoint>.api.cognitive.microsoft.com/contentmoderator/moderate/v1.0/ProcessText/Screen';
+  private apiKey = 'e857f822e05e4bc197c20b061366ee1d';
+  private contentModeratorClient: ContentModeratorClient;
+
+
+  constructor(private http:HttpClient) { const credentials = new CognitiveServicesCredentials(this.apiKey);
+    this.contentModeratorClient = new ContentModeratorClient(credentials, this.endpoint);}
 
  /**
    * 獲取評論
@@ -155,6 +163,30 @@ getAvgTxt(hotelId: number): Observable<any> {
 getHotelImage(): Observable<any>{
   return this.http.get<any>(`${this.apiUrl}/GetCHotelUrl`);
 }
+
+
+
+
+
+//azure內容仲裁
+ moderateText(text: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Ocp-Apim-Subscription-Key': this.apiKey,
+      'Content-Type': 'text/plain'
+    });
+
+    return this.http.post(this.endpoint, text, { headers: headers });
+  }
+
+
+
+
+
+
+
+
+
+
 
 
 }
