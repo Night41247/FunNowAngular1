@@ -3,8 +3,8 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map, throwError } from 'rxjs';
 import { CommentInfo, CommentRequest, CommentUpdateRequest, Commentdata, Commentsdata, HotelImage, OrderDetaileDTO, RatingScore } from '../model/comment';
-import { CognitiveServicesCredentials } from '@azure/ms-rest-js';
 import { ContentModeratorClient } from '@azure/cognitiveservices-contentmoderator';
+import { CognitiveServicesCredentials } from '@azure/ms-rest-azure-js';
 
 
 @Injectable({

@@ -147,6 +147,13 @@ export class PlatformCommentComponent {
           })) as Report[];
           this.filterReportsByStatus();
           this.cdr.detectChanges();
+
+          // 對每條報告的評論進行審查
+        this.reports.forEach(report => {
+          this.moderateComment(report.repoertedComment);
+        });
+
+
         } else {
           console.error('Data is not an array:', data);
         }
@@ -401,9 +408,24 @@ trackByReportId(index: number, report: any): number {
     }
   }
 
-
+  moderateComment(commentText: string): void {
+    this.commentService.moderateText(commentText).subscribe(
+      response => {
+        if (response.Terms || response.PII) {
+          console.log('Inappropriate content found:', response.Terms, response.PII);
+          // 處理不當內容，例如標記評論或通知管理員
+        } else {
+          console.log('Content is appropriate');
+          // 內容合適，繼續處理
+        }
+      },
+      error => {
+        console.error('Error moderating text:', error);
+      }
+    );
 
 
 
 }
 
+}
