@@ -34,7 +34,8 @@ export class MemberCommentComponent {
   completedComments: any[] = [];
   hotelImage:any[]=[];
 
-  constructor(private commentService: CommentService,private router: Router) { }
+  constructor(
+    private commentService: CommentService,private router: Router) { }
 
 
   commentID!: number;
@@ -43,8 +44,9 @@ export class MemberCommentComponent {
   checkinDate!: string;
   checkoutDate!: string;
   roomId!: number;
-  @Input() memberId!: number;
+  @Input() memberId: number = 0;
   @Output() navigateToForm = new EventEmitter<any>();
+
 
 ngOnInit(): void {
 
@@ -73,7 +75,6 @@ ngOnInit(): void {
             checkInDate: order ? order.checkInDate : null,
             checkOutDate: order ? order.checkOutDate : null,
             nights
-
           };
         });
         console.log('ng',data);
@@ -82,16 +83,25 @@ ngOnInit(): void {
         this.unfinishedComments = this.combinedComments.filter(comment => comment.commentStatus === '6');
         this.pendingComments = this.combinedComments.filter(comment => comment.commentStatus === '5');
         this.completedComments = this.combinedComments.filter(comment => comment.commentStatus === '7');
+
         sessionStorage.setItem('unfinishedComments', JSON.stringify(this.unfinishedComments));
 
       },
       (error) => {
-        console.error('Error fetching comments',error);
+        console.error('Error fetching comments', error);
       }
     );
   }
 
-
+  private processImageUrl(url: string): string {
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      // 處理網路圖片
+      return url;
+    } else {
+      // 本地圖片
+      return `/image/${url}`;
+    }
+  }
 
   startReview(commentID: number, hotelName: string, roomtypeName: string, checkinDate: string, checkoutDate: string, roomId: number): void {
     const formattedCheckinDate = new Date(checkinDate).toISOString().split('T')[0];
