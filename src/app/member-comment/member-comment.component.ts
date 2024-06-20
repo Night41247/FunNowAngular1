@@ -120,11 +120,13 @@ ngOnInit(): void {
       memberId: this.memberId,
       nights
     };
-
+   // alert(`Emitted event with data: ${JSON.stringify(commentData)}`);
+    console.log('Emitted event with data:', commentData);
     this.navigateToForm.emit(commentData);
 
-    console.log(commentID);
   }
+
+
   private calculateNights(checkInDate: Date | string, checkOutDate: Date | string): number {
     const checkIn = new Date(checkInDate);
     const checkOut = new Date(checkOutDate);
@@ -132,5 +134,7 @@ ngOnInit(): void {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
   }
+
+
 
 }

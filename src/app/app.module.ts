@@ -122,8 +122,17 @@ export class AppModule {
     const hotelCommentElement = createCustomElement(HotelCommentComponent, { injector });
     customElements.define('hotel-comment-element', hotelCommentElement);
 
-    const membercommentformElement = createCustomElement(HotelCommentComponent, { injector });
+    const membercommentformElement = createCustomElement(MembercommentformComponent, { injector });
     customElements.define('member-commentform-element', membercommentformElement);
+
+    const pgbackmemberElement = createCustomElement(PgbackMemberComponent, { injector });
+    customElements.define('pgback-member-element', pgbackmemberElement);
+
+    const commentElement = createCustomElement(CommentComponent, { injector });
+    customElements.define('comments-element', commentElement);
+
+    const platformElement = createCustomElement(PlatformCommentComponent, { injector });
+    customElements.define('platformcomment-element', platformElement);
   }
 
   ngDoBootstrap() {}

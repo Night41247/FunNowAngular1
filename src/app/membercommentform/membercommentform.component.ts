@@ -1,5 +1,6 @@
-
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
+import { ReportDetailDialogComponent } from './../report-detail-dialog/report-detail-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { Component, ElementRef, Input, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 
 import { faCalculator, faHeart, faLocationDot, faWifi } from '@fortawesome/free-solid-svg-icons';
 import { faFaceSmileWink } from '@fortawesome/free-solid-svg-icons';
@@ -11,7 +12,7 @@ import { CommentRequest, Commentdata, RatingScore, RatingScoreDTO } from '../mod
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommentService } from './../service/comment.service';
 
 @Component({
@@ -60,14 +61,16 @@ export class MembercommentformComponent implements OnInit, OnDestroy {
   commentTitle = '';
   commentText = '';
 
-  memberId: number = 0;
-  commentID: number = 0;
-  hotelName: string = '';
-  roomtypeName: string = '';
-  checkinDate: string = '';
-  checkoutDate: string = '';
-  roomId: number = 0;
 
+
+  @Input() commentId!: number;
+  @Input() hotelName!: string;
+  @Input() roomtypeName!: string;
+  @Input() checkinDate!: string;
+  @Input() checkoutDate!: string;
+  @Input() roomId!: number;
+  @Input() memberId!: number;
+  @Input() nights!: number;
 
   commentStatus: string = '';
   fieldsMoved = new Set<string>();
@@ -94,56 +97,50 @@ export class MembercommentformComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private commentService: CommentService,
     private renderer: Renderer2,
-  ) {
-
-    this.route.params.subscribe((para)=>{
-      console.log(para);
-    })
-    console.log('!!!',this.route.snapshot.params);
-
-  }
+    private dialog: MatDialog,
+    private router: Router
+  ) {  }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      this.commentID = +params['commentID'];
-      this.hotelName = params['hotelName'];
-      this.roomtypeName = params['roomtypeName'];
-      this.checkinDate = params['checkinDate'];
-      this.checkoutDate = params['checkoutDate'];
-      this.roomId = +params['roomId'];
-      this.memberId = params['memberId'];
 
       // 使用这些参数进行其他初始化操作
-      console.log('Received parameters:', this.commentID, this.hotelName, this.roomtypeName, this.checkinDate, this.checkoutDate, this.roomId,this.memberId);
-    });
+      console.log('Received parameters:', {
+        commentId: this.commentId,
+        hotelName: this.hotelName,
+        roomtypeName: this.roomtypeName,
+        checkinDate: this.checkinDate,
+        checkoutDate: this.checkoutDate,
+        roomId: this.roomId,
+        memberId: this.memberId,
+        nights: this.nights
+      });
 
-    // 從 sessionStorage 恢復表單數據
-    const savedFormData = sessionStorage.getItem('commentForm');
-    if (savedFormData) {
-      const formData = JSON.parse(savedFormData);
-      this.commentID = formData.commentID;
-      this.commentTitle = formData.commentTitle;
-      this.commentText = formData.commentText;
-      this.roomId = formData.roomId;
-      this.comfortScore = formData.comfortScore;
-      this.cleanlinessScore = formData.cleanlinessScore;
-      this.staffScore = formData.staffScore;
-      this.facilitiesScore = formData.facilitiesScore;
-      this.valueScore = formData.valueScore;
-      this.locationScore = formData.locationScore;
-      this.freeWifiScore = formData.freeWifiScore;
-      this.travelerType = formData.travelerType;
-    }
     //背景
     this.initBlobs();
   }
 
-
+ // 從 sessionStorage 恢復表單數據
+    // const savedFormData = sessionStorage.getItem('commentForm');
+    // if (savedFormData) {
+    //   const formData = JSON.parse(savedFormData);
+    //   this.commentID = formData.commentID;
+    //   this.commentTitle = formData.commentTitle;
+    //   this.commentText = formData.commentText;
+    //   this.roomId = formData.roomId;
+    //   this.comfortScore = formData.comfortScore;
+    //   this.cleanlinessScore = formData.cleanlinessScore;
+    //   this.staffScore = formData.staffScore;
+    //   this.facilitiesScore = formData.facilitiesScore;
+    //   this.valueScore = formData.valueScore;
+    //   this.locationScore = formData.locationScore;
+    //   this.freeWifiScore = formData.freeWifiScore;
+    //   this.travelerType = formData.travelerType;
+    // }
 
   ngOnDestroy(): void {
     // 保存表單數據到 sessionStorage
     const formData = {
-      commentID: this.commentID,
+      commentID: this.commentId,
       commentTitle: this.commentTitle,
       commentText: this.commentText,
       roomId: this.roomId,
@@ -199,7 +196,7 @@ export class MembercommentformComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     const isFormComplete = this.isFormComplete();
     const ratingScore: RatingScore = {
-      commentId: this.commentID,
+      commentId: this.commentId,
       roomId: this.roomId,
       comfortScore: this.comfortScore,
       cleanlinessScore: this.cleanlinessScore,
@@ -226,7 +223,7 @@ export class MembercommentformComponent implements OnInit, OnDestroy {
 
     };
     console.log('updateRequest Form Data:', updateRequest);
-    this.commentService.updateComment(this.commentID, updateRequest).subscribe(response => {
+    this.commentService.updateComment(this.commentId, updateRequest).subscribe(response => {
       console.log('Comment status updated successfully', response);
     }, error => {
       console.error('Error updating comment status', error);
@@ -234,6 +231,16 @@ export class MembercommentformComponent implements OnInit, OnDestroy {
 
     // 清除 sessionStorage 中保存的表單數據
     sessionStorage.removeItem('commentForm');
+    this.showSuccessDialog();
+
+  }
+
+  showSuccessDialog(): void {
+    this.dialog.open(ReportDetailDialogComponent, {
+      data: {
+        dialogType: 'confirmdialog'
+      }
+    });
   }
 
 
