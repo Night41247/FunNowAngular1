@@ -122,7 +122,7 @@ export class AppModule {
     const hotelCommentElement = createCustomElement(HotelCommentComponent, { injector });
     customElements.define('hotel-comment-element', hotelCommentElement);
 
-    const membercommentformElement = createCustomElement(HotelCommentComponent, { injector });
+    const membercommentformElement = createCustomElement(MembercommentformComponent, { injector });
     customElements.define('member-commentform-element', membercommentformElement);
   }
 

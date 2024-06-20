@@ -1,3 +1,4 @@
+import { pgBackMemberDTO } from './interface/pgBackMemberDTO';
 import { MemberCommentComponent } from './member-comment/member-comment.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -8,6 +9,7 @@ import { ReportformComponent } from './reportform/reportform.component';
 import { MembercommentformComponent } from './membercommentform/membercommentform.component';
 import { NotfoundpageComponent } from './notfoundpage/notfoundpage.component';
 import { LoadingpageComponent } from './loadingpage/loadingpage.component';
+import { PgbackMemberComponent } from './pgback-member/pgback-member.component';
 
 
 
@@ -22,6 +24,7 @@ const routes: Routes = [
   { path: '**' , component:NotfoundpageComponent }, //萬用路由，導到404 not found
   { path: 'hotel',component:HotelCommentComponent},
   { path: 'loading',component:LoadingpageComponent},
+  { path: 'backmember',component:PgbackMemberComponent}
 ];
 
 @NgModule({

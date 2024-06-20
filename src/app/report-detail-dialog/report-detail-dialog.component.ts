@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CommentService } from '../service/comment.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -14,7 +15,9 @@ export class ReportDetailDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<ReportDetailDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private commentService: CommentService)
+    private commentService: CommentService,
+    private router: Router
+  )
   {this.reportReason = data.reportReason;
     console.log('Data received in dialog:', this.reportReason); // 调试日志
 
@@ -64,9 +67,15 @@ export class ReportDetailDialogComponent {
     this.dialogRef.close();
   }
 
+  onConfirmDialog():void{
+    this.dialogRef.close();
+    this.router.navigateByUrl('http://localhost:7284/Comment/Angular_membercomment');
+  }
+
   onConfirm(): void {
     this.onSubmit();
   }
+
   formatDate(date: Date): string {
     const pad = (n: number) => n.toString().padStart(2, '0');
     const year = date.getFullYear();
