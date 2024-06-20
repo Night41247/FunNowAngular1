@@ -11,13 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 export class CommentComponent implements OnInit{
 
-navigateToPgHotel() {
-  //https://localhost:7284/PgHotel/pgHotel/?hotelId=2&checkInDate=2024-06-25&checkOutDate=2024-06-26
-  //TODO 寫死port(注意DEMO要用的port)，常見作法會寫死port
-  const url = `https://localhost:7284/PgHotel/pgHotel/?hotelId=${this.backMvcParam.hotelId}&checkInDate=${this.backMvcParam.checkInDate}&checkOutDate=${this.backMvcParam.checkOutDate}`;
-  window.location.href = url;
 
-}
   ratingRanges = [
     { key: 2, label: '超讚:9+' },
     { key: 3, label: '很讚:7-9' },
@@ -33,7 +27,7 @@ navigateToPgHotel() {
     { key: '12-2月', label: '12-2月' },
   ];
 
-  hotelId = 0; // TODO: 測試時寫死
+ // TODO: 測試時寫死
   hotelName!: string; // 使用非空斷言操作符
   statistics: any;
   page: number = 1;
@@ -67,58 +61,54 @@ navigateToPgHotel() {
     valueScore: '性價比'
   };
 
-  //MVC hotel頁有帶的參數
-  backMvcParam = {
-    hotelId : 0,
-    checkInDate : '',
-    checkOutDate : '',
-  }
+AVGscore:number = 0;
+  @Input() hotelId: number = 0;
+  @Input() checkInDate: string ='';
+  @Input() checkOutDate: string='';
 
-  checkInDate:string='';
-  checkOutDate:string='';
 
   constructor(
     private commentService: CommentService ,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   )
   {
-    this.backMvcParam.hotelId = +this.route.snapshot.params['hotelId'];
-    this.backMvcParam.checkInDate = this.route.snapshot.params['checkInDate']|| '';
-    this.backMvcParam.checkOutDate = this.route.snapshot.params['checkOutDate']|| '';
-    console.log('checkInDate',this.backMvcParam.checkInDate);
-    console.log('hotel',this.backMvcParam.hotelId);
   }
 
 
   ngOnInit(): void {
-    const hotelId = this.route.snapshot.paramMap.get('hotelId');
-    const checkInDate = this.route.snapshot.paramMap.get('checkInDate');
-    const checkOutDate = this.route.snapshot.paramMap.get('checkOutDate');
 
-    if (hotelId) {
-      this.hotelId = +hotelId;
-    }
-    if (checkInDate) {
-      this.checkInDate = checkInDate;
-    }
-    if (checkOutDate) {
-      this.checkOutDate = checkOutDate;
-    }
+    console.log('Received parameters:', {
+             hotelId:this.hotelId,
+             checkInDate:this.checkInDate,
+             checkOutDate:this.checkOutDate
 
-    this.backMvcParam.hotelId = this.hotelId;
-    this.backMvcParam.checkInDate = this.checkInDate;
-    this.backMvcParam.checkOutDate = this.checkOutDate;
-    console.log('ng', this.backMvcParam.hotelId);
-    console.log('ng',  this.backMvcParam.checkInDate);
-    console.log('ng',  this.backMvcParam.checkOutDate);
-    this.loadComments();
+      });
+
+
     this.loadCommentCounts();
     this.loadAverageScore();
     this.AvgText();
+    this.loadAVGscore();
   }
 
+//   ngOnInit(): void {
 
+//     // 使用这些参数进行其他初始化操作
+//     console.log('Received parameters:', {
+//       commentId: this.commentId,
+//       hotelName: this.hotelName,
+//       roomtypeName: this.roomtypeName,
+//       checkinDate: this.checkinDate,
+//       checkoutDate: this.checkoutDate,
+//       roomId: this.roomId,
+//       memberId: this.memberId,
+//       nights: this.nights
+//     });
+
+//   //背景
+//   this.initBlobs();
+// }
 
   AvgText() {
     this.commentService.getAvgTxt(this.hotelId).subscribe(data => {
@@ -221,7 +211,18 @@ navigateToPgHotel() {
     return total / scores.length;
   }
 
-
+  //僅用來抓hotel avgscore
+  loadAVGscore(): void {
+    this.commentService.getAVGscore(this.hotelId).subscribe(
+      data => {
+        this.AVGscore = data.totalAverageScore;
+        console.log('AVGscore:', this.AVGscore);
+      },
+      error => {
+        console.error('Error fetching average score:', error);
+      }
+    );
+  }
 
   loadAverageScore(): void {
     this.commentService.getAverageScores(this.hotelId).subscribe(

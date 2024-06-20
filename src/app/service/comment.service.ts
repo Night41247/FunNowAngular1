@@ -156,6 +156,9 @@ getHotelImage(): Observable<any>{
   return this.http.get<any>(`${this.apiUrl}/GetCHotelUrl`);
 }
 
+getAVGscore(hotelId: number): Observable<any> {
+  return this.http.get<any>(`${this.apiUrl}/${hotelId}/AverageScores`);
+}
 
 }
 

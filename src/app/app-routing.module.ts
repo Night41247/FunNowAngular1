@@ -18,13 +18,13 @@ const routes: Routes = [
   { path: 'platformcomment', component: PlatformCommentComponent },
   { path: 'hotel_comment', component: HotelCommentComponent }, //其他人接過來要這樣設定
   { path: 'reportform', component: ReportformComponent },
-  { path: 'comment/:hotelId/:checkInDate/:checkOutDate', component: CommentComponent },//
+  { path: 'comment', component: CommentComponent },//
   { path: 'membercomment' , component:MemberCommentComponent},
   {path: 'membercommentform', component: MembercommentformComponent},
   { path: '**' , component:NotfoundpageComponent }, //萬用路由，導到404 not found
   { path: 'hotel',component:HotelCommentComponent},
   { path: 'loading',component:LoadingpageComponent},
-  { path: 'backmember',component:PgbackMemberComponent}
+  { path: 'pgback-member',component:PgbackMemberComponent}
 ];
 
 @NgModule({

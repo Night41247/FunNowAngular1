@@ -12,7 +12,7 @@ import { CommentRequest, Commentdata, RatingScore, RatingScoreDTO } from '../mod
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommentService } from './../service/comment.service';
 
 @Component({
@@ -97,7 +97,8 @@ export class MembercommentformComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private commentService: CommentService,
     private renderer: Renderer2,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) {  }
 
   ngOnInit(): void {
