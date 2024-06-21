@@ -21,10 +21,10 @@ export class CommentComponent implements OnInit{
   ];
 
   monthRanges = [
-    { key: '3-5月', label: '3-5月' },
-    { key: '6-8月', label: '6-8月' },
-    { key: '9-11月', label: '9-11月' },
-    { key: '12-2月', label: '12-2月' },
+    { key: '1-3', label: '3-5月' },
+    { key: '4-6', label: '6-8月' },
+    { key: '7-9', label: '9-11月' },
+    { key: '10-12', label: '12-2月' },
   ];
 
  // TODO: 測試時寫死
@@ -90,6 +90,7 @@ AVGscore:number = 0;
     this.loadAverageScore();
     this.AvgText();
     this.loadAVGscore();
+    this.loadComments();
   }
 
 //   ngOnInit(): void {
@@ -243,7 +244,7 @@ AVGscore:number = 0;
 
  // 加載評論數量
  loadCommentCounts(): void {
-  this.commentService.getCommentCounts().subscribe(data => {
+  this.commentService.getCommentCounts(this.hotelId).subscribe(data => {
 
 
     const ratingCommentDetailsArray = Object.entries(data.ratingCommentDetails);
@@ -264,7 +265,9 @@ AVGscore:number = 0;
   });
 }
 
-
+trackByFn(index: number, item: any): any {
+  return item.key; // or item.id
+}
 
 
 filterByRating(event: any): void {

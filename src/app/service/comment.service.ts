@@ -39,7 +39,8 @@ export class CommentService {
 
   let params = new HttpParams()
     .set('page', page.toString())
-    .set('pageSize', pageSize.toString());
+    .set('pageSize', pageSize.toString())
+    .set('hotelId', hotelId.toString()); // 添加hotelId參數
 
   if (search) {
     params = params.set('search', search);
@@ -57,6 +58,7 @@ export class CommentService {
     params = params.set('topics', topics);
   }
 
+  console.log('Request Params:', params.toString());
   return this.http.get<any>(`${this.apiUrl}/${hotelId}/GetComments`, { params });
 }
 
@@ -67,10 +69,9 @@ export class CommentService {
  /**
    * 獲取評論數量
    */
- getCommentCounts(): Observable<any> {
-  return this.http.get<any>(`${this.apiUrl}/commentCounts`);
+ getCommentCounts(hotelId: number): Observable<any> {
+  return this.http.get<any>(`${this.apiUrl}/commentCounts`, { params: new HttpParams().set('hotelId', hotelId.toString()) });
 }
-
 /**
    * 發佈評論
    * @param comment 評論對象
