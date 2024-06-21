@@ -51,7 +51,9 @@
          <div>
            <select class="form-select" aria-label="filter-during"  [(ngModel)]="dateFilter" (ngModelChange)="filterByDate($event)">
              <option [ngValue]="null" selected>全部 ({{ totalCommentcounts }})</option>
-             <option *ngFor="let range of monthRanges" [ngValue]="range.key">{{range.label}} ({{monthCounts.get(range.key)}})</option>
+              <option *ngFor="let range of monthRanges; trackBy: trackByFn" [ngValue]="range.key">
+      {{range.label}} ({{monthCounts.get(range.key) || 0}})
+    </option>
            </select>
          </div>
        </div>
