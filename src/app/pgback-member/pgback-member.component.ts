@@ -111,7 +111,7 @@ export class PgbackMemberComponent {
   }
   //更改狀態紐
 setRoleColor(roleName: string): string {
-  return roleName === '房客' ? 'green' : 'red';
+  return roleName === '房客房東' ? 'green' : 'red';
 }
 
 popConfirmMsg(member: pgBackMemberDTO) {
@@ -122,7 +122,7 @@ popConfirmMsg(member: pgBackMemberDTO) {
 }
 
 changeRoleStatus(member: pgBackMemberDTO) {
-  const newRole = member.roleName === '房客' ? '封鎖中' : '房客';
+  const newRole = member.roleName === '房客房東' ? '被鎖成員' : '房客房東';
   const updateMemberRole: updateMemberRoleDTO = {
     memberId: member.memberId,
     newRoleName: newRole
