@@ -79,32 +79,30 @@ export class ReportformComponent {
   commentData: any = {};
 
   ngOnInit(): void {
-    this.commentService.currentCommentData.subscribe(comment => {
-      if (comment) {
-        this.commentData = {
-          memberName: comment.memberName,
-          memberEmail: comment.memberEmail,
-          commentFirstName: comment.firstName,
-          commentRoomTypeName: comment.roomTypeName,
-          commentTravelerType: comment.travelerType,
-          commentTitle: comment.commentTitle,
-          commentText: comment.commentText,
-          commentCreatedAt: comment.createdAt,
-          commentID: comment.commentId.toString(),
-          memberID: this.memberID.toString()
-        };
-      }
+    this.route.queryParams.subscribe(params => {
+      this.commentData = {
+        reporterName: params['reporterName'],
+        reporterEmail: params['reporterEmail'],
+        commentFirstName: params['commentFirstName'],
+        commentRoomTypeName: params['commentRoomTypeName'],
+        commentTravelerType: params['commentTravelerType'],
+        commentTitle: params['commentTitle'],
+        commentText: params['commentText'],
+        commentCreatedAt: params['commentCreatedAt'],
+        commentID: params['commentID'],
+        memberID: params['memberID']
+      };
     });
   }
 
 
-  fetchMemberInfo(memberID: number): void {
-    this.commentService.getMemberInfo(this.memberID).subscribe(data => {
-      this.memberName = data.firstName;
-      this.memberEmail = data.email;
-      console.log('Member Info:', data);
-    });
-  }
+  // fetchMemberInfo(memberID: number): void {
+  //   this.commentService.getMemberInfo(this.memberID).subscribe(data => {
+  //     this.memberName = data.firstName;
+  //     this.memberEmail = data.email;
+  //     console.log('Member Info:', data);
+  //   });
+  // }
 
 
 
