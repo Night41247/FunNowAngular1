@@ -1,5 +1,5 @@
 import { CommentService } from './../service/comment.service';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommentQueryParameters, Score } from '../model/comment';
 import { ActivatedRoute, Router } from '@angular/router';
 import { da } from 'date-fns/locale';
@@ -70,6 +70,7 @@ AVGscore:number = 0;
   memberName: string = '';
   memberEmail: string = '';
 
+
   constructor(
     private commentService: CommentService ,
     private route: ActivatedRoute,
@@ -92,7 +93,7 @@ AVGscore:number = 0;
     this.loadAverageScore();
     this.AvgText();
     this.loadAVGscore();
-
+    this.fetchMemberInfo();
   }
 
 //   ngOnInit(): void {
@@ -125,17 +126,31 @@ AVGscore:number = 0;
     });
   }
 
-  report(comment: any): void {
+  reporterName: string = '';
+  reporterEmail: string = '';
+  fetchMemberInfo(): void {
+    this.commentService.getMemberInfo(this.memberID).subscribe(
+      data => {
+        this.reporterName = data.firstName;
+        this.reporterEmail = data.email;
+        console.log('Member Info:', data);
+      },
+      error => {
+        console.error('Error fetching member info:', error);
+      }
+    );
+  }
 
+
+  report(comment: any): void {
     const selectedComment = {
       ...comment,
-      memberName: this.memberName,
-      memberEmail: this.memberEmail
+      reporterName: this.reporterName,
+      reporterEmail: this.reporterEmail
     };
-    console.log('Navigating with comment:', selectedComment);
     const queryParams = new URLSearchParams({
-      memberName: selectedComment.memberName,
-      memberEmail: selectedComment.memberEmail,
+      reporterName: selectedComment.reporterName,
+      reporterEmail: selectedComment.reporterEmail,
       commentFirstName: selectedComment.firstName,
       commentRoomTypeName: selectedComment.roomTypeName,
       commentTravelerType: selectedComment.travelerType,
@@ -143,10 +158,13 @@ AVGscore:number = 0;
       commentText: selectedComment.commentText,
       commentCreatedAt: selectedComment.createdAt,
       commentID: selectedComment.commentId.toString(),
+      memberID: this.memberID.toString()
     }).toString();
+
     const url = `https://localhost:7284/Comment/Angular_reportform?${queryParams}`;
     console.log('Navigating to:', url);
-    window.location.href = url;
+    console.log('data :', queryParams);
+    //window.location.href = url;
   }
 
 
