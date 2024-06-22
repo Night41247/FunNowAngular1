@@ -62,10 +62,10 @@ export class CommentComponent implements OnInit{
   };
 
 AVGscore:number = 0;
-  @Input() hotelId: number = 0;
-  @Input() checkInDate: string ='';
-  @Input() checkOutDate: string='';
-  @Input() memberID: any;
+@Input() hotelId: number = 0;
+@Input() checkInDate: string = '';
+@Input() checkOutDate: string = '';
+@Input() memberID: number = 0;
   memberName: string = '';
   memberEmail: string = '';
 
@@ -79,14 +79,12 @@ AVGscore:number = 0;
 
 
   ngOnInit(): void {
-
-    // console.log('Received parameters:', {
-    //          hotelId:this.hotelId,
-    //          checkInDate:this.checkInDate,
-    //          checkOutDate:this.checkOutDate,
-
-    //   });
-    console.log('MemberID:', this.memberID);
+    console.log('Received parameters:', {
+      hotelId: this.hotelId,
+      checkInDate: this.checkInDate,
+      checkOutDate: this.checkOutDate,
+      memberID: this.memberID
+    });
     if (this.memberID) {
       this.fetchMemberInfo(this.memberID);
     } else {
