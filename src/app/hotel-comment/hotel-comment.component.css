@@ -36,7 +36,7 @@
 }
 
 .progress-bar2 {
-  height: 3px;
+  height: 5px;
   border-radius: 30px;
   background-image: linear-gradient(to bottom, #005AB5, #0066CC);
   transition: 0.4s linear;

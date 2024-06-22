@@ -86,6 +86,13 @@ AVGscore:number = 0;
     //          checkOutDate:this.checkOutDate,
 
     //   });
+    console.log('MemberID:', this.memberID);
+    if (this.memberID) {
+      this.fetchMemberInfo(this.memberID);
+    } else {
+      console.error('MemberID is undefined');
+    }
+    this.loadComments();
 
     this.fetchMemberInfo(this.memberID);
     this.loadCommentCounts();
@@ -127,15 +134,23 @@ AVGscore:number = 0;
   }
 
   report(comment: any): void {
-    console.log('Navigating with comment:', comment);
+
+    const selectedComment = {
+      ...comment,
+      memberName: this.memberName,
+      memberEmail: this.memberEmail
+    };
+    console.log('Navigating with comment:', selectedComment);
     const queryParams = new URLSearchParams({
-      commentFirstName: comment.firstName,
-      commentRoomTypeName: comment.roomTypeName,
-      commentTravelerType: comment.travelerType,
-      commentTitle: comment.commentTitle,
-      commentText: comment.commentText,
-      commentCreatedAt: comment.createdAt,
-      commentID: comment.commentId,
+      memberName: selectedComment.memberName,
+      memberEmail: selectedComment.memberEmail,
+      commentFirstName: selectedComment.firstName,
+      commentRoomTypeName: selectedComment.roomTypeName,
+      commentTravelerType: selectedComment.travelerType,
+      commentTitle: selectedComment.commentTitle,
+      commentText: selectedComment.commentText,
+      commentCreatedAt: selectedComment.createdAt,
+      commentID: selectedComment.commentId.toString(),
     }).toString();
     const url = `https://localhost:7284/Comment/Angular_reportform?${queryParams}`;
     console.log('Navigating to:', url);

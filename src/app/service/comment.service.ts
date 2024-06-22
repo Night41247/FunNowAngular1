@@ -1,7 +1,7 @@
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, map, throwError } from 'rxjs';
 import { CommentInfo, CommentRequest, CommentUpdateRequest, Commentdata, Commentsdata, HotelImage, OrderDetaileDTO, RatingScore } from '../model/comment';
 import { ContentModeratorClient } from '@azure/cognitiveservices-contentmoderator';
 import { CognitiveServicesCredentials } from '@azure/ms-rest-azure-js';
@@ -182,10 +182,19 @@ getAVGscore(hotelId: number): Observable<any> {
     return this.http.post(this.endpoint, text, { headers: headers });
   }
 
+  private commentDataSource = new BehaviorSubject<any>(null);
+  currentCommentData = this.commentDataSource.asObservable();
+
+  //從commemt element傳遞資料到report element
+  changeCommentData(comment: any) {
+    this.commentDataSource.next(comment);
+  }
 
 
-
-
+  getMemberInfo(memberID: number): Observable<any> {
+    // 假设这是获取当前用户信息的API调用
+    return this.http.get<any>(`https://localhost:7103/api/Members/searchByID?ID=${memberID}`);
+  }
 
 
 
