@@ -3,6 +3,7 @@ import { pgBackMemberDTO } from '../interface/pgBackMemberDTO';
 import { SearchParametersDTO } from '../interface/SearchParametersDTO';
 import { PgbackMemberService } from '../service/pgback-member.service';
 import { CPaging } from '../interface/CPaging';
+import { updateMemberRoleDTO } from './../interface/UpdateMemberRoleDTO';
 
 enum FilterCondition {
   AllMembers,
@@ -109,18 +110,28 @@ export class PgbackMemberComponent {
   }
   //更改狀態紐
   setRoleColor(roleName: string): string {
-    return roleName === '房客' ? 'green' : 'red';
+    return roleName === '房客房東' ? 'green' : 'red';
   }
+
+
   popConfirmMsg(member: pgBackMemberDTO) {
     const confirmed = window.confirm(`確定要修改${member.fullName}的狀態嗎？`);
     if (confirmed) {
       this.changeRoleStatus(member);
     }
   }
+
   changeRoleStatus(member: pgBackMemberDTO) {
-    const newRole = member.roleName === '房客' ? '封鎖中' : '房客';
-    this.service.callUpdateMemberRoleAPI(member.memberId, newRole).subscribe(() => {
+    const newRole = member.roleName === '房客房東' ? '被鎖成員' : '房客房東';
+    const updateMemberRole: updateMemberRoleDTO = {
+      memberId: member.memberId,
+      newRoleName: newRole
+    };
+
+    this.service.callUpdateMemberRoleAPI(updateMemberRole).subscribe(() => {
       member.roleName = newRole;
+    }, error => {
+      console.error('Error updating member role:', error);
     });
   }
   //分頁紐

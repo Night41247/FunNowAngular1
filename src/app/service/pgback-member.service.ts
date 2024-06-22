@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { SearchParametersDTO } from '../interface/SearchParametersDTO';
 import { pgBackMemberDTO } from '../interface/pgBackMemberDTO';
 import { CPaging } from '../interface/CPaging';
+import { updateMemberRoleDTO } from './../interface/UpdateMemberRoleDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -23,9 +24,9 @@ export class PgbackMemberService {
   callShowMemberContainsKeywordAPI(searchParams: SearchParametersDTO){
     return this.client.post<CPaging<pgBackMemberDTO>>('https://localhost:7103/api/pgBackMember/showMemberContainsKeyword', searchParams);
   }
-  callUpdateMemberRoleAPI(memberId: number, newRole: string){
-    return this.client.put('https://localhost:7103/api/pgBackMember/updateMemberRole', { memberId, newRole });
-  }
+  callUpdateMemberRoleAPI(updateMemberRole: updateMemberRoleDTO){
+    return this.client.put('https://localhost:7103/api/pgBackMember/updateMemberRole', updateMemberRole);
 
 
+}
 }

@@ -133,6 +133,9 @@ export class AppModule {
 
     const platformElement = createCustomElement(PlatformCommentComponent, { injector });
     customElements.define('platformcomment-element', platformElement);
+
+    const reportformElement = createCustomElement(ReportformComponent, { injector });
+    customElements.define('reportform-element', reportformElement);
   }
 
   ngDoBootstrap() {}
