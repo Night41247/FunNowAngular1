@@ -1,6 +1,6 @@
 
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommentService } from '../service/comment.service';
 import { ReportDetailDialogComponent } from '../report-detail-dialog/report-detail-dialog.component';
@@ -74,25 +74,26 @@ export class ReportformComponent {
   commentCreatedAt: string = '';
   reportReason: string = '';
   commentID: number = 0;
-  memberID: number = 0;
+  @Input()memberID: number = 0;
 
   commentData: any = {};
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      console.log('Received queryParams:', params); // 调试日志
-      this.commentData = {
-        memberName: params['memberName'],
-        memberEmail: params['memberEmail'],
-        commentFirstName: params['commentFirstName'],
-        commentRoomTypeName: params['commentRoomTypeName'],
-        commentTravelerType: params['commentTravelerType'],
-        commentTitle: params['commentTitle'],
-        commentText: params['commentText'],
-        commentCreatedAt: params['commentCreatedAt'],
-        commentID: params['commentID'],
-        memberID: params['memberID']
-      };
+    this.commentService.currentCommentData.subscribe(comment => {
+      if (comment) {
+        this.commentData = {
+          memberName: comment.memberName,
+          memberEmail: comment.memberEmail,
+          commentFirstName: comment.firstName,
+          commentRoomTypeName: comment.roomTypeName,
+          commentTravelerType: comment.travelerType,
+          commentTitle: comment.commentTitle,
+          commentText: comment.commentText,
+          commentCreatedAt: comment.createdAt,
+          commentID: comment.commentId.toString(),
+          memberID: this.memberID.toString()
+        };
+      }
     });
   }
 

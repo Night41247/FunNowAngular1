@@ -65,7 +65,9 @@ AVGscore:number = 0;
   @Input() hotelId: number = 0;
   @Input() checkInDate: string ='';
   @Input() checkOutDate: string='';
-
+  @Input() memberID: any;
+  memberName: string = '';
+  memberEmail: string = '';
 
   constructor(
     private commentService: CommentService ,
@@ -78,19 +80,20 @@ AVGscore:number = 0;
 
   ngOnInit(): void {
 
-    console.log('Received parameters:', {
-             hotelId:this.hotelId,
-             checkInDate:this.checkInDate,
-             checkOutDate:this.checkOutDate
+    // console.log('Received parameters:', {
+    //          hotelId:this.hotelId,
+    //          checkInDate:this.checkInDate,
+    //          checkOutDate:this.checkOutDate,
 
-      });
+    //   });
 
-
+    this.fetchMemberInfo(this.memberID);
     this.loadCommentCounts();
     this.loadAverageScore();
     this.AvgText();
     this.loadAVGscore();
     this.loadComments();
+
   }
 
 //   ngOnInit(): void {
@@ -119,43 +122,61 @@ AVGscore:number = 0;
       this.ratingText = data.ratingText;
       this.totalCommentcounts = data.counts;
     }, error => {
-      console.error('Error fetching rating text:', error);
+      // console.error('Error fetching rating text:', error);
     });
   }
 
   report(comment: any): void {
     console.log('Navigating with comment:', comment);
-    this.router.navigate(['/reportform'], {
-      queryParams: {
-        memberName: 'John Doe', // 檢舉人（測試）
-        memberEmail: 'john.doe@example.com', // 檢舉人信箱（測試）
-        commentFirstName: comment.firstName,
-        commentRoomTypeName: comment.roomTypeName,
-        commentTravelerType: comment.travelerType,
-        commentTitle: comment.commentTitle,
-        commentText: comment.commentText,
-        commentCreatedAt: comment.createdAt,
-        commentID: comment.commentId,
-        memberID: comment.memberId
-      }
+    const queryParams = new URLSearchParams({
+      commentFirstName: comment.firstName,
+      commentRoomTypeName: comment.roomTypeName,
+      commentTravelerType: comment.travelerType,
+      commentTitle: comment.commentTitle,
+      commentText: comment.commentText,
+      commentCreatedAt: comment.createdAt,
+      commentID: comment.commentId,
+    }).toString();
+    const url = `https://localhost:7284/Comment/Angular_reportform?${queryParams}`;
+    console.log('Navigating to:', url);
+    window.location.href = url;
+  }
+
+  fetchMemberInfo(memberID: number): void {
+    this.commentService.getMemberInfo(memberID).subscribe(data => {
+      this.memberName = data.firstName;
+      this.memberEmail = data.email;
+      console.log('Member Info:', data);
     });
   }
+
+
+//透過service傳送資料到report
+selectComment(comment: any): void {
+  const selectedComment = {
+    ...comment,
+    memberName: this.memberName,
+    memberEmail: this.memberEmail
+  };
+  this.commentService.changeCommentData(selectedComment);
+}
+
   // 加載評論
   loadComments(): void {
     const ratingFilter = this.ratingFilter !== null ? this.ratingFilter : undefined;
     const dateFilter = this.dateFilter !== null ? this.dateFilter : undefined;
     const combinedSearch = [...this.selectedTopics, this.search].filter(Boolean).join(' ');
 
-    console.log('Loading comments with params:', {
-      hotelId: this.hotelId,
-      page: this.page,
-      pageSize: this.pageSize,
-      search: combinedSearch,
-      ratingFilter: ratingFilter,
-      dateFilter: dateFilter,
-      sortOrder: this.sortOrder,
-      topics: this.selectedTopics.join(' ')
-    });
+    // console.log('Loading comments with params:', {
+    //   hotelId: this.hotelId,
+    //   page: this.page,
+    //   pageSize: this.pageSize,
+    //   search: combinedSearch,
+    //   ratingFilter: ratingFilter,
+    //   dateFilter: dateFilter,
+    //   sortOrder: this.sortOrder,
+    //   topics: this.selectedTopics.join(' ')
+    // });
 
     this.commentService.getComments(this.hotelId, this.page, this.pageSize, combinedSearch, ratingFilter, dateFilter, this.sortOrder, this.selectedTopics.join(' '))
       .subscribe(data => {
@@ -167,7 +188,7 @@ AVGscore:number = 0;
         this.totalComments = data.totalComments;
         this.totalAverageScore = data.totalAverageScore;
 
-        console.log('Received data:', data);
+        // console.log('Received data:', data);
 
         this.combineData();
         this.applySort(); // 调用排序方法
@@ -199,7 +220,7 @@ AVGscore:number = 0;
           avgScoresPerCom
         };
       } else {
-        console.warn(`Comment with ID ${member.commentId} not found in comments`);
+        // console.warn(`Comment with ID ${member.commentId} not found in comments`);
         return member;
       }
     });
@@ -217,10 +238,10 @@ AVGscore:number = 0;
     this.commentService.getAVGscore(this.hotelId).subscribe(
       data => {
         this.AVGscore = data.totalAverageScore;
-        console.log('AVGscore:', this.AVGscore);
+        // console.log('AVGscore:', this.AVGscore);
       },
       error => {
-        console.error('Error fetching average score:', error);
+        // console.error('Error fetching average score:', error);
       }
     );
   }
@@ -237,7 +258,7 @@ AVGscore:number = 0;
         // console.log('AVG Data:', data);
       },
       error => {
-        console.error('Error loading average scores:', error);
+        // console.error('Error loading average scores:', error);
       }
     );
   }
@@ -253,7 +274,7 @@ AVGscore:number = 0;
       this.rateCounts.set(parseInt(rating, 10), ratingDetail.count);
     });
 
-    console.log('Updated Rating Counts:', Array.from(this.rateCounts.entries()));
+    // console.log('Updated Rating Counts:', Array.from(this.rateCounts.entries()));
 
     const dateCommentDetailsArray = Object.entries(data.dateCommentDetails);
     dateCommentDetailsArray.forEach(([dateRange, detail]) => {
@@ -261,7 +282,7 @@ AVGscore:number = 0;
       this.monthCounts.set(dateRange, dateDetail.count);
     });
 
-    console.log('Updated Month Counts:', Array.from(this.monthCounts.entries()));
+    // console.log('Updated Month Counts:', Array.from(this.monthCounts.entries()));
   });
 }
 
@@ -345,7 +366,7 @@ filterByDate(date: string | null): void {
       this.sortOrder = event;
       this.page = 1;
       this.loadComments();
-      console.log('Sort Order:', this.sortOrder);
+      // console.log('Sort Order:', this.sortOrder);
     }
 
     applySort(): void {
@@ -358,7 +379,7 @@ filterByDate(date: string | null): void {
       } else if (this.sortOrder === 'oldest') {
         this.combinedData.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
       }
-      console.log('Sorted Combined Data:', this.combinedData);
+      // console.log('Sorted Combined Data:', this.combinedData);
     }
 
 
