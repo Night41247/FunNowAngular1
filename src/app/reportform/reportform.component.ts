@@ -98,7 +98,13 @@ export class ReportformComponent {
   }
 
 
-
+  fetchMemberInfo(memberID: number): void {
+    this.commentService.getMemberInfo(this.memberID).subscribe(data => {
+      this.memberName = data.firstName;
+      this.memberEmail = data.email;
+      console.log('Member Info:', data);
+    });
+  }
 
 
 

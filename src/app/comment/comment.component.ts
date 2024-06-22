@@ -2,6 +2,7 @@ import { CommentService } from './../service/comment.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { CommentQueryParameters, Score } from '../model/comment';
 import { ActivatedRoute, Router } from '@angular/router';
+import { da } from 'date-fns/locale';
 
 @Component({
   selector: 'app-comment',
@@ -85,19 +86,12 @@ AVGscore:number = 0;
       checkOutDate: this.checkOutDate,
       memberID: this.memberID
     });
-    if (this.memberID) {
-      this.fetchMemberInfo(this.memberID);
-    } else {
-      console.error('MemberID is undefined');
-    }
-    this.loadComments();
 
-    this.fetchMemberInfo(this.memberID);
+    this.loadComments();
     this.loadCommentCounts();
     this.loadAverageScore();
     this.AvgText();
     this.loadAVGscore();
-    this.loadComments();
 
   }
 
@@ -155,13 +149,7 @@ AVGscore:number = 0;
     window.location.href = url;
   }
 
-  fetchMemberInfo(memberID: number): void {
-    this.commentService.getMemberInfo(memberID).subscribe(data => {
-      this.memberName = data.firstName;
-      this.memberEmail = data.email;
-      console.log('Member Info:', data);
-    });
-  }
+
 
 
 //透過service傳送資料到report
@@ -173,6 +161,11 @@ selectComment(comment: any): void {
   };
   this.commentService.changeCommentData(selectedComment);
 }
+
+commentmembername:string='';
+travelerType:string = '';
+roomTypeName:string= '';
+createdAt:string ='';
 
   // 加載評論
   loadComments(): void {
@@ -194,14 +187,16 @@ selectComment(comment: any): void {
     this.commentService.getComments(this.hotelId, this.page, this.pageSize, combinedSearch, ratingFilter, dateFilter, this.sortOrder, this.selectedTopics.join(' '))
       .subscribe(data => {
         this.comments = data.comments;
-        this.memberInfo = data.memberInfo;
+        this.commentmembername = data.firstName;
+        this.travelerType = data.travelerType;
+        this.roomTypeName =data.roomTypeName;
         this.hotelName = data.hotelName;
         this.totalItems = data.totalItems;
         this.totalPages = Math.ceil(this.totalItems / this.pageSize);
         this.totalComments = data.totalComments;
         this.totalAverageScore = data.totalAverageScore;
 
-        // console.log('Received data:', data);
+        console.log('Received data:', data);
 
         this.combineData();
         this.applySort(); // 调用排序方法
@@ -210,32 +205,24 @@ selectComment(comment: any): void {
 
 
   combineData() {
-    this.combinedData = this.memberInfo.map(member => {
-      const comment = this.comments.find(c => c.commentId === member.commentId);
-      if (comment) {
-        const ratingScores = comment.ratingScores || [];
+    this.combinedData = this.comments.map(comment => {
+      const ratingScores = comment.ratingScores || [];
+      const avgScoresPerCom = {
+        totalAverageScore: (
+          this.calculateAverage(ratingScores, 'cleanlinessScore') +
+          this.calculateAverage(ratingScores, 'comfortScore') +
+          this.calculateAverage(ratingScores, 'facilitiesScore') +
+          this.calculateAverage(ratingScores, 'freeWifiScore') +
+          this.calculateAverage(ratingScores, 'locationScore') +
+          this.calculateAverage(ratingScores, 'staffScore') +
+          this.calculateAverage(ratingScores, 'valueScore')
+        ) / 7
+      };
 
-        const avgScoresPerCom = {
-          totalAverageScore: (
-            this.calculateAverage(ratingScores, 'cleanlinessScore') +
-            this.calculateAverage(ratingScores, 'comfortScore') +
-            this.calculateAverage(ratingScores, 'facilitiesScore') +
-            this.calculateAverage(ratingScores, 'freeWifiScore') +
-            this.calculateAverage(ratingScores, 'locationScore') +
-            this.calculateAverage(ratingScores, 'staffScore') +
-            this.calculateAverage(ratingScores, 'valueScore')
-          ) / 7
-        };
-
-        return {
-          ...member,
-          ...comment,
-          avgScoresPerCom
-        };
-      } else {
-        // console.warn(`Comment with ID ${member.commentId} not found in comments`);
-        return member;
-      }
+      return {
+        ...comment,
+        avgScoresPerCom
+      };
     });
 
     console.log('Combined Data:', this.combinedData);
@@ -379,7 +366,7 @@ filterByDate(date: string | null): void {
       this.sortOrder = event;
       this.page = 1;
       this.loadComments();
-      // console.log('Sort Order:', this.sortOrder);
+      console.log('Sort Order:', this.sortOrder);
     }
 
     applySort(): void {
@@ -392,7 +379,7 @@ filterByDate(date: string | null): void {
       } else if (this.sortOrder === 'oldest') {
         this.combinedData.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
       }
-      // console.log('Sorted Combined Data:', this.combinedData);
+      console.log('Sorted Combined Data:', this.combinedData);
     }
 
 
