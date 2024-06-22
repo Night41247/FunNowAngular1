@@ -81,27 +81,7 @@ postCommentAPI(comment: any): Observable<any> {
 }
 
 
-/**
-   * 獲取月份評論數量
-   */
-// getMonthCounts(): Observable<Map<string, number>> {
-//   return this.http.get<{ [key: string]: number }>(`${this.apiUrl}/monthCounts`).pipe(
-//     map(data => {
-//       const counts = new Map<string, number>();
-//       for (const [key, value] of Object.entries(data)) {
-//         counts.set(key, value);
-//       }
-//       return counts;
-//     })
-//   );
-// }
 
-/**
- * 獲取月份範圍
- */
-// getMonthRanges(): Observable<{ key: string, label: string }[]> {
-//   return this.http.get<{ key: string, label: string }[]>(`${this.apiUrl}/monthRanges`);
-// }
 
 /**
  * 獲取評分平均
@@ -127,11 +107,7 @@ updateCommentAndReportStatus(commentId: number, reportId: number, status: number
   });
 }
 
-// updateCommentAndReportStatus(commentId: number, reportId: number, newStatus: number): Observable<any> {
-//   const url = `https://localhost:7103/api/Comment/UpdateCommentStatus`;
-//   const body = { commentId, reportId, newStatus };
-//   return this.http.post<any>(url, body);
-// }
+
 
 sendEmail(to: string, subject: string, body: string): Observable<any> {
   const emailRequest = { to, subject, body };
@@ -157,7 +133,7 @@ updateComment(commentId: number, updateRequest: CommentUpdateRequest): Observabl
 }
 
 getAvgTxt(hotelId: number): Observable<any> {
-  return this.http.get<any>(`${this.apiUrl}/averageRatingText/${hotelId}`);
+  return this.http.get<any>(`${this.apiUrl}/AverageRatingText/${hotelId}`);
 }
 
 
@@ -197,7 +173,9 @@ getAVGscore(hotelId: number): Observable<any> {
   }
 
 
-
+getHotelComment(hotelId:number):Observable<any>{
+  return this.http.get<any>(`https://localhost:7103/api/Comment/${hotelId}/ForHotelComment`);
+}
 
 
 

@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { CommentService } from './../service/comment.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faUserLarge } from '@fortawesome/free-solid-svg-icons';
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import { faCaretLeft } from '@fortawesome/free-solid-svg-icons';
 import { ChangeDetectorRef } from '@angular/core';
+import { data } from 'jquery';
 
 @Component({
   selector: 'app-hotel-comment',
@@ -39,7 +40,7 @@ export class HotelCommentComponent implements OnInit{
 facaretright = faCaretRight;
 facaretleft = faCaretLeft;
 
-  hotelId = 2; // TODO: 測試時寫死
+
   hotelName!: string; // 使用非空斷言操作符
   statistics: any;
   page: number = 1;
@@ -58,7 +59,7 @@ facaretleft = faCaretLeft;
   averageScores: any[] = [];
   totalAverageScore: number = 0;
   isSearchVisible: boolean = false;
-  ratingText:string='';
+  ratingText: string = '';
   rateCounts: Map<number, number> = new Map();
   monthCounts: Map<string, number> = new Map();
 
@@ -73,43 +74,61 @@ facaretleft = faCaretLeft;
   };
 
   //MVC hotel頁有帶的參數
-  backMvcParam = {
-    hotelId : 0,
-    checkInDate : '',
-    checkOutDate : '',
-  }
+  @Input()hotelId :number = 0;
+  @Input()checkInDate:string='';
+  @Input()checkOutDate:string='';
+  @Input() memberID: number = 0;
 
   constructor(
     private commentService: CommentService ,
      private route: ActivatedRoute,
      private router: Router,
      private cdr: ChangeDetectorRef){
-    this.backMvcParam.hotelId = this.route.snapshot.params['hotelId'];
-    this.backMvcParam.checkInDate = this.route.snapshot.queryParams['checkInDate'];
-    this.backMvcParam.checkOutDate = this.route.snapshot.queryParams['checkOutDate'];
   }
 
   // ngAfterViewInit() {
   //   this.startScrolling();
   // }
   ngOnInit(): void {
-    const hotelId = this.route.snapshot.paramMap.get('hotelId');
-    if (hotelId) {
-      this.hotelId = +hotelId; // 將 hotelId 轉換為數字類型
-    }
+    // console.log('Received parameters:', {
+    //   hotelId: this.hotelId,
+    //   checkInDate: this.checkInDate,
+    //   checkOutDate: this.checkOutDate,
+    //   memberID: this.memberID
+    // });
+    this.getHotelComment();
+    this.AvgText();
     this.loadComments();
     this.loadAverageScore();
-    this.AvgText();
-    this.cdr.markForCheck();
-
   }
 
 
+  totalcommentcount:number= 0;
+
+  getHotelComment(): void {
+    this.commentService.getHotelComment(this.hotelId).subscribe(
+      data => {
+        this.totalcommentcount = data.totalComments;
+        this.comments = data.topComments;
+
+        console.log('Comments Data:', data);
+        this.cdr.markForCheck();  // Ensure Angular detects the changes
+      },
+      error => {
+        console.error('Error fetching comments:', error);
+      }
+    );
+  }
+
+
+
+  averageScore:number = 0;
   AvgText() {
     this.commentService.getAvgTxt(this.hotelId).subscribe(data => {
 
       this.hotelId = data.hotelId;
       this.ratingText = data.ratingText;
+      this.averageScore = data.averageScore;
       this.cdr.markForCheck();
     }, error => {
       console.error('Error fetching rating text:', error);
@@ -139,26 +158,17 @@ facaretleft = faCaretLeft;
     const dateFilter = this.dateFilter !== null ? this.dateFilter : undefined;
     const combinedSearch = [...this.selectedTopics, this.search].filter(Boolean).join(' ');
 
-    console.log('Loading comments with params:', {
-      hotelId: this.hotelId,
-      page: this.page,
-      pageSize: this.pageSize,
-      search: combinedSearch,
-      ratingFilter: ratingFilter,
-      dateFilter: dateFilter,
-      sortOrder: this.sortOrder,
-      topics: this.selectedTopics.join(' ')
-    });
+
 
     this.commentService.getComments(this.hotelId, this.page, this.pageSize, combinedSearch, ratingFilter, dateFilter, this.sortOrder, this.selectedTopics.join(' '))
       .subscribe(data => {
-        this.comments = data.comments;
-        this.memberInfo = data.memberInfo;
-        this.hotelName = data.hotelName;
-        this.totalItems = data.totalItems;
-        this.totalPages = Math.ceil(this.totalItems / this.pageSize);
-        this.totalComments = data.totalComments;
-        this.totalAverageScore = data.totalAverageScore;
+        // this.comments = data.comments;
+        // this.memberInfo = data.memberInfo;
+        // this.hotelName = data.hotelName;
+        // this.totalItems = data.totalItems;
+        // this.totalPages = Math.ceil(this.totalItems / this.pageSize);
+        // this.totalComments = data.totalComments;
+        // this.totalAverageScore = data.totalAverageScore;
 
         console.log('Received data:', data);
         this.combineData();
@@ -233,24 +243,6 @@ facaretleft = faCaretLeft;
 
 
 
-    // 切換到下一頁
-    nextPage(): void {
-      if (this.page * this.pageSize < this.totalItems) {
-        this.page++;
-        this.loadComments();
-      }
-    }
-
-    // 切換到上一頁
-    prevPage(): void {
-      if (this.page > 1) {
-        this.page--;
-        this.loadComments();
-      }
-    }
-
-
-
 
 
 
@@ -288,8 +280,8 @@ facaretleft = faCaretLeft;
     setPage(page: number) {
       if (page > 0 && page <= this.totalPages) {
         this.currentPage = page;
-        console.log('Current Page:', this.currentPage);
-        this.loadComments(); // 添加頁面切換邏輯
+        // console.log('Current Page:', this.currentPage);
+        this.getHotelComment(); // 添加頁面切換邏輯
       }
     }
 
@@ -302,10 +294,12 @@ facaretleft = faCaretLeft;
 
     nextSlide() {
       this.currentSlide = (this.currentSlide + 1) % (this.combinedData.length / 3);
+      this.cdr.markForCheck();
     }
 
     prevSlide() {
       this.currentSlide = (this.currentSlide - 1 + (this.combinedData.length / 3)) % (this.combinedData.length / 3);
+      this.cdr.markForCheck();
     }
     //3個卡片一組
     getChunks(array: any[], size: number): any[][] {
