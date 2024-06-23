@@ -66,7 +66,8 @@ AVGscore:number = 0;
 @Input() hotelId: number = 0;
 @Input() checkInDate: string = '';
 @Input() checkOutDate: string = '';
-@Input() memberID: number = 0;
+@Input() memberId: number = 0;
+
   memberName: string = '';
   memberEmail: string = '';
 
@@ -81,21 +82,26 @@ AVGscore:number = 0;
 
 
   ngOnInit(): void {
-    console.log('Received parameters:', {
-      hotelId: this.hotelId,
-      checkInDate: this.checkInDate,
-      checkOutDate: this.checkOutDate,
-      memberID: this.memberID
-    });
 
-    this.loadComments();
+      this.logParameters();
+      this.initializeData();
+
+  }
+  logParameters(): void {
+    console.log('hotelId:', this.hotelId);
+    console.log('CheckInDate:', this.checkInDate);
+    console.log('checkOutDate:', this.checkOutDate);
+    console.log('memberId:', this.memberId);
+  }
+
+  initializeData(): void {
+  this.loadComments();
     this.loadCommentCounts();
     this.loadAverageScore();
     this.AvgText();
     this.loadAVGscore();
     this.fetchMemberInfo();
   }
-
 //   ngOnInit(): void {
 
 //     // 使用这些参数进行其他初始化操作
@@ -128,8 +134,9 @@ AVGscore:number = 0;
 
   reporterName: string = '';
   reporterEmail: string = '';
+
   fetchMemberInfo(): void {
-    this.commentService.getMemberInfo(this.memberID).subscribe(
+    this.commentService.getMemberInfo(this.memberId).subscribe(
       data => {
         this.reporterName = data.firstName;
         this.reporterEmail = data.email;
@@ -158,7 +165,7 @@ AVGscore:number = 0;
       commentText: selectedComment.commentText,
       commentCreatedAt: selectedComment.createdAt,
       commentID: selectedComment.commentId.toString(),
-      memberID: this.memberID.toString()
+      memberID: this.memberId.toString()
     }).toString();
 
     const url = `https://localhost:7284/Comment/Angular_reportform?${queryParams}`;
@@ -217,7 +224,7 @@ createdAt:string ='';
         console.log('Received data:', data);
 
         this.combineData();
-        this.applySort(); // 调用排序方法
+        this.applySort(); // 排序方法
       });
   }
 

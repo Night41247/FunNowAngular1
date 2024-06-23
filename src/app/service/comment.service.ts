@@ -178,7 +178,11 @@ getHotelComment(hotelId:number):Observable<any>{
 }
 
 
-
+private memberIdSource = new BehaviorSubject<number>(0);
+currentMemberId = this.memberIdSource.asObservable();
+changeMemberId(memberId: number) {
+  this.memberIdSource.next(memberId);
+}
 
 }
 

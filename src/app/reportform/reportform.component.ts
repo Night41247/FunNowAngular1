@@ -79,6 +79,7 @@ export class ReportformComponent {
   commentData: any = {};
 
   ngOnInit(): void {
+
     this.route.queryParams.subscribe(params => {
       this.commentData = {
         reporterName: params['reporterName'],

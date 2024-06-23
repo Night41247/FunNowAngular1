@@ -50,7 +50,7 @@ export class MemberCommentComponent {
 
 ngOnInit(): void {
 
-
+  this.commentService.changeMemberId(this.memberId);
     this.commentService.getCommentsByStatus(this.memberId).subscribe(
 
       (data) => {
