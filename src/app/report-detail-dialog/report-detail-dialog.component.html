@@ -41,6 +41,13 @@
     <div mat-dialog-content>
       <p><strong>Title:</strong> {{ reportReason.commentTitle }}</p>
       <p><strong>Text:</strong> {{ reportReason.commentText }}</p>
+      <p><strong>仲裁結果：</strong>
+        {{data.reportReason.moderationStatus === 'appropriate'
+          ? '內容合適'
+          : data.reportReason.moderationStatus === 'inappropriate'
+          ? '不當內容'
+          : '無違規內容'}}
+      </p>
     </div>
     <div mat-dialog-actions>
       <button mat-button (click)="onCancel()">關閉</button>

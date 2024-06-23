@@ -156,14 +156,14 @@ AVGscore:number = 0;
       reporterEmail: this.reporterEmail
     };
     const queryParams = new URLSearchParams({
-      reporterName: selectedComment.reporterName,
-      reporterEmail: selectedComment.reporterEmail,
-      commentFirstName: selectedComment.firstName,
-      commentRoomTypeName: selectedComment.roomTypeName,
-      commentTravelerType: selectedComment.travelerType,
-      commentTitle: selectedComment.commentTitle,
-      commentText: selectedComment.commentText,
-      commentCreatedAt: selectedComment.createdAt,
+      reporterName: encodeURIComponent(selectedComment.reporterName),
+      reporterEmail: encodeURIComponent(selectedComment.reporterEmail),
+      commentFirstName: encodeURIComponent(selectedComment.firstName),
+      commentRoomTypeName: encodeURIComponent(selectedComment.roomTypeName),
+      commentTravelerType: encodeURIComponent(selectedComment.travelerType),
+      commentTitle: encodeURIComponent(selectedComment.commentTitle),
+      commentText: encodeURIComponent(selectedComment.commentText),
+      commentCreatedAt: encodeURIComponent(selectedComment.createdAt),
       commentID: selectedComment.commentId.toString(),
       memberID: this.memberId.toString()
     }).toString();
@@ -171,7 +171,7 @@ AVGscore:number = 0;
     const url = `https://localhost:7284/Comment/Angular_reportform?${queryParams}`;
     console.log('Navigating to:', url);
     console.log('data :', queryParams);
-    //window.location.href = url;
+    window.location.href = url;
   }
 
 

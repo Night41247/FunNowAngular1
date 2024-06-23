@@ -15,7 +15,7 @@ export class CommentService {
   private apiUrl = 'https://localhost:7103/api/Comment';
 
   //azure 內容仲裁金鑰、端點
-  private endpoint = 'https://<your-endpoint>.api.cognitive.microsoft.com/contentmoderator/moderate/v1.0/ProcessText/Screen';
+  private endpoint = 'https://funnow.cognitiveservices.azure.com/contentmoderator/moderate/v1.0/ProcessText/Screen';
   private apiKey = 'e857f822e05e4bc197c20b061366ee1d';
   private contentModeratorClient: ContentModeratorClient;
 

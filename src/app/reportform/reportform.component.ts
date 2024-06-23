@@ -64,8 +64,7 @@ export class ReportformComponent {
     { value: '3', viewValue: '被FunNow終止合約' }
   ];
 
-  memberName: string = '';
-  memberEmail: string = '';
+
   commentFirstName: string = '';
   commentRoomTypeName: string = '';
   commentTravelerType: string = '';
@@ -74,36 +73,44 @@ export class ReportformComponent {
   commentCreatedAt: string = '';
   reportReason: string = '';
   commentID: number = 0;
-  @Input()memberID: number = 0;
-
+  memberID: number = 0;
+  reporterName: string = '';
+  reporterEmail: string = '';
   commentData: any = {};
 
   ngOnInit(): void {
-
-    this.route.queryParams.subscribe(params => {
+    try {
+      const params = new URLSearchParams(window.location.search);
       this.commentData = {
-        reporterName: params['reporterName'],
-        reporterEmail: params['reporterEmail'],
-        commentFirstName: params['commentFirstName'],
-        commentRoomTypeName: params['commentRoomTypeName'],
-        commentTravelerType: params['commentTravelerType'],
-        commentTitle: params['commentTitle'],
-        commentText: params['commentText'],
-        commentCreatedAt: params['commentCreatedAt'],
-        commentID: params['commentID'],
-        memberID: params['memberID']
+        reporterName: this.decodeParam(params, 'reporterName'),
+        reporterEmail: this.decodeParam(params, 'reporterEmail'),
+        commentFirstName: this.decodeParam(params, 'commentFirstName'),
+        commentRoomTypeName: this.decodeParam(params, 'commentRoomTypeName'),
+        commentTravelerType: this.decodeParam(params, 'commentTravelerType'),
+        commentTitle: this.decodeParam(params, 'commentTitle'),
+        commentText: this.decodeParam(params, 'commentText'),
+        commentCreatedAt: this.decodeParam(params, 'commentCreatedAt'),
+        commentID: this.decodeParam(params, 'commentID', true),
+        memberID: this.decodeParam(params, 'memberID', true)
       };
-    });
+      console.log('Received Comment Data:', this.commentData);
+    } catch (error) {
+      console.error('Error processing URL parameters:', error);
+    }
+  }
+
+  private decodeParam(params: URLSearchParams, key: string, isNumber: boolean = false): string | number {
+    const value = params.get(key);
+    if (value === null) {
+      console.warn(`Missing parameter: ${key}`);
+      return isNumber ? 0 : '';
+    }
+    const decodedValue = decodeURIComponent(value);
+    return isNumber ? parseInt(decodedValue, 10) : decodedValue;
   }
 
 
-  // fetchMemberInfo(memberID: number): void {
-  //   this.commentService.getMemberInfo(this.memberID).subscribe(data => {
-  //     this.memberName = data.firstName;
-  //     this.memberEmail = data.email;
-  //     console.log('Member Info:', data);
-  //   });
-  // }
+
 
 
 

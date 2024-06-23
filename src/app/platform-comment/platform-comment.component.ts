@@ -12,6 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ReportDetailDialogComponent } from '../report-detail-dialog/report-detail-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ChangeDetectorRef } from '@angular/core';
+import { Observable, catchError, concatMap, delay, forkJoin, map, of } from 'rxjs';
 
 
 
@@ -43,6 +44,9 @@ interface Report {
   memberPhone: string;
   repoertedComment:string;
   repoertedCommentTitle:string;
+  moderationStatus?: string;
+  terms?: string[];
+  pii?: string[];
 }
 
 
@@ -117,6 +121,7 @@ export class PlatformCommentComponent {
   };
 
   ngOnInit(): void {
+
     this.loadReports();
   }
 
@@ -143,15 +148,18 @@ export class PlatformCommentComponent {
             memberPhone: report.phone, // 确保正确映射字段
             repoertedComment:report.commentText,
             repoertedCommentTitle:report.commentTitle,
-
+            moderationStatus: 'pending',
+            terms: [],
+            pii: []
           })) as Report[];
           this.filterReportsByStatus();
           this.cdr.detectChanges();
 
           // 對每條報告的評論進行審查
-        this.reports.forEach(report => {
-          this.moderateComment(report.repoertedComment);
-        });
+        // this.reports.forEach(report => {
+        //   this.moderateComment(report.repoertedComment);
+        // });
+
 
 
         } else {
@@ -311,12 +319,15 @@ trackByReportId(index: number, report: any): number {
 
   openReportedDialog(report: any): void {
     this.dialog.open(ReportDetailDialogComponent, {
-      width: '250px',
+      width: '400px',
       data: {
         dialogType: 'reportedText',
         reportReason: {
           commentTitle: report.commentTitle,
-          commentText: report.commentText
+          commentText: report.commentText,
+          moderationStatus: report.moderationStatus,
+          terms: report.terms,
+          pii: report.pii
         }
       }
     });
@@ -408,24 +419,56 @@ trackByReportId(index: number, report: any): number {
     }
   }
 
-  moderateComment(commentText: string): void {
-    this.commentService.moderateText(commentText).subscribe(
-      response => {
-        if (response.Terms || response.PII) {
-          console.log('Inappropriate content found:', response.Terms, response.PII);
-          // 處理不當內容，例如標記評論或通知管理員
-        } else {
-          console.log('Content is appropriate');
-          // 內容合適，繼續處理
-        }
-      },
-      error => {
-        console.error('Error moderating text:', error);
-      }
-    );
+//   moderateComment(commentText: string): void {
+//     this.commentService.moderateText(commentText).subscribe(
+//       response => {
+//         if (response.Terms || response.PII) {
+//           console.log('Inappropriate content found:', response.Terms, response.PII);
+//           // 處理不當內容，例如標記評論或通知管理員
+//         } else {
+//           console.log('Content is appropriate');
+//           // 內容合適，繼續處理
+//         }
+//       },
+//       error => {
+//         console.error('Error moderating text:', error);
+//       }
+//     );
 
 
 
+// }
+moderateComment(commentText: string): Observable<any> {
+  console.log('Moderating comment text:', commentText); // 打印出要进行仲裁的评论内容
+  return this.commentService.moderateText(commentText);
 }
+
+moderateSelectedComment(report: Report): void {
+  this.moderateComment(report.repoertedComment).subscribe(
+    response => {
+      report.moderationStatus = response.status;
+      report.terms = response.Terms || [];
+      report.pii = response.PII || [];
+      console.log(`Moderation result for comment ID ${report.commentId}: ${report.moderationStatus}`);
+      if (response.Terms) {
+        console.log('Terms:', response.Terms);
+      }
+      if (response.PII) {
+        console.log('PII:', response.PII);
+      }
+      this.cdr.detectChanges();
+    },
+    error => {
+      report.moderationStatus = 'error';
+      console.error(`Error moderating comment ID ${report.commentId}:`, error);
+    }
+  );
+}
+
+
+
+
+
+
 
 }
